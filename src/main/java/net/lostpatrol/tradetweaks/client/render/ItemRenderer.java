@@ -46,16 +46,15 @@ public class ItemRenderer {
                 int s_length = mc.font.width(sofar.substring(0, sofar.length() - 2));
                 // and Chat Heads
                 if (ModList.get().isLoaded("chat_heads")) {
-                    render(mc, guiGraphics, s_length+5*halfSpace, character == ' ' ? 0 : -halfSpace, x, y, style, color);
-                    return false;
+                    render(guiGraphics, s_length+5*halfSpace, character == ' ' ? 0 : -halfSpace, x, y, style, color);
                 } else {
-                    render(mc, guiGraphics, s_length, character == ' ' ? 0 : -halfSpace, x, y, style, color);
-                    return false;
+                    render(guiGraphics, s_length, character == ' ' ? 0 : -halfSpace, x, y, style, color);
                 }
+                return false;
 
             } else if (sofar.endsWith("  ")) {
                 float shift = mc.font.width(before.substring(0, before.length() - 2)) + context.offset;
-                render(mc, guiGraphics, shift, 0, x, y, style, color);
+                render(guiGraphics, shift, 0, x, y, style, color);
                 context.offset += mc.font.width(String.valueOf(before)) + 2 * halfSpace;
                 before.setLength(0);
                 return true;
@@ -84,7 +83,7 @@ public class ItemRenderer {
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void render(Minecraft mc, GuiGraphics guiGraphics, float shift, float extraShift, float x, float y, Style style, int color) {
+    private static void render(GuiGraphics guiGraphics, float shift, float extraShift, float x, float y, Style style, int color) {
         float a = (color >> 24 & 255) / 255.0F;
 
         PoseStack pose = guiGraphics.pose();
