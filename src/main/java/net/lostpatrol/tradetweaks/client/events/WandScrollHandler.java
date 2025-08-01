@@ -1,7 +1,7 @@
 package net.lostpatrol.tradetweaks.client.events;
 
 import net.lostpatrol.tradetweaks.TradeTweaks;
-import net.lostpatrol.tradetweaks.common.item.custom.EmeraldWand;
+import net.lostpatrol.tradetweaks.common.wand.EmeraldWand;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

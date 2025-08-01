@@ -1,0 +1,15 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+logoFile= "logo.png"
+#credits="Special thanks to Ultramege for Showcase Item and ThetaDev for Construction Wand"
+authors="${mod_authors}"
+description='''${mod_description}'''
+
+[[mixins]]
+config="tradetweaks.mixins.json"

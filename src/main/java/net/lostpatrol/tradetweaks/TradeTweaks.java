@@ -3,7 +3,7 @@ package net.lostpatrol.tradetweaks;
 import com.mojang.logging.LogUtils;
 import net.lostpatrol.tradetweaks.command.InternalCommand;
 import net.lostpatrol.tradetweaks.command.TradeBroadcastCommand;
-import net.lostpatrol.tradetweaks.common.VillagerTradeReporter;
+import net.lostpatrol.tradetweaks.common.tradecast.VillagerTradeReporter;
 import net.lostpatrol.tradetweaks.config.ClientConfig;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.common.item.ModCreativeModeTab;

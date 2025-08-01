@@ -2,7 +2,7 @@ package net.lostpatrol.tradetweaks.command;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import net.lostpatrol.tradetweaks.common.VillagerTradeReporter;
+import net.lostpatrol.tradetweaks.common.tradecast.VillagerTradeReporter;
 import net.lostpatrol.tradetweaks.config.ClientConfig;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.minecraft.commands.CommandSourceStack;

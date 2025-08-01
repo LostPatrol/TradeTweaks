@@ -27,6 +27,8 @@
   "tradetweaks.emerald_wand.fail.block_not_occupied": "附近未找到占用该方块的村民",
   "tradetweaks.emerald_wand.fail.block_not_exist": "方块已消失或不存在",
   "tradetweaks.emerald_wand.fail.villager_occupied": "只能对无业村民使用该功能",
+  "tradetweaks.emerald_wand.fail.villager_max_level": "职业等级已经为大师",
+  "tradetweaks.emerald_wand.fail.insufficient_funds": "需要1个绿宝石块或9个绿宝石",
   "tradetweaks.emerald_wand.success.reset": "已清除村民职业",
   "tradetweaks.emerald_wand.success.track_block": "已在 X=%s Y=%s Z=%s 高亮显示该村民的工作方块",
   "tradetweaks.emerald_wand.success.track_villager": "已在 X=%s Y=%s Z=%s 高亮显示占用该工作方块的村民",
@@ -35,5 +37,6 @@
   "tradetweaks.emerald_wand.mode.tracking_block": "已切换至工作方块追踪模式",
   "tradetweaks.emerald_wand.mode.tracking_villager": "已切换至村民追踪模式",
   "tradetweaks.emerald_wand.mode.refresh": "已切换至刷新模式",
+  "tradetweaks.emerald_wand.mode.upgrade": "已切换至升级模式",
   "tradetweaks.emerald_wand.text.copy": "点击复制到剪切板"
 }

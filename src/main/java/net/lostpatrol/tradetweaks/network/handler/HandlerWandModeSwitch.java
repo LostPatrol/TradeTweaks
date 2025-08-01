@@ -1,6 +1,6 @@
 package net.lostpatrol.tradetweaks.network.handler;
 
-import net.lostpatrol.tradetweaks.common.item.custom.EmeraldWand;
+import net.lostpatrol.tradetweaks.common.wand.EmeraldWand;
 import net.lostpatrol.tradetweaks.network.packet.PacketWandModeSwitch;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -9,7 +9,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-import static net.lostpatrol.tradetweaks.common.item.custom.EmeraldWand.*;
+import static net.lostpatrol.tradetweaks.common.wand.EmeraldWand.*;
 
 public class HandlerWandModeSwitch {
     public static void handle(PacketWandModeSwitch packet, Supplier<NetworkEvent.Context> ctx) {
