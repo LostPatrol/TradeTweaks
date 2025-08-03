@@ -1,3 +1,5 @@
+# 中文版更新可能不及时，请查看英文版或publish内更新日志
+
 # Trade Tweaks
 
 Minecraft mod, Forge
