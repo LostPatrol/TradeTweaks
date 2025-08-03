@@ -38,5 +38,13 @@
   "tradetweaks.emerald_wand.mode.tracking_villager": "Switch to TRACKING VILLAGER mode",
   "tradetweaks.emerald_wand.mode.refresh": "Switch to REFRESH mode",
   "tradetweaks.emerald_wand.mode.upgrade": "Switch to UPGRADE mode",
-  "tradetweaks.emerald_wand.text.copy": "Copy to clipboard"
+  "tradetweaks.emerald_wand.mode.select": "Switch to SELECT mode",
+  "tradetweaks.emerald_wand.text.copy": "Copy to clipboard",
+
+  "tradetweaks.gui.trade_selection": "Trade Selection",
+  "tradetweaks.gui.replacement_options": "Replacements",
+  "tradetweaks.gui.existing_trades":"Existing Trades",
+  "tradetweaks.gui.confirm": "OK",
+
+  "tradetweaks.gui.narration.trade_entry": "Open Trade Selection Window"
 }

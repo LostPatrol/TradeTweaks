@@ -10,6 +10,7 @@ import net.lostpatrol.tradetweaks.common.item.ModCreativeModeTab;
 import net.lostpatrol.tradetweaks.common.item.ModItems;
 import net.lostpatrol.tradetweaks.network.handler.HandlerBlockHighlight;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
+import net.lostpatrol.tradetweaks.network.handler.HandlerOpenTradeSelection;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -34,6 +35,7 @@ public class TradeTweaks {
         MinecraftForge.EVENT_BUS.register(this);
         if (FMLEnvironment.dist == Dist.CLIENT){
             MinecraftForge.EVENT_BUS.register(HandlerBlockHighlight.class);
+            MinecraftForge.EVENT_BUS.register(HandlerOpenTradeSelection.class);
         }
 
         VillagerTradeReporter.register();

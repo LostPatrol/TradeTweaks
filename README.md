@@ -10,7 +10,7 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 ### Emerald Wand
 
-![image-20250730000406228](assets/image-20250730000406228.png)
+![image-20250730000406228](publish/assets/craft1.png)
 
 **Usage:**
 
@@ -38,7 +38,7 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 **2. Workblock(JobSite) Tracker**
 
-<img src="assets/image-20250730010846369.png" alt="image-20250730010846369" style="zoom:50%;" />
+<img src="publish/assets/mode_track_block_en.png" alt="image-20250730010846369" style="zoom:50%;" />
 
 - Visually highlights the villager's linked workstation
 - Effective range: 64 blocks
@@ -47,7 +47,7 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 **3. Villager Tracker**
 
-<img src="assets/image-20250730010925780.png" alt="image-20250730010925780" style="zoom:50%;" />
+<img src="publish/assets/mode_track_villager_en.png" alt="image-20250730010925780" style="zoom:50%;" />
 
 - Applies glowing effect to villager using the targeted workstation
 
@@ -66,9 +66,9 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 Displays nearby villagers' trade lists (with item icons) in chat, with click-to-highlight functionality. Won't repeat broadcasts for unchanged trades.
 
-![image-20250730011315489](assets/image-20250730011315489.png)
+![image-20250730011315489](publish/assets/tradecast_1_en.png)
 
-![image-20250730011328032](assets/image-20250730011328032.png)
+![image-20250730011328032](publish/assets/tradecast_2_en.png)
 
 
 

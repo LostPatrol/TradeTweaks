@@ -38,5 +38,12 @@
   "tradetweaks.emerald_wand.mode.tracking_villager": "已切换至村民追踪模式",
   "tradetweaks.emerald_wand.mode.refresh": "已切换至刷新模式",
   "tradetweaks.emerald_wand.mode.upgrade": "已切换至升级模式",
-  "tradetweaks.emerald_wand.text.copy": "点击复制到剪切板"
+  "tradetweaks.emerald_wand.mode.select": "已切换至自选交易模式",
+  "tradetweaks.emerald_wand.text.copy": "点击复制到剪切板",
+
+  "tradetweaks.gui.trade_selection": "选择交易",
+  "tradetweaks.gui.replacement_options": "可交换项",
+  "tradetweaks.gui.existing_trades":"现有交易",
+  "tradetweaks.gui.confirm": "确定",
+  "tradetweaks.gui.narration.trade_entry": "打开交易选择窗口"
 }

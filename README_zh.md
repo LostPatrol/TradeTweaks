@@ -16,7 +16,7 @@ Minecraft mod, Forge
 
 
 
-![image-20250730000406228](assets/image-20250730000406228.png)
+![image-20250730000406228](publish/assets/craft1.png)
 
 **使用：**
 
@@ -41,7 +41,7 @@ Minecraft mod, Forge
 
 **2.工作方块追踪**
 
-<img src="assets/image-20250730001941467.png" alt="image-20250730001941467" style="zoom:50%;" />
+<img src="publish/assets/mode_track_block_zh.png" alt="image-20250730001941467" style="zoom:50%;" />
 
 + 高亮透视显示村民当前的工作方块
 + 有效检测范围为64格
@@ -50,7 +50,7 @@ Minecraft mod, Forge
 
 **3.村民追踪**
 
-<img src="assets/image-20250730002353583.png" alt="image-20250730002353583" style="zoom:50%;" />
+<img src="publish/assets/mode_track_villager_zh.png" alt="image-20250730002353583" style="zoom:50%;" />
 
 + 若有村民正在使用该方块作为工作方块，则给予该村民发光效果
 
@@ -68,9 +68,9 @@ Minecraft mod, Forge
 
 允许将附近村民的交易列表（以及物品图标）播报到玩家的聊天栏，并可以点击高亮对应村民。同一村民如果交易未发生变化则不会重复播报。
 
-![image-20250730003617420](assets/image-20250730003617420.png)
+![image-20250730003617420](publish/assets/tradecast_1_zh.png)
 
-![image-20250730005806910](assets/image-20250730005806910.png)
+![image-20250730005806910](publish/assets/image-20250730005806910.png)
 
 #### 命令
 

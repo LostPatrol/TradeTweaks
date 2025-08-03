@@ -80,8 +80,10 @@ public class ServerConfig {
     }
 
     @SubscribeEvent
-    public static void onReload(final ModConfigEvent.Reloading configEvent) {
-        HandlerUpgradeVillager.reloadCosts();
+    public static void onReload(final ModConfigEvent.Reloading event) {
+        if (event.getConfig().getSpec() == SPEC) {
+            HandlerUpgradeVillager.reloadCosts();
+        }
     }
 
     public static void setCheckInterval(int seconds) {

@@ -32,7 +32,8 @@ public class EmeraldWand extends Item {
         TRACKING_BLOCK_MODE("tracking_block"),
         TRACKING_VILLAGER_MODE("tracking_villager"),
         REFRESH_MODE("refresh"),
-        UPGRADE_MODE("upgrade");
+        UPGRADE_MODE("upgrade"),
+        SELECT_MODE("select");
 
         private final String name;
 
@@ -60,7 +61,8 @@ public class EmeraldWand extends Item {
             WandMode.RESET_MODE,
             WandMode.REFRESH_MODE,
             WandMode.TRACKING_BLOCK_MODE,
-            WandMode.UPGRADE_MODE
+            WandMode.UPGRADE_MODE,
+            WandMode.SELECT_MODE
     );
 
     private static final Set<WandMode> BLOCK_MODES = Set.of(
@@ -70,9 +72,7 @@ public class EmeraldWand extends Item {
 
     public void switchMode(ItemStack stack, Player player, boolean forward) {
         if (player.level().isClientSide) {
-            NetworkHandler.getChannel().sendToServer(
-                    new PacketWandModeSwitch(forward)
-            );
+            NetworkHandler.sendWandModeSwitchToServer(new PacketWandModeSwitch(forward));
         }
 
         WandMode current = getMode(stack);
@@ -128,6 +128,7 @@ public class EmeraldWand extends Item {
             case REFRESH_MODE -> HandlerVillagerRefresh.handle(player, villager);
             case TRACKING_BLOCK_MODE -> HandlerTrackBlock.handle(player, villager);
             case UPGRADE_MODE -> HandlerUpgradeVillager.handle(player, villager);
+            case SELECT_MODE -> HandlerTradeSelector.handle(player, villager);
             default -> InteractionResult.FAIL;
         };
     }
