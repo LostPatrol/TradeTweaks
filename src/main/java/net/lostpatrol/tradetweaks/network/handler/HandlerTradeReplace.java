@@ -1,15 +1,12 @@
 package net.lostpatrol.tradetweaks.network.handler;
 
-import net.lostpatrol.tradetweaks.common.select.TradeReplacer;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 public class HandlerTradeReplace {

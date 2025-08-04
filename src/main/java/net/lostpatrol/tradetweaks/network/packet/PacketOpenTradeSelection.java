@@ -1,8 +1,6 @@
 package net.lostpatrol.tradetweaks.network.packet;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.trading.MerchantOffers;
 
 public class PacketOpenTradeSelection {

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tradetweaks:emerald_wand"
+    },
+    {
+      "item": "minecraft:nether_star"
+    }
+  ],
+  "result": {
+    "item": "tradetweaks:emerald_wand",
+    "nbt": "{upgrade: 1}"
+  }
+}

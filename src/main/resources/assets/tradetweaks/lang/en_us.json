@@ -1,6 +1,7 @@
 {
   "creativetab.tradetweaks_tab": "Trade Tweaks",
   "item.tradetweaks.emerald_wand": "Emerald Wand",
+
   "tradetweaks.tradecast.settings.header": "=== TradeTweaks-tradecast Settings ===",
   "tradetweaks.tradecast.settings.mode": "Your report mode: %s",
   "tradetweaks.tradecast.settings.interval": "Server check interval: %s seconds",
@@ -23,12 +24,14 @@
   "tradetweaks.tradecast.highlight.success": "Highlighted!",
   "tradetweaks.tradecast.render.set": "Render item set to: %s",
   "tradetweaks.tradecast.render.error": "This configuration can only be modified by the client",
+
   "tradetweaks.emerald_wand.fail.villager_not_occupied": "This villager has no profession",
   "tradetweaks.emerald_wand.fail.block_not_occupied": "No villagers were found nearby occupying this block",
   "tradetweaks.emerald_wand.fail.block_not_exist": "Jobsite has disappeared or does not exist",
   "tradetweaks.emerald_wand.fail.villager_occupied": "This villager already has a profession",
   "tradetweaks.emerald_wand.fail.villager_max_level": "Has reached MASTER level",
-  "tradetweaks.emerald_wand.fail.insufficient_funds": "1 emerald block or 9 emeralds is required",
+  "tradetweaks.emerald_wand.fail.insufficient_funds": "1 emerald block or 9 emeralds is required (by default)",
+  "tradetweaks.emerald_wand.fail.wand_not_upgraded": "Requires upgrade to use this mode",
   "tradetweaks.emerald_wand.success.reset": "Villager's profession cleared",
   "tradetweaks.emerald_wand.success.track_block": "Highlighted this villager's job site at X=%s Y=%s Z=%s",
   "tradetweaks.emerald_wand.success.track_villager": "Highlighted this job site's owner at X=%s Y=%s Z=%s",
@@ -45,6 +48,7 @@
   "tradetweaks.gui.replacement_options": "Replacements",
   "tradetweaks.gui.existing_trades":"Existing Trades",
   "tradetweaks.gui.confirm": "OK",
+  "tradetweaks.gui.narration.trade_entry": "Open Trade Selection Window",
 
-  "tradetweaks.gui.narration.trade_entry": "Open Trade Selection Window"
+  "tradetweaks.tooltip.market_ruler": "Master of Trades"
 }

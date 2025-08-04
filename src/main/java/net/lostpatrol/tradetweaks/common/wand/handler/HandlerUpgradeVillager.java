@@ -48,7 +48,7 @@ public class HandlerUpgradeVillager {
             return InteractionResult.SUCCESS;
         }
 
-        if (!consumeUpgradeCost(player)) {
+        if (!player.isCreative() && !consumeUpgradeCost(player)) {
             player.displayClientMessage(UPGRADE_FAIL_INSUFFICIENT_FUNDS, true);
             return InteractionResult.SUCCESS;
         }
@@ -74,7 +74,7 @@ public class HandlerUpgradeVillager {
                         if (total >= cost.amount()) {
                             removeExactly(handler, cost.item(), cost.amount());
                             success.set(true);
-                            break; // Stop after first successful consumption
+                            break;
                         }
                     }
                 });

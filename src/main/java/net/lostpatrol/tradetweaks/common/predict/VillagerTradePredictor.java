@@ -1,9 +1,7 @@
 package net.lostpatrol.tradetweaks.common.predict;
 
-import net.lostpatrol.tradetweaks.util.DeepCopy;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;

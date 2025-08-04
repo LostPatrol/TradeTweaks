@@ -1,15 +1,16 @@
 package net.lostpatrol.tradetweaks.client.gui;
 
+import net.lostpatrol.tradetweaks.common.dummy.DummyVillager;
 import net.lostpatrol.tradetweaks.common.select.TradeReplacer;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraftforge.api.distmarker.Dist;
@@ -30,10 +31,10 @@ public class TradeSelectionScreen extends Screen {
     private static final int CONTAINER_WIDTH = (PANEL_WIDTH * 2) + PANEL_SPACING;
 
     private final int villagerId;
-    private MerchantOffers offers;
+    private final MerchantOffers offers;
     private final int level;
-    private final String professionName;
-    private final String villagerType;
+    private final VillagerProfession profession;
+    private final Villager dummyVillager;
 
     TradeListWidget leftPanel;
     private TradeListWidget rightPanel;
@@ -45,26 +46,22 @@ public class TradeSelectionScreen extends Screen {
     private final Component RIGHT_TITLE = Component.translatable("tradetweaks.gui.replacement_options").withStyle(ChatFormatting.GREEN);
 
     @OnlyIn(Dist.CLIENT)
-    public TradeSelectionScreen(int VillagerId, MerchantOffers offers, int level, String professionName, String villagerType) {
+    public TradeSelectionScreen(DummyVillager dummyVillager) {
         super(Component.translatable("tradetweaks.gui.trade_selection").withStyle(ChatFormatting.BOLD));
-        this.villagerId = VillagerId;
-        this.offers = offers;
-        this.level = level;
-        this.professionName = professionName;
-        this.villagerType = villagerType;
+        this.villagerId = dummyVillager.getVillagerId();
+        this.offers = dummyVillager.getOffers();
+        this.level = dummyVillager.getProfessionLevel();
+        this.profession = dummyVillager.getProfession();
+        this.dummyVillager = dummyVillager.getDummyVillager();
     }
 
     @Override
     protected void init() {
         super.init();
 
-//        int panelHeight = this.height - 50;
-//        int panelY = 30;
-
         int containerX = (this.width - CONTAINER_WIDTH) / 2;
         int containerY = 30;
         int panelHeight = this.height - containerY - 50; // Leave space for title and button
-
 
         leftPanel = new TradeListWidget(this.minecraft, PANEL_WIDTH, panelHeight, containerY, containerY + panelHeight, ITEM_HEIGHT);
         leftPanel.setLeftPos(containerX);
@@ -74,7 +71,6 @@ public class TradeSelectionScreen extends Screen {
         rightPanel.setLeftPos(containerX + PANEL_WIDTH + PANEL_SPACING);
         addRenderableWidget(rightPanel);
 
-        // 添加确认按钮（初始不可见）
         confirmButton = new Button.Builder(
                 Component.translatable("tradetweaks.gui.confirm"),
                 button -> confirmReplacement()
@@ -114,8 +110,6 @@ public class TradeSelectionScreen extends Screen {
 
     }
 
-
-
     public void selectExistingTrade(int index) {
         if (this.selectedTradeIndex == index)
             return;
@@ -127,7 +121,7 @@ public class TradeSelectionScreen extends Screen {
 
         if (index >= 0 && index < offers.size()) {
             MerchantOffer selectedOffer = offers.get(index);
-            List<MerchantOffer> possibleTrades = TradeReplacer.getPossibleTrades(selectedOffer, level, professionName, villagerType);
+            List<MerchantOffer> possibleTrades = TradeReplacer.getPossibleTrades(selectedOffer, level, profession, dummyVillager);
 
             if (possibleTrades != null) {
                 for (int i = 0; i < possibleTrades.size(); i++) {
@@ -156,6 +150,4 @@ public class TradeSelectionScreen extends Screen {
             }
         }
     }
-
-
 }

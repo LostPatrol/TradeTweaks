@@ -2,5 +2,11 @@
   "parent": "minecraft:item/handheld",
   "textures": {
     "layer0": "tradetweaks:item/emerald_wand"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": { "tradetweaks:upgrade": 1 },
+      "model": "tradetweaks:item/emerald_wand_upgraded"
+    }
+  ]
 }

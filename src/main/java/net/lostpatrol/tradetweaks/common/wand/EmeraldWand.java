@@ -2,6 +2,7 @@ package net.lostpatrol.tradetweaks.common.wand;
 
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.lostpatrol.tradetweaks.network.packet.PacketWandModeSwitch;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -13,17 +14,21 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import java.util.List;
 import java.util.Set;
 
 import net.lostpatrol.tradetweaks.common.wand.handler.*;
 
 public class EmeraldWand extends Item {
     private static final String MODE_TAG = "wand_mode";
+    private static final String UPGRADE_TAG = "upgrade";
 
     public static final int COOLDOWN_TICKS = 10;
 
@@ -98,6 +103,23 @@ public class EmeraldWand extends Item {
         tag.putString(MODE_TAG, mode.name());
     }
 
+    public static float isUpgradedTexture(ItemStack stack) {
+        if (!stack.hasTag() || !stack.getTag().contains(UPGRADE_TAG)) {
+            return 0F;
+        }
+        return stack.getTag().getBoolean(UPGRADE_TAG) ? 1F : 0F;
+    }
+
+    public static boolean isUpgraded(ItemStack stack) {
+        return stack.hasTag() && stack.getTag().getBoolean(UPGRADE_TAG);
+    }
+
+    @Override
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level level, @Nonnull List<Component> tooltipComponents, @Nonnull TooltipFlag isAdvanced) {
+        if (isUpgraded(stack)){
+            tooltipComponents.add(Component.translatable("tradetweaks.tooltip.market_ruler").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD));
+        }
+    }
 
     public EmeraldWand() {
         super(new Item.Properties().stacksTo(1));
@@ -128,7 +150,7 @@ public class EmeraldWand extends Item {
             case REFRESH_MODE -> HandlerVillagerRefresh.handle(player, villager);
             case TRACKING_BLOCK_MODE -> HandlerTrackBlock.handle(player, villager);
             case UPGRADE_MODE -> HandlerUpgradeVillager.handle(player, villager);
-            case SELECT_MODE -> HandlerTradeSelector.handle(player, villager);
+            case SELECT_MODE -> HandlerTradeSelector.handle(stack, player, villager);
             default -> InteractionResult.FAIL;
         };
     }
