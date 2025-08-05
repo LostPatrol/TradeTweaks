@@ -129,7 +129,7 @@ public class EmeraldWand extends Item {
     @Nonnull
     public InteractionResult interactLivingEntity(@Nonnull ItemStack stack, @Nonnull Player player, @Nonnull LivingEntity entity, @Nonnull InteractionHand hand) {
         if (player.level().isClientSide){
-            return InteractionResult.PASS;
+            return InteractionResult.CONSUME;
         }
 
         if (player.getCooldowns().isOnCooldown(this)) {

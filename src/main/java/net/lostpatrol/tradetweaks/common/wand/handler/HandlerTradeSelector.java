@@ -37,6 +37,6 @@ public class HandlerTradeSelector {
                     villager.getVillagerData().getType().toString()
             ));
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.CONSUME;
     }
 }

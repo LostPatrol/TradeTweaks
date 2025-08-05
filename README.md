@@ -86,7 +86,7 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 + Compatible with multiplayers
 + A Nether Star is required to upgrade your wand to use this mode.
 + Honestly, you can use this to force the villager to restock... but it doesn't matter and i don't want to fix.
-+ Specially for librarian, if you select a trade of enchanted book, you will be allowed to choose the enchantment and its level.(not completed)
++ Specially for librarian, if you select a trade of enchanted book, you will be allowed to choose the enchantment and its level.
 
 
 

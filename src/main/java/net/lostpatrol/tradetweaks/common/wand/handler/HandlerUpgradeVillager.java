@@ -11,6 +11,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +24,8 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HandlerUpgradeVillager {
+    private static final int[] LEVEL_XP = new int[]{0, 10, 70, 150, 250, 250};
+
     public static final Component UPGRADE_FAIL_NOT_OCCUPIED = Component.translatable("tradetweaks.emerald_wand.fail.villager_not_occupied").withStyle(ChatFormatting.RED);
     public static final Component UPGRADE_FAIL_MAX_LEVEL = Component.translatable("tradetweaks.emerald_wand.fail.villager_max_level").withStyle(ChatFormatting.WHITE);
     public static final Component UPGRADE_FAIL_INSUFFICIENT_FUNDS = Component.translatable("tradetweaks.emerald_wand.fail.insufficient_funds").withStyle(ChatFormatting.RED);
@@ -56,7 +59,12 @@ public class HandlerUpgradeVillager {
         if (villager.increaseProfessionLevelOnUpdate)
             villager.increaseProfessionLevelOnUpdate=false;
         villager.increaseMerchantCareer();
+
+        int i = villager.getVillagerData().getLevel();
+        villager.setVillagerXp(LEVEL_XP[i-1]);
+
         villager.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 0));
+
 //        villager.handleEntityEvent((byte) 14);    this doesn't work, so we add particles manually
         spawnHappyParticles(villager);
 

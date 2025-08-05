@@ -95,6 +95,12 @@ public class TradeListWidget extends ObjectSelectionList<TradeListWidget.TradeEn
         }
 
         @Override
+        public void renderBack(@Nonnull GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
+            if (isMouseOver)
+                guiGraphics.fill(left, top, left-1 + width-2, top + height+1, 0x33FFFFFF);
+        }
+
+        @Override
         @Nonnull
         public Component getNarration() {
             return Component.translatable("tradetweaks.gui.narration.trade_entry",
