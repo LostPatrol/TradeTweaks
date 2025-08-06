@@ -17,6 +17,7 @@
   "tradetweaks.tradecast.report.header": "附近 %s-%s 的交易列表:",
   "tradetweaks.tradecast.trade.format": "%s x%d +%s x%d →%s x%d",
   "tradetweaks.tradecast.trade.format_single": "%s x%d →%s x%d",
+  "tradetweaks.tradecast.trade.out_of_stock": "(缺货)",
   "tradetweaks.tradecast.refresh.success": "已清空播报缓存",
   "tradetweaks.tradecast.refresh.fail.not_player":"仅玩家可执行该命令!",
   "tradetweaks.tradecast.refresh.fail.no_data": "没有可清空的数据",

@@ -1,11 +1,13 @@
 modLoader="javafml"
 loaderVersion="${loader_version_range}"
 license="${mod_license}"
+issueTrackerURL="https://github.com/LostPatrol/TradeTweaks/issues"
 
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/trade-tweaks"
 logoFile= "logo.png"
 #credits="Special thanks to Ultramege for Showcase Item and ThetaDev for Construction Wand"
 authors="${mod_authors}"

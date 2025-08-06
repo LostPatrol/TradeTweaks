@@ -17,6 +17,7 @@
   "tradetweaks.tradecast.report.header": "Trade list of nearby %s-%s :",
   "tradetweaks.tradecast.trade.format": "%s x%d +%s x%d →%s x%d",
   "tradetweaks.tradecast.trade.format_single": "%s x%d →%s x%d",
+  "tradetweaks.tradecast.trade.out_of_stock": "(Out of stock)",
   "tradetweaks.tradecast.refresh.success": "tradecast cache cleared",
   "tradetweaks.tradecast.refresh.fail.not_player": "Only player can do this!",
   "tradetweaks.tradecast.refresh.fail.no_data": "No data to clear",

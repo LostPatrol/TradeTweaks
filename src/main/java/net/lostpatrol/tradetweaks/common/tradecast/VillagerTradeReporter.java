@@ -131,7 +131,6 @@ public class VillagerTradeReporter {
             return;
         }
 
-        boolean hasMending = false;
         VillagerData data = villager.getVillagerData();
         Component professionName = VillagerUtil.getProfessionComponent(data.getProfession());
         Component levelName = VillagerUtil.getLevelComponent(data.getLevel());
@@ -152,6 +151,7 @@ public class VillagerTradeReporter {
         MerchantOffers tempOffers = deepCopyOffers(offers);
         updateSpecialPrices(villager, tempOffers, player);
 
+        boolean hasMending = false;
         for (MerchantOffer offer : tempOffers) {
             ItemStack buying1 = offer.getCostA();
             ItemStack buying2 = offer.getCostB();
@@ -161,7 +161,7 @@ public class VillagerTradeReporter {
                 hasMending = true;
             }
 
-            MutableComponent message = buildTradeMessage(buying1, buying2, selling);
+            MutableComponent message = buildTradeMessage(buying1, buying2, selling, offer.isOutOfStock());
             player.displayClientMessage(message, false);
         }
 
@@ -171,21 +171,27 @@ public class VillagerTradeReporter {
         }
     }
 
-    private static MutableComponent buildTradeMessage(ItemStack buying1, ItemStack buying2, ItemStack selling) {
+    private static MutableComponent buildTradeMessage(ItemStack buying1, ItemStack buying2, ItemStack selling, boolean outOfStock) {
         Component item1 = formatItemStack(buying1);
         Component item2 = buying2.isEmpty() ? Component.empty() : formatItemStack(buying2);
         Component result = formatItemStack(selling);
 
+        MutableComponent baseMessage;
+
         if (buying2.isEmpty()) {
-            return Component.translatable("tradetweaks.tradecast.trade.format_single",
+            baseMessage = Component.translatable("tradetweaks.tradecast.trade.format_single",
                     item1, buying1.getCount(),
                     result, selling.getCount());
         } else {
-            return Component.translatable("tradetweaks.tradecast.trade.format",
+            baseMessage = Component.translatable("tradetweaks.tradecast.trade.format",
                     item1, buying1.getCount(),
                     item2, buying2.getCount(),
                     result, selling.getCount());
         }
+
+        return outOfStock
+                ? baseMessage.append(Component.literal(" ").append(Component.translatable("tradetweaks.tradecast.trade.out_of_stock").withStyle(ChatFormatting.RED)))
+                : baseMessage;
     }
 
     // broadcast format and style

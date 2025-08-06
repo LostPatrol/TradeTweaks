@@ -1,7 +1,7 @@
 package net.lostpatrol.tradetweaks.client.gui;
 
 import net.lostpatrol.tradetweaks.common.dummy.DummyVillager;
-import net.lostpatrol.tradetweaks.common.select.TradeReplacer;
+import net.lostpatrol.tradetweaks.common.wand.handler.HandlerTradeSelector;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
 import net.minecraft.ChatFormatting;
@@ -121,7 +121,7 @@ public class TradeSelectionScreen extends Screen {
 
         if (index >= 0 && index < offers.size()) {
             MerchantOffer selectedOffer = offers.get(index);
-            List<MerchantOffer> possibleTrades = TradeReplacer.getPossibleTrades(selectedOffer, level, profession, dummyVillager);
+            List<MerchantOffer> possibleTrades = HandlerTradeSelector.getPossibleTrades(selectedOffer, level, profession, dummyVillager);
 
             if (possibleTrades != null) {
                 for (int i = 0; i < possibleTrades.size(); i++) {

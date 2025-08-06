@@ -3,6 +3,7 @@ package net.lostpatrol.tradetweaks.common.wand.handler;
 import net.lostpatrol.tradetweaks.util.VillagerUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -32,18 +33,23 @@ public class HandlerVillagerReset {
         villager.clearRestriction();
         villager.getOffers().clear();
 
-        Brain<Villager> brain = villager.getBrain();
+        if (player.level() instanceof ServerLevel level) {
+            villager.refreshBrain(level);
+        }
+        else{
+            Brain<Villager> brain = villager.getBrain();
 
-        brain.eraseMemory(MemoryModuleType.JOB_SITE);
-        brain.eraseMemory(MemoryModuleType.LAST_WORKED_AT_POI);
-        brain.eraseMemory(MemoryModuleType.POTENTIAL_JOB_SITE);
-        brain.eraseMemory(MemoryModuleType.SECONDARY_JOB_SITE);
-        brain.eraseMemory(MemoryModuleType.WALK_TARGET);
-        brain.eraseMemory(MemoryModuleType.INTERACTION_TARGET);
+            brain.eraseMemory(MemoryModuleType.JOB_SITE);
+            brain.eraseMemory(MemoryModuleType.LAST_WORKED_AT_POI);
+            brain.eraseMemory(MemoryModuleType.POTENTIAL_JOB_SITE);
+            brain.eraseMemory(MemoryModuleType.SECONDARY_JOB_SITE);
+            brain.eraseMemory(MemoryModuleType.WALK_TARGET);
+            brain.eraseMemory(MemoryModuleType.INTERACTION_TARGET);
 
-        villager.getNavigation().stop();
+            villager.getNavigation().stop();
 
-        brain.setActiveActivityIfPossible(Activity.IDLE);
+            brain.setActiveActivityIfPossible(Activity.IDLE);
+        }
 
         player.displayClientMessage(RESET_SUCCESS, true);
 
