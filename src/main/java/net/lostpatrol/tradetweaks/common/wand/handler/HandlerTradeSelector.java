@@ -3,6 +3,7 @@ package net.lostpatrol.tradetweaks.common.wand.handler;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.lostpatrol.tradetweaks.TradeTweaks;
 import net.lostpatrol.tradetweaks.common.wand.EmeraldWand;
+import net.lostpatrol.tradetweaks.integrations.QuarkCompat;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
 import net.lostpatrol.tradetweaks.util.CompareTrades;
@@ -80,18 +81,30 @@ public class HandlerTradeSelector {
             VillagerTrades.ItemListing[] listings = tradesMap.get(levelOfTrade);
             if (listings != null) {
                 for (VillagerTrades.ItemListing listing : listings) {
+                    boolean isEnchantedBook = false;
                     try {
                         if (listing instanceof VillagerTrades.EnchantBookForEmeralds) {
-                            return getEnchantedBookOffers(dummyVillager, dummyVillager.getRandom(), selectedOffer.getXp());
+                            possibleTrades.addAll(getEnchantedBookOffers(dummyVillager, dummyVillager.getRandom(), selectedOffer.getXp()));
+                            isEnchantedBook = true;
                         }
 
                         MerchantOffer offer = listing.getOffer(dummyVillager, dummyVillager.getRandom());
-                        if (offer != null && isValidReplacement(offer)) {
+                        if (offer != null && !isEnchantedBook && isValidReplacement(offer)) {
                             possibleTrades.add(offer);
                         }
+
                     } catch (Exception e) {
                         TradeTweaks.LOGGER.error("Failed to generate trade offer", e);
                     }
+                }
+                try {
+                    // Quark's Ancient Tome
+                    if (QuarkCompat.isQuarkLoaded() && levelOfTrade == 5  && profession == VillagerProfession.LIBRARIAN){
+                        TradeTweaks.LOGGER.info("Detected Quark loaded. Try to get Ancient Tome trades");
+                        possibleTrades.addAll(QuarkCompat.getAncientTomeOffers());
+                    }
+                } catch (Exception e) {
+                    TradeTweaks.LOGGER.error("Failed to generate Quark's Ancient Tome trades: ", e);
                 }
             }
         }
