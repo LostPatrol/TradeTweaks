@@ -157,7 +157,26 @@ Displays nearby villagers' trade lists (with item icons) in chat, with click-to-
 ## Compatibility
 
 *   Should work with all mod-added villager professions
+*   Should work with all mod-added enchantments (as long as it is 'tradeable')
+*   Compatible with the Ancient Tome added by Quark
 *   Potential rendering conflicts when used with Showcase Item/Quark's inventory icon features (disable client rendering if overlap occurs)
+
+For example:
+
+![image-20250808235714038](D:\IDEA\projects\1.20.1TradeTweaks\publish\assets\image-20250808235714038.png)
+
+
+
+![image-20250808235746712](D:\IDEA\projects\1.20.1TradeTweaks\publish\assets\image-20250808235746712.png)
+
+
+
+![image-20250808235802797](D:\IDEA\projects\1.20.1TradeTweaks\publish\assets\image-20250808235802797.png)
+
+
+
+![image-20250808235829314](D:\IDEA\projects\1.20.1TradeTweaks\publish\assets\image-20250808235829314.png)
+
 
 
 ## Credits and Licensing
