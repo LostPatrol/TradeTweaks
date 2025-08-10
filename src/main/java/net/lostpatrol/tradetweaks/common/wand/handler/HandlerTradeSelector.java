@@ -133,7 +133,7 @@ public class HandlerTradeSelector {
     }
 
     private static List<MerchantOffer> getEnchantedBookOffers(Entity trader, RandomSource random, int villagerXp) {
-        List<Enchantment> tradableEnchantments = BuiltInRegistries.ENCHANTMENT.stream().filter(Enchantment::isTradeable).collect(Collectors.toList());
+        List<Enchantment> tradableEnchantments = BuiltInRegistries.ENCHANTMENT.stream().filter(Enchantment::isTradeable).toList();
 
         List<MerchantOffer> offers = new ArrayList<>();
 
@@ -141,20 +141,14 @@ public class HandlerTradeSelector {
             int maxLevel = enchantment.getMaxLevel();
             ItemStack enchantedBook = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, maxLevel));
 
-            int basePrice = 2 + 3 * maxLevel;
-            int minPrice = Integer.MAX_VALUE;
-            for (int i = 0; i < 3; i++) {
-                int price = basePrice + random.nextInt(5 + maxLevel * 10);
-                if (enchantment.isTreasureOnly()) {
-                    price *= 2;
-                }
-                price = Math.min(price, 64);
-                if (price < minPrice) {
-                    minPrice = price;
-                }
-            }
+            int price = 2 + 3 * maxLevel + Math.min(Math.min(random.nextInt(5 + maxLevel * 10), random.nextInt(5 + maxLevel * 10)), random.nextInt(5 + maxLevel * 10));
 
-            MerchantOffer offer = new MerchantOffer(new ItemStack(Items.EMERALD, minPrice), new ItemStack(Items.BOOK), enchantedBook, 12, villagerXp, 0.2F);
+            if (enchantment.isTreasureOnly()) {
+                price *= 2;
+            }
+            price = Math.min(price, 64);
+
+            MerchantOffer offer = new MerchantOffer(new ItemStack(Items.EMERALD, price), new ItemStack(Items.BOOK), enchantedBook, 12, villagerXp, 0.2F);
             offers.add(offer);
         }
 
