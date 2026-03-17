@@ -10,9 +10,12 @@ import net.lostpatrol.tradetweaks.util.CompareTrades;
 import net.lostpatrol.tradetweaks.util.VillagerUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -25,13 +28,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 
 public class HandlerTradeSelector {
@@ -101,7 +105,7 @@ public class HandlerTradeSelector {
                     // Quark's Ancient Tome
                     if (QuarkCompat.isQuarkLoaded() && levelOfTrade == 5  && profession == VillagerProfession.LIBRARIAN){
                         TradeTweaks.LOGGER.info("Detected Quark loaded. Try to get Ancient Tome trades");
-                        possibleTrades.addAll(QuarkCompat.getAncientTomeOffers());
+                        possibleTrades.addAll(QuarkCompat.getAncientTomeOffers(dummyVillager.level().registryAccess()));
                     }
                 } catch (Exception e) {
                     TradeTweaks.LOGGER.error("Failed to generate Quark's Ancient Tome trades: ", e);
@@ -133,25 +137,36 @@ public class HandlerTradeSelector {
     }
 
     private static List<MerchantOffer> getEnchantedBookOffers(Entity trader, RandomSource random, int villagerXp) {
-        List<Enchantment> tradableEnchantments = BuiltInRegistries.ENCHANTMENT.stream().filter(Enchantment::isTradeable).toList();
+        Registry<Enchantment> registry = trader.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        List<? extends Holder<Enchantment>> tradableEnchantments = registry.holders()
+                .filter(holder -> holder.is(EnchantmentTags.TRADEABLE))
+                .toList();
 
         List<MerchantOffer> offers = new ArrayList<>();
 
-        for (Enchantment enchantment : tradableEnchantments) {
-            int maxLevel = enchantment.getMaxLevel();
+        for (Holder<Enchantment> enchantment : tradableEnchantments) {
+            int maxLevel = enchantment.value().getMaxLevel();
             ItemStack enchantedBook = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, maxLevel));
 
             int price = 2 + 3 * maxLevel + Math.min(Math.min(random.nextInt(5 + maxLevel * 10), random.nextInt(5 + maxLevel * 10)), random.nextInt(5 + maxLevel * 10));
 
-            if (enchantment.isTreasureOnly()) {
+            if (enchantment.is(EnchantmentTags.TREASURE)) {
                 price *= 2;
             }
             price = Math.min(price, 64);
 
-            MerchantOffer offer = new MerchantOffer(new ItemStack(Items.EMERALD, price), new ItemStack(Items.BOOK), enchantedBook, 12, villagerXp, 0.2F);
+            MerchantOffer offer = new MerchantOffer(
+                    new ItemCost(Items.EMERALD, price),
+                    Optional.of(new ItemCost(Items.BOOK, 1)),
+                    enchantedBook,
+                    12,
+                    villagerXp,
+                    0.2F
+            );
             offers.add(offer);
         }
 
         return offers;
     }
 }
+

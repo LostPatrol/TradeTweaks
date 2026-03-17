@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "key": {
+    "A": {
+      "tag": "c:gems/emerald"
+    },
+    "B": {
+      "tag": "c:rods/wooden"
+    }
+  },
+  "pattern": [
+    "  A",
+    " B ",
+    "B  "
+  ],
+
+  "result": {
+    "id": "tradetweaks:emerald_wand",
+    "count": 1
+  }
+}

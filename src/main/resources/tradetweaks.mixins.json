@@ -2,10 +2,9 @@
   "required": true,
   "plugin": "net.lostpatrol.tradetweaks.mixin.plugin.TradeTweaksMixinConfigPlugin",
   "package": "net.lostpatrol.tradetweaks.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_21",
   "refmap": "tradetweaks.refmap.json",
   "mixins": [
-    "ItemStackMixin"
   ],
   "client": [
     "client.ItemRendererMixin",

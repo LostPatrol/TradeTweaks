@@ -7,8 +7,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
@@ -79,3 +79,4 @@ public class DummyMerchant implements Merchant {
         return false;
     }
 }
+

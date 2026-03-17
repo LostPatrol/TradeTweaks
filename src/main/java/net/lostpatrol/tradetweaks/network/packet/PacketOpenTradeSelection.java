@@ -1,9 +1,18 @@
 package net.lostpatrol.tradetweaks.network.packet;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.lostpatrol.tradetweaks.TradeTweaks;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.trading.MerchantOffers;
 
-public class PacketOpenTradeSelection {
+public class PacketOpenTradeSelection implements CustomPacketPayload {
+    public static final Type<PacketOpenTradeSelection> TYPE =
+            new Type<>(ResourceLocation.fromNamespaceAndPath(TradeTweaks.MODID, "open_trade_selection"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketOpenTradeSelection> STREAM_CODEC =
+            StreamCodec.of((buf, packet) -> packet.encode(buf), PacketOpenTradeSelection::new);
+
     private final int villagerId;
     private final MerchantOffers offers;
     private final int level;
@@ -18,20 +27,25 @@ public class PacketOpenTradeSelection {
         this.type = type;
     }
 
-    public PacketOpenTradeSelection(FriendlyByteBuf buf) {
+    public PacketOpenTradeSelection(RegistryFriendlyByteBuf buf) {
         this.villagerId = buf.readInt();
-        this.offers = MerchantOffers.createFromStream(buf);
+        this.offers = MerchantOffers.STREAM_CODEC.decode(buf);
         this.level = buf.readInt();
         this.profession = buf.readUtf();
         this.type = buf.readUtf();
     }
 
-    public void encode(FriendlyByteBuf buf) {
+    public void encode(RegistryFriendlyByteBuf buf) {
         buf.writeInt(villagerId);
-        offers.writeToStream(buf);
+        MerchantOffers.STREAM_CODEC.encode(buf, offers);
         buf.writeInt(level);
         buf.writeUtf(profession);
         buf.writeUtf(type);
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     public int getVillagerId() {
@@ -54,3 +68,4 @@ public class PacketOpenTradeSelection {
         return type;
     }
 }
+

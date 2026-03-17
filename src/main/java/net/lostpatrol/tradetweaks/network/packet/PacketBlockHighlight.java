@@ -1,9 +1,19 @@
 package net.lostpatrol.tradetweaks.network.packet;
 
+import net.lostpatrol.tradetweaks.TradeTweaks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
-public class PacketBlockHighlight {
+public class PacketBlockHighlight implements CustomPacketPayload {
+    public static final Type<PacketBlockHighlight> TYPE =
+            new Type<>(ResourceLocation.fromNamespaceAndPath(TradeTweaks.MODID, "block_highlight"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketBlockHighlight> STREAM_CODEC =
+            StreamCodec.of((buf, packet) -> packet.encode(buf), PacketBlockHighlight::new);
+
     private final BlockPos pos;
     private final int durationTicks;
     private final float red, green, blue;
@@ -32,6 +42,11 @@ public class PacketBlockHighlight {
         buf.writeFloat(blue);
     }
 
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
     public BlockPos getPos() {
         return pos;
     }
@@ -52,3 +67,4 @@ public class PacketBlockHighlight {
         return blue;
     }
 }
+

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(value = net.minecraft.client.renderer.entity.ItemRenderer.class, priority = 999)
+@Mixin(value = net.minecraft.client.renderer.entity.ItemRenderer.class, priority = 999, remap = false)
 public abstract class ItemRendererMixin {
 
     @Accessor

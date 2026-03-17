@@ -65,3 +65,4 @@ public class HighlightRender extends RenderType {
         super("", DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.LINES, 0, false, false, () -> {}, () -> {});
     }
 }
+

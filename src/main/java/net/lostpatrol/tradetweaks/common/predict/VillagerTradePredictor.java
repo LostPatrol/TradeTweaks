@@ -46,7 +46,7 @@ public class VillagerTradePredictor {
 
     private static Component formatOffer(MerchantOffer offer) {
         return Component.literal(
-                String.format("- %s x%d → %s x%d",
+                String.format("- %s x%d -> %s x%d",
                         offer.getBaseCostA().getItem().getName(offer.getBaseCostA()).getString(),
                         offer.getBaseCostA().getCount(),
                         offer.getResult().getItem().getName(offer.getResult()).getString(),
@@ -55,3 +55,4 @@ public class VillagerTradePredictor {
         );
     }
 }
+

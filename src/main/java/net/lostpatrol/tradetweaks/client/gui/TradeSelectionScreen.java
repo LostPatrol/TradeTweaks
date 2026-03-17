@@ -13,8 +13,8 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -63,12 +63,12 @@ public class TradeSelectionScreen extends Screen {
         int containerY = 30;
         int panelHeight = this.height - containerY - 50; // Leave space for title and button
 
-        leftPanel = new TradeListWidget(this.minecraft, PANEL_WIDTH, panelHeight, containerY, containerY + panelHeight, ITEM_HEIGHT);
-        leftPanel.setLeftPos(containerX);
+        leftPanel = new TradeListWidget(this.minecraft, PANEL_WIDTH, panelHeight, containerY, ITEM_HEIGHT);
+        leftPanel.setPosition(containerX, containerY);
         addRenderableWidget(leftPanel);
 
-        rightPanel = new TradeListWidget(this.minecraft, PANEL_WIDTH, panelHeight, containerY, containerY + panelHeight, ITEM_HEIGHT);
-        rightPanel.setLeftPos(containerX + PANEL_WIDTH + PANEL_SPACING);
+        rightPanel = new TradeListWidget(this.minecraft, PANEL_WIDTH, panelHeight, containerY, ITEM_HEIGHT);
+        rightPanel.setPosition(containerX + PANEL_WIDTH + PANEL_SPACING, containerY);
         addRenderableWidget(rightPanel);
 
         confirmButton = new Button.Builder(
@@ -94,18 +94,23 @@ public class TradeSelectionScreen extends Screen {
 
     @Override
     public void render(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         int containerX = (this.width - CONTAINER_WIDTH) / 2;
         int containerY = 30;
-        int containerWidth = CONTAINER_WIDTH;
-        int containerHeight = this.height - containerY - 50;
 
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 10, 0xFFFFFF);
         guiGraphics.drawCenteredString(this.font, LEFT_TITLE, containerX + PANEL_WIDTH / 2, 20, 0xFFFFFF);
         if (selectedTradeIndex >= 0) {
             guiGraphics.drawCenteredString(this.font, RIGHT_TITLE, containerX + PANEL_WIDTH + PANEL_SPACING + PANEL_WIDTH / 2, 20, 0xFFFFFF);
+        }
+
+        // Defer tooltip rendering to avoid clipping by scissoring
+        if (!leftPanel.getHoveredStack().isEmpty()) {
+            guiGraphics.renderTooltip(this.font, leftPanel.getHoveredStack(), mouseX, mouseY);
+        } else if (!rightPanel.getHoveredStack().isEmpty()) {
+            guiGraphics.renderTooltip(this.font, rightPanel.getHoveredStack(), mouseX, mouseY);
         }
 
     }
@@ -151,3 +156,4 @@ public class TradeSelectionScreen extends Screen {
         }
     }
 }
+

@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = ItemBlockRenderTypes.class, priority = 999)
+@Mixin(value = ItemBlockRenderTypes.class, priority = 999, remap = false)
 public class ItemBlockRenderTypesMixin {
     @Inject(method = "getRenderType(Lnet/minecraft/world/level/block/state/BlockState;Z)Lnet/minecraft/client/renderer/RenderType;", at = @At("HEAD"), cancellable = true, require = 0)
     private static void overrideRenderType(BlockState state, boolean needsCulling, CallbackInfoReturnable<RenderType> cir) {
@@ -24,3 +24,4 @@ public class ItemBlockRenderTypesMixin {
         }
     }
 }
+

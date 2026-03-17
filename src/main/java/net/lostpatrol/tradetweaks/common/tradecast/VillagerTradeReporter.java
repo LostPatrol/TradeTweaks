@@ -18,15 +18,17 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 
 import java.util.*;
 
@@ -45,8 +47,8 @@ public class VillagerTradeReporter {
     public static final Map<UUID, PlayerTradeData> playerTradeDataMap = new HashMap<>();
 
     public static void register() {
-        MinecraftForge.EVENT_BUS.addListener(VillagerTradeReporter::onPlayerTick);
-        MinecraftForge.EVENT_BUS.addListener(VillagerTradeReporter::onVillagerDeath);
+        NeoForge.EVENT_BUS.addListener(VillagerTradeReporter::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(VillagerTradeReporter::onVillagerDeath);
     }
 
     // Immediately report when villager profession changes
@@ -57,22 +59,23 @@ public class VillagerTradeReporter {
     // TODO
     // Is it necessary?
 
-    private static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+    private static void onPlayerTick(PlayerTickEvent.Post event) {
         if (ClientConfig.tempMode == ClientConfig.ReportMode.OFF) {
             return;
         }
 
-        if (event.phase != TickEvent.Phase.END || event.player.level().isClientSide) {
+        Player player = event.getEntity();
+        if (player.level().isClientSide) {
             return;
         }
 
-        if (event.player.level().getGameTime() % ServerConfig.tempIntervalTicks != 0) {
+        if (player.level().getGameTime() % ServerConfig.tempIntervalTicks != 0) {
             return;
         }
 
-        List<AbstractVillager> villagers = event.player.level().getEntitiesOfClass(
+        List<AbstractVillager> villagers = player.level().getEntitiesOfClass(
                 AbstractVillager.class,
-                new AABB(event.player.blockPosition()).inflate(ServerConfig.tempRadiusBlocks),
+                new AABB(player.blockPosition()).inflate(ServerConfig.tempRadiusBlocks),
                 villager -> {
                     if (!(villager instanceof Villager)) {
                         return false;
@@ -87,7 +90,7 @@ public class VillagerTradeReporter {
                 }
         );
 
-        PlayerTradeData playerData = getPlayerData(event.player.getUUID());
+        PlayerTradeData playerData = getPlayerData(player.getUUID());
         for (AbstractVillager villager : villagers) {
             if (villager instanceof Villager v) {
                 MerchantOffers currentOffers = v.getOffers();
@@ -97,7 +100,7 @@ public class VillagerTradeReporter {
                     continue;
                 }
 
-                reportTrades(v, event.player, false);
+                reportTrades(v, player, false);
                 playerData.lastKnownOffers.put(villagerId, deepCopyOffers(currentOffers));
             }
         }
@@ -152,12 +155,18 @@ public class VillagerTradeReporter {
         updateSpecialPrices(villager, tempOffers, player);
 
         boolean hasMending = false;
+        net.minecraft.core.Registry<net.minecraft.world.item.enchantment.Enchantment> enchantmentRegistry =
+                player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        Holder<net.minecraft.world.item.enchantment.Enchantment> mendingHolder =
+                enchantmentRegistry.getHolder(Enchantments.MENDING).orElse(null);
         for (MerchantOffer offer : tempOffers) {
             ItemStack buying1 = offer.getCostA();
             ItemStack buying2 = offer.getCostB();
             ItemStack selling = offer.getResult();
 
-            if (selling.getItem() == Items.ENCHANTED_BOOK && EnchantmentHelper.getEnchantments(selling).containsKey(Enchantments.MENDING)) {
+            if (mendingHolder != null
+                    && selling.getItem() == Items.ENCHANTED_BOOK
+                    && EnchantmentHelper.getEnchantmentsForCrafting(selling).getLevel(mendingHolder) > 0) {
                 hasMending = true;
             }
 
@@ -196,24 +205,25 @@ public class VillagerTradeReporter {
 
     // broadcast format and style
     private static Component formatItemStack(ItemStack stack) {
+        MutableComponent icon = net.lostpatrol.tradetweaks.client.render.ItemRenderer.createIconComponent(stack);
+
         if (stack.getItem() == Items.EMERALD) {
-            return stack.getDisplayName().copy().withStyle(ChatFormatting.GREEN);
+            return icon.append(stack.getDisplayName().copy().withStyle(ChatFormatting.GREEN));
         }
 
         if (stack.getItem() == Items.ENCHANTED_BOOK) {
-            Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+            ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
             if (!enchantments.isEmpty()) {
-                Map.Entry<Enchantment, Integer> entry = enchantments.entrySet().iterator().next();
+                var entry = enchantments.entrySet().iterator().next();
 
-                return Component.literal("[")
-                        .append(Component.translatable(entry.getKey().getDescriptionId()))
-                        .append(" " + toRoman(entry.getValue()))
+                return icon.append(Component.literal("[")
+                        .append(entry.getKey().value().description())
+                        .append(" " + toRoman(entry.getIntValue()))
                         .append("]")
-                        .withStyle(ChatFormatting.YELLOW);
+                        .withStyle(ChatFormatting.YELLOW));
             }
         }
-//        return stack.getHoverName();
-        return stack.getDisplayName();
+        return icon.append(stack.getDisplayName());
     }
 
     private static void onVillagerDeath(LivingDeathEvent event) {
@@ -255,3 +265,5 @@ public class VillagerTradeReporter {
 
 
 }
+
+

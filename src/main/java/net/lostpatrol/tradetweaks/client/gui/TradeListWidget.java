@@ -9,8 +9,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
@@ -18,15 +18,22 @@ import javax.annotation.Nonnull;
 @OnlyIn(Dist.CLIENT)
 public class TradeListWidget extends ObjectSelectionList<TradeListWidget.TradeEntry> {
 
-    private static final ResourceLocation VILLAGER_LOCATION = new ResourceLocation("textures/gui/container/villager2.png");
     private final TradeSelectionScreen parent;
+    private ItemStack hoveredStack = ItemStack.EMPTY;
 
-    public TradeListWidget(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight) {
-        super(minecraft, width, height, y0, y1, itemHeight);
+    public TradeListWidget(Minecraft minecraft, int width, int height, int y0, int itemHeight) {
+        super(minecraft, width, height, y0, itemHeight);
         this.parent = (TradeSelectionScreen) minecraft.screen;
-        this.setRenderBackground(false);
-        this.setRenderTopAndBottom(false);
-        this.setRenderSelection(true);
+    }
+
+    public ItemStack getHoveredStack() {
+        return hoveredStack;
+    }
+
+    @Override
+    public void renderWidget(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.hoveredStack = ItemStack.EMPTY;
+        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -36,21 +43,24 @@ public class TradeListWidget extends ObjectSelectionList<TradeListWidget.TradeEn
     }
 
     @Override
-    protected void enableScissor(@Nonnull GuiGraphics guiGraphics) {
-        guiGraphics.enableScissor(0,this.y0,parent.width,parent.height);
+    protected void renderListBackground(GuiGraphics guiGraphics) {
+    }
+
+    @Override
+    protected void renderListSeparators(GuiGraphics guiGraphics) {
     }
 
     @Override
     protected void renderSelection(GuiGraphics guiGraphics, int top, int width, int height, int outerColor, int innerColor) {
-        int i = this.x0 + (this.width - width) / 2;
-        int j = this.x0 + (this.width + width) / 2;
+        int i = this.getX() + (this.width - width) / 2;
+        int j = this.getX() + (this.width + width) / 2;
         guiGraphics.fill(i, top - 2, j, top + height + 2, outerColor);
         guiGraphics.fill(i + 1, top - 1, j - 1, top + height + 1, innerColor);
     }
 
     @Override
     protected int getScrollbarPosition() {
-        return this.x0 + this.width - 6;
+        return this.getX() + this.width - 6;
     }
 
     class TradeEntry extends ObjectSelectionList.Entry<TradeEntry> {
@@ -70,7 +80,7 @@ public class TradeListWidget extends ObjectSelectionList<TradeListWidget.TradeEn
             int panelWidth = TradeListWidget.this.width;
 
 //            int xPos = left + (panelWidth / 2) - ITEM_SPACING * 2;;
-            int xPos = TradeListWidget.this.x0 + (TradeListWidget.this.width - width) / 2 + (int) (TradeSelectionScreen.PANEL_SPACING * 1.5);
+            int xPos = TradeListWidget.this.getX() + (TradeListWidget.this.width - width) / 2 + (int) (TradeSelectionScreen.PANEL_SPACING * 1.5);
             int yPos = top;
 
             renderTradeItem(guiGraphics, font, offer.getCostA(), xPos, yPos, mouseX, mouseY, 16);
@@ -132,7 +142,7 @@ public class TradeListWidget extends ObjectSelectionList<TradeListWidget.TradeEn
         guiGraphics.renderItemDecorations(font, itemStack, x, y);
         if (mouseOnItem(mouseX, mouseY, x, y, iconSize)) {
             guiGraphics.fill(x, y, x + iconSize, y + iconSize, 0x33FF0000);
-            guiGraphics.renderTooltip(font, itemStack, mouseX, mouseY);
+            this.hoveredStack = itemStack;
         }
 
     }
@@ -141,8 +151,11 @@ public class TradeListWidget extends ObjectSelectionList<TradeListWidget.TradeEn
         return mouseX >= x && mouseX < x + iconSize && mouseY >= y && mouseY < y+iconSize;
     }
 
+    private static final ResourceLocation ARROW_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/trade_arrow");
+
     private void renderButtonArrows(GuiGraphics guiGraphics, int posX, int posY) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(VILLAGER_LOCATION, posX, posY + 3, 0, 15.0F, 171.0F, 10, 9, 512, 256);
+        guiGraphics.blitSprite(ARROW_SPRITE, posX, posY + 3, 10, 9);
     }
 }
+

@@ -9,7 +9,12 @@
     }
   ],
   "result": {
-    "item": "tradetweaks:emerald_wand",
-    "nbt": "{upgrade: 1}"
+    "id": "tradetweaks:emerald_wand",
+    "count": 1,
+    "components": {
+      "minecraft:custom_data": {
+        "upgrade": true
+      }
+    }
   }
 }

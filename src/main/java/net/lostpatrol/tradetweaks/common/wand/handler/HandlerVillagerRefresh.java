@@ -45,3 +45,4 @@ public class HandlerVillagerRefresh {
         return InteractionResult.SUCCESS;
     }
 }
+

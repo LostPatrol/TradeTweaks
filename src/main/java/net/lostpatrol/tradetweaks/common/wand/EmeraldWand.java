@@ -4,6 +4,7 @@ import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.lostpatrol.tradetweaks.network.packet.PacketWandModeSwitch;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -15,11 +16,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -89,33 +90,33 @@ public class EmeraldWand extends Item {
     }
 
     public static WandMode getMode(ItemStack stack) {
-        if (!stack.hasTag() || stack.getTag() == null) {
+        CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        if (data.isEmpty() || !data.contains(MODE_TAG)) {
             return WandMode.RESET_MODE;
         }
-        if (!stack.getTag().contains(MODE_TAG)) {
-            return WandMode.RESET_MODE;
-        }
-        return WandMode.valueOf(stack.getTag().getString(MODE_TAG));
+        CompoundTag tag = data.copyTag();
+        return WandMode.valueOf(tag.getString(MODE_TAG));
     }
 
     public static void setMode(ItemStack stack, WandMode mode) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putString(MODE_TAG, mode.name());
+        CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.putString(MODE_TAG, mode.name()));
     }
 
     public static float isUpgradedTexture(ItemStack stack) {
-        if (!stack.hasTag() || !stack.getTag().contains(UPGRADE_TAG)) {
+        CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        if (data.isEmpty() || !data.contains(UPGRADE_TAG)) {
             return 0F;
         }
-        return stack.getTag().getBoolean(UPGRADE_TAG) ? 1F : 0F;
+        return data.copyTag().getBoolean(UPGRADE_TAG) ? 1F : 0F;
     }
 
     public static boolean isUpgraded(ItemStack stack) {
-        return stack.hasTag() && stack.getTag().getBoolean(UPGRADE_TAG);
+        CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        return !data.isEmpty() && data.copyTag().getBoolean(UPGRADE_TAG);
     }
 
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level level, @Nonnull List<Component> tooltipComponents, @Nonnull TooltipFlag isAdvanced) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nonnull Item.TooltipContext context, @Nonnull List<Component> tooltipComponents, @Nonnull TooltipFlag isAdvanced) {
         if (isUpgraded(stack)){
             tooltipComponents.add(Component.translatable("tradetweaks.tooltip.market_ruler").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD));
         }
@@ -176,3 +177,4 @@ public class EmeraldWand extends Item {
         return InteractionResult.PASS;
     }
 }
+

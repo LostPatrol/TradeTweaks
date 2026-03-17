@@ -1,16 +1,13 @@
 package net.lostpatrol.tradetweaks.config;
 
 import net.lostpatrol.tradetweaks.TradeTweaks;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
 
-@Mod.EventBusSubscriber(modid = TradeTweaks.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientConfig {
 
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     public enum ReportMode {
         OFF("off"),
@@ -32,24 +29,33 @@ public class ClientConfig {
         }
     }
 
-    private static final ForgeConfigSpec.EnumValue<ReportMode> REPORT_MODE = BUILDER
+    private static final ModConfigSpec.EnumValue<ReportMode> REPORT_MODE = BUILDER
             .comment("Player's local report mode setting")
             .defineEnum("client.reportMode", ReportMode.LIBRARIAN_ONLY);
 
-    private static final ForgeConfigSpec.BooleanValue RENDER_ITEMS = BUILDER
+    private static final ModConfigSpec.BooleanValue RENDER_ITEMS = BUILDER
             .comment("Render the item icon in chat bar")
             .define("client.renderItems", true);
 
-    public static final ForgeConfigSpec SPEC = BUILDER.build();
+    public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static ReportMode tempMode = ReportMode.LIBRARIAN_ONLY;
     public static boolean tempRenderFlag = true;
 
     @SubscribeEvent
-    public static void onLoad(final ModConfigEvent event) {
+    public static void onLoad(final ModConfigEvent.Loading event) {
         if (event.getConfig().getSpec() == SPEC) {
             tempMode = getMode();
+            tempRenderFlag = getRenderMode();
             TradeTweaks.LOGGER.debug("Loaded client config: mode={}", tempMode);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onReload(final ModConfigEvent.Reloading event) {
+        if (event.getConfig().getSpec() == SPEC) {
+            tempMode = getMode();
+            tempRenderFlag = getRenderMode();
         }
     }
 

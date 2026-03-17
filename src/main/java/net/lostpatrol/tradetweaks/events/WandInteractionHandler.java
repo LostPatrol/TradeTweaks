@@ -1,17 +1,14 @@
 package net.lostpatrol.tradetweaks.events;
 
-import net.lostpatrol.tradetweaks.TradeTweaks;
 import net.lostpatrol.tradetweaks.common.wand.EmeraldWand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
-@Mod.EventBusSubscriber(modid = TradeTweaks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class WandInteractionHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

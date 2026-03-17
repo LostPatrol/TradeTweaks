@@ -15,8 +15,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.List;
 import java.util.Objects;
@@ -73,18 +73,18 @@ public class HandlerUpgradeVillager {
     private static boolean consumeUpgradeCost(Player player) {
         AtomicBoolean success = new AtomicBoolean(false);
 
-        player.getCapability(ForgeCapabilities.ITEM_HANDLER)
-                .ifPresent(handler -> {
-                    // Try each cost option in order
-                    for (ItemCost cost : upgradeCosts) {
-                        int total = findTotal(handler, cost.item());
-                        if (total >= cost.amount()) {
-                            removeExactly(handler, cost.item(), cost.amount());
-                            success.set(true);
-                            break;
-                        }
-                    }
-                });
+        IItemHandler handler = player.getCapability(Capabilities.ItemHandler.ENTITY);
+        if (handler != null) {
+            // Try each cost option in order
+            for (ItemCost cost : upgradeCosts) {
+                int total = findTotal(handler, cost.item());
+                if (total >= cost.amount()) {
+                    removeExactly(handler, cost.item(), cost.amount());
+                    success.set(true);
+                    break;
+                }
+            }
+        }
 
         return success.get();
     }
@@ -142,3 +142,4 @@ public class HandlerUpgradeVillager {
         }
     }
 }
+

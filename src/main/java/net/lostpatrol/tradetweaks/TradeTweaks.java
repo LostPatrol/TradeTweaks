@@ -8,17 +8,16 @@ import net.lostpatrol.tradetweaks.config.ClientConfig;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.common.item.ModCreativeModeTab;
 import net.lostpatrol.tradetweaks.common.item.ModItems;
+import net.lostpatrol.tradetweaks.client.events.WandScrollHandler;
+import net.lostpatrol.tradetweaks.events.WandInteractionHandler;
 import net.lostpatrol.tradetweaks.network.handler.HandlerBlockHighlight;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
-import net.lostpatrol.tradetweaks.network.handler.HandlerOpenTradeSelection;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.fml.ModContainer;
 import org.slf4j.Logger;
 
 @Mod(TradeTweaks.MODID)
@@ -26,25 +25,30 @@ public class TradeTweaks {
     public static final String MODID = "tradetweaks";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public TradeTweaks() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public TradeTweaks(IEventBus modEventBus, ModContainer modContainer) {
+        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, ClientConfig.SPEC);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ClientConfig.SPEC);
-
-        MinecraftForge.EVENT_BUS.register(this);
-        if (FMLEnvironment.dist == Dist.CLIENT){
-            MinecraftForge.EVENT_BUS.register(HandlerBlockHighlight.class);
-            MinecraftForge.EVENT_BUS.register(HandlerOpenTradeSelection.class);
+        NeoForge.EVENT_BUS.register(WandInteractionHandler.class);
+        if (Dist.CLIENT.equals(net.neoforged.fml.loading.FMLEnvironment.dist)) {
+            NeoForge.EVENT_BUS.register(HandlerBlockHighlight.class);
+            NeoForge.EVENT_BUS.register(WandScrollHandler.class);
         }
 
         VillagerTradeReporter.register();
         TradeBroadcastCommand.register();
         InternalCommand.register();
 
-        NetworkHandler.register();
+        NetworkHandler.register(modEventBus);
+
+        modEventBus.register(ServerConfig.class);
+        if (Dist.CLIENT.equals(net.neoforged.fml.loading.FMLEnvironment.dist)) {
+            modEventBus.register(ClientConfig.class);
+            modEventBus.register(net.lostpatrol.tradetweaks.client.events.PropertyRegistry.class);
+        }
 
         ModItems.register(modEventBus);
         ModCreativeModeTab.register(modEventBus);
     }
 }
+

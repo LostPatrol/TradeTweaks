@@ -13,8 +13,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -24,8 +24,8 @@ import java.util.List;
 @OnlyIn(Dist.CLIENT)
 @Deprecated
 public class TradeSelectionMerchantScreen extends Screen {
-    private static final ResourceLocation VILLAGER_LOCATION = new ResourceLocation("textures/gui/container/villager2.png");
-    private static final int TEXTURE_WIDTH = 512;
+    private static final ResourceLocation VILLAGER_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/villager.png");
+    private static final int TEXTURE_WIDTH = 256;
     private static final int TEXTURE_HEIGHT = 256;
     private static final int MERCHANT_MENU_PART_X = 99;
     private static final int SELL_ITEM_1_X = 5;
@@ -113,8 +113,8 @@ public class TradeSelectionMerchantScreen extends Screen {
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(VILLAGER_LOCATION, i, j, 0, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
-        guiGraphics.blit(VILLAGER_LOCATION, i + 176, j, 0, 0.0F, 0.0F, 224, this.imageHeight, 512, 256);
+        guiGraphics.blit(VILLAGER_LOCATION, i, j, 0, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
+        guiGraphics.blit(VILLAGER_LOCATION, i + 176, j, 0, 0.0F, 0.0F, 224, this.imageHeight, 256, 256);
         MerchantOffers merchantoffers = this.offers;
         if (!merchantoffers.isEmpty()) {
             int k = this.shopItem;
@@ -124,7 +124,7 @@ public class TradeSelectionMerchantScreen extends Screen {
 
             MerchantOffer merchantoffer = (MerchantOffer)merchantoffers.get(k);
             if (merchantoffer.isOutOfStock()) {
-                guiGraphics.blit(VILLAGER_LOCATION, this.leftPos + 83 + 99, this.topPos + 35, 0, 311.0F, 0.0F, 28, 21, 512, 256);
+                guiGraphics.blit(VILLAGER_LOCATION, this.leftPos + 83 + 99, this.topPos + 35, 0, 311.0F, 0.0F, 28, 21, 256, 256);
             }
         }
 
@@ -142,15 +142,15 @@ public class TradeSelectionMerchantScreen extends Screen {
                 i1 = 113;
             }
 
-            guiGraphics.blit(VILLAGER_LOCATION, posX + 94, posY + 18 + i1, 0, 0.0F, 199.0F, 6, 27, 512, 256);
+            guiGraphics.blit(VILLAGER_LOCATION, posX + 94, posY + 18 + i1, 0, 0.0F, 199.0F, 6, 27, 256, 256);
         } else {
-            guiGraphics.blit(VILLAGER_LOCATION, posX + 94, posY + 18, 0, 6.0F, 199.0F, 6, 27, 512, 256);
+            guiGraphics.blit(VILLAGER_LOCATION, posX + 94, posY + 18, 0, 6.0F, 199.0F, 6, 27, 256, 256);
         }
 
     }
 
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         MerchantOffers merchantoffers = this.offers;
         if (!merchantoffers.isEmpty()) {
@@ -244,14 +244,16 @@ public class TradeSelectionMerchantScreen extends Screen {
 //        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
+    private static final ResourceLocation TRADE_ARROW_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/trade_arrow");
+    private static final ResourceLocation TRADE_ARROW_OUT_OF_STOCK_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/trade_arrow_out_of_stock");
+
     private void renderButtonArrows(GuiGraphics guiGraphics, MerchantOffer merchantOffers, int posX, int posY) {
         RenderSystem.enableBlend();
         if (merchantOffers.isOutOfStock()) {
-            guiGraphics.blit(VILLAGER_LOCATION, posX + 5 + 35 + 20, posY + 3, 0, 25.0F, 171.0F, 10, 9, 512, 256);
+            guiGraphics.blitSprite(TRADE_ARROW_OUT_OF_STOCK_SPRITE, posX + 5 + 35 + 20, posY + 3, 10, 9);
         } else {
-            guiGraphics.blit(VILLAGER_LOCATION, posX + 5 + 35 + 20, posY + 3, 0, 15.0F, 171.0F, 10, 9, 512, 256);
+            guiGraphics.blitSprite(TRADE_ARROW_SPRITE, posX + 5 + 35 + 20, posY + 3, 10, 9);
         }
-
     }
 
     private void renderAndDecorateCostA(GuiGraphics guiGraphics, ItemStack baseCost, int x, int y) {
@@ -373,3 +375,4 @@ public class TradeSelectionMerchantScreen extends Screen {
         }
     }
 }
+

@@ -12,8 +12,8 @@ public class DeepCopy {
 
     private static MerchantOffer deepCopyOffer(MerchantOffer original) {
         return new MerchantOffer(
-                original.getBaseCostA().copy(),
-                original.getCostB().copy(),
+                original.getItemCostA(),
+                original.getItemCostB(),
                 original.getResult().copy(),
                 original.getUses(),
                 original.getMaxUses(),
@@ -23,3 +23,4 @@ public class DeepCopy {
         );
     }
 }
+

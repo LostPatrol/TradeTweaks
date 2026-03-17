@@ -1,10 +1,19 @@
 package net.lostpatrol.tradetweaks.network.packet;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.lostpatrol.tradetweaks.TradeTweaks;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 
-public class PacketTradeReplace {
+public class PacketTradeReplace implements CustomPacketPayload {
+    public static final Type<PacketTradeReplace> TYPE =
+            new Type<>(ResourceLocation.fromNamespaceAndPath(TradeTweaks.MODID, "trade_replace"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketTradeReplace> STREAM_CODEC =
+            StreamCodec.of((buf, packet) -> packet.encode(buf), PacketTradeReplace::new);
+
     private final int villagerId;
     private final int tradeIndex;
     private final MerchantOffers replacement;
@@ -16,16 +25,21 @@ public class PacketTradeReplace {
         this.replacement.add(replacement);
     }
 
-    public PacketTradeReplace(FriendlyByteBuf buf) {
+    public PacketTradeReplace(RegistryFriendlyByteBuf buf) {
         this.villagerId = buf.readInt();
         this.tradeIndex = buf.readInt();
-        this.replacement = MerchantOffers.createFromStream(buf);
+        this.replacement = MerchantOffers.STREAM_CODEC.decode(buf);
     }
 
-    public void encode(FriendlyByteBuf buf) {
+    public void encode(RegistryFriendlyByteBuf buf) {
         buf.writeInt(villagerId);
         buf.writeInt(tradeIndex);
-        replacement.writeToStream(buf);
+        MerchantOffers.STREAM_CODEC.encode(buf, replacement);
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     public int getVillagerId() {
@@ -44,3 +58,4 @@ public class PacketTradeReplace {
         return this.replacement.get(0);
     }
 }
+

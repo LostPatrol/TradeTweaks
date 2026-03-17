@@ -4,31 +4,29 @@ import net.lostpatrol.tradetweaks.TradeTweaks;
 import net.lostpatrol.tradetweaks.common.wand.handler.HandlerUpgradeVillager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = TradeTweaks.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ServerConfig {
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    private static final ForgeConfigSpec.IntValue CHECK_INTERVAL = BUILDER
+    private static final ModConfigSpec.IntValue CHECK_INTERVAL = BUILDER
             .comment("Detection interval in seconds")
             .defineInRange("server.checkInterval", 5, 1, 100);
-    private static final ForgeConfigSpec.IntValue CHECK_RADIUS = BUILDER
+    private static final ModConfigSpec.IntValue CHECK_RADIUS = BUILDER
             .comment("Detection radius in blocks")
             .defineInRange("server.checkRadius", 10, 1, 32);
 
-    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> UPGRADE_COSTS = BUILDER
+    private static final ModConfigSpec.ConfigValue<List<? extends String>> UPGRADE_COSTS = BUILDER
             .comment("List of items and amounts(range: 1-1000) required for villager upgrade in format 'modid:itemid:amount'. Items will be consumed in order.")
             .defineList("server.upgradeCosts", List.of("minecraft:emerald_block:1", "minecraft:emerald:9"), ServerConfig::validateItemEntry);
 
-    public static final ForgeConfigSpec SPEC = BUILDER.build();
+    public static final ModConfigSpec SPEC = BUILDER.build();
 
     private static boolean validateItemEntry(final Object obj) {
         if (!(obj instanceof String entry)) return false;
@@ -36,7 +34,7 @@ public class ServerConfig {
         String[] parts = entry.split(":");
         if (parts.length < 2 || parts.length > 3) return false;
 
-        if (!ForgeRegistries.ITEMS.containsKey(new ResourceLocation(parts[0], parts[1]))) {
+        if (!BuiltInRegistries.ITEM.containsKey(ResourceLocation.fromNamespaceAndPath(parts[0], parts[1]))) {
             return false;
         }
 
@@ -55,9 +53,9 @@ public class ServerConfig {
         List<HandlerUpgradeVillager.ItemCost> costs = new ArrayList<>();
         for (String entry : UPGRADE_COSTS.get()) {
             String[] parts = entry.split(":");
-            ResourceLocation itemId = new ResourceLocation(parts[0], parts[1]);
+            ResourceLocation itemId = ResourceLocation.fromNamespaceAndPath(parts[0], parts[1]);
             int amount = Integer.parseInt(parts[2]);
-            Item item = ForgeRegistries.ITEMS.getValue(itemId);
+            Item item = BuiltInRegistries.ITEM.get(itemId);
             if (item != null) {
                 costs.add(new HandlerUpgradeVillager.ItemCost(item, amount));
             }
@@ -70,7 +68,7 @@ public class ServerConfig {
     public static int tempRadiusBlocks = 10;
 
     @SubscribeEvent
-    public static void onLoad(final ModConfigEvent event) {
+    public static void onLoad(final ModConfigEvent.Loading event) {
         if (event.getConfig().getSpec() == SPEC) {
             tempIntervalTicks = getCheckInterval() * 20;
             tempRadiusBlocks = getCheckRadius();

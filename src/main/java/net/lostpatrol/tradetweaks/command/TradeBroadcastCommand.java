@@ -10,14 +10,14 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 
 // modify the config file only after command executed successfully
 public class TradeBroadcastCommand {
     public static void register() {
-        MinecraftForge.EVENT_BUS.addListener(TradeBroadcastCommand::registerCommands);
+        NeoForge.EVENT_BUS.addListener(TradeBroadcastCommand::registerCommands);
     }
 
     private static void registerCommands(RegisterCommandsEvent event) {
@@ -137,3 +137,5 @@ public class TradeBroadcastCommand {
         return 1;
     }
 }
+
+

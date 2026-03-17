@@ -5,12 +5,12 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 public class InternalCommand {
     public static void register() {
-        MinecraftForge.EVENT_BUS.addListener(InternalCommand::registerCommands);
+        NeoForge.EVENT_BUS.addListener(InternalCommand::registerCommands);
     }
 
     private static void registerCommands(RegisterCommandsEvent event) {
@@ -35,7 +35,7 @@ public class InternalCommand {
                 villagerID,
                 durationTicks / 20
         );
-        int result = level.getServer().getCommands().performPrefixedCommand(
+        level.getServer().getCommands().performPrefixedCommand(
 //                source.withPermission(4).withSuppressedOutput(),
                 source.withPermission(4),
                 effectCommand
@@ -47,6 +47,8 @@ public class InternalCommand {
 //                    true
 //            );
 //        }
-        return result;
+        return 1;
     }
 }
+
+

@@ -9,9 +9,22 @@ version="${mod_version}"
 displayName="${mod_name}"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/trade-tweaks"
 logoFile= "logo.png"
-#credits="Special thanks to Ultramege for Showcase Item and ThetaDev for Construction Wand"
 authors="${mod_authors}"
 description='''${mod_description}'''
 
 [[mixins]]
 config="tradetweaks.mixins.json"
+
+[[dependencies.${mod_id}]]
+modId="neoforge"
+type="required"
+versionRange="${neo_version_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="minecraft"
+type="required"
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"

@@ -8,7 +8,7 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class DummyVillager {
     private final EntityType<Villager> entityType;
@@ -37,8 +37,8 @@ public class DummyVillager {
 
     public DummyVillager(String typeName, String professionName, int professionLevel, MerchantOffers offers, int villagerId, Level level){
         this.villagerType = new VillagerType(typeName);
-        ResourceLocation professionNameSrc = new ResourceLocation(professionName);
-        this.profession = ForgeRegistries.VILLAGER_PROFESSIONS.getValue(professionNameSrc);
+        ResourceLocation professionNameSrc = ResourceLocation.parse(professionName);
+        this.profession = BuiltInRegistries.VILLAGER_PROFESSION.get(professionNameSrc);
         this.professionLevel = professionLevel;
         this.offers = offers;
         this.entityType = EntityType.VILLAGER;
@@ -83,3 +83,4 @@ public class DummyVillager {
         return level;
     }
 }
+

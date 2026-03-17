@@ -11,7 +11,7 @@ import net.minecraft.util.FormattedCharSequence;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(value = ChatComponent.class, priority = 999)
+@Mixin(value = ChatComponent.class, priority = 999, remap = false)
 public class ChatComponentMixin {
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/util/FormattedCharSequence;III)I"))
     private int wrapDrawString(GuiGraphics instance, Font font, FormattedCharSequence text, int x, int y, int color, Operation<Integer> original) {
@@ -20,3 +20,4 @@ public class ChatComponentMixin {
         return original.call(instance, font, text, x, y, color);
     }
 }
+

@@ -17,3 +17,4 @@ public class CompareTrades {
         return ItemStack.isSameItem(stack1, stack2);
     }
 }
+

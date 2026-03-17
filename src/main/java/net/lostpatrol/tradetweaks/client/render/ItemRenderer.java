@@ -2,7 +2,6 @@ package net.lostpatrol.tradetweaks.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.lostpatrol.tradetweaks.TradeTweaks;
 import net.lostpatrol.tradetweaks.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,12 +12,10 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.ModList;
 
-@Mod.EventBusSubscriber(modid = TradeTweaks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ItemRenderer {
     public static float alphaValue = 1F;
 
@@ -64,22 +61,16 @@ public class ItemRenderer {
         });
     }
 
-    public static MutableComponent createStackComponent(ItemStack stack, MutableComponent component) {
-        if (!ClientConfig.tempRenderFlag)
-            return component;
-
-        Style style = component.getStyle();
+    public static MutableComponent createIconComponent(ItemStack stack) {
+        Style style = Style.EMPTY;
         ItemStack copyStack = stack.copy();
         if (stack.getCount() > 64) {
             copyStack.setCount(64);
         }
         style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackInfo(copyStack)));
-        component.withStyle(style);
 
-
-        MutableComponent out = Component.literal("   ");
-        out.setStyle(style);
-        return out.append(component);
+        MutableComponent out = Component.literal("   "); // 3 spaces for the icon
+        return out.withStyle(style);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -113,7 +104,7 @@ public class ItemRenderer {
 
                 guiGraphics.pose().pushPose();
 
-                guiGraphics.pose().mulPoseMatrix(pose.last().pose());
+                guiGraphics.pose().mulPose(pose.last().pose());
 
                 guiGraphics.pose().translate(x_shift + x, y, 0);
                 guiGraphics.pose().scale(0.5f, 0.5f, 0.5f);
@@ -127,3 +118,5 @@ public class ItemRenderer {
         }
     }
 }
+
+
