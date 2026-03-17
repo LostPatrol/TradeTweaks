@@ -8,7 +8,7 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 ### Emerald Wand
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/craft1.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/craft1.png?raw=true)
 
 **Usage:**
 
@@ -27,8 +27,8 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 **1\. Profession Clear**
 
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_reset_1.png?raw=true)
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_reset_2_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_reset_1.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_reset_2_en.png?raw=true)
 
 *   Removes profession from any villager
 *   Works even on leveled/traded villagers
@@ -36,21 +36,21 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 **2\. Workblock(JobSite) Tracker**
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_track_block_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_track_block_en.png?raw=true)
 
 *   Visually highlights the villager's linked workstation
 *   Effective range: 64 blocks
 
 **3\. Villager Tracker**
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_track_villager_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_track_villager_en.png?raw=true)
 
 *   Applies glowing effect to villager using the targeted workstation
 
 **4\. Villager AI Refresh**
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_refresh_1.png?raw=true)
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_refresh_2_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_refresh_1.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_refresh_2_en.png?raw=true)
 
 *   Forces unemployed villagers to stop current activities
 *   Makes them (try to) immediately search for nearest valid workstation
@@ -61,7 +61,7 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 **5\. Villager Instant Upgrade**
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_upgrade_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_upgrade_en.png?raw=true)
 
 + Increases villager's profession level immediately
 + Consumes `1 Emerald Block` or `9 Emerald` by default. Block will be consumed first.
@@ -71,7 +71,7 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 **6\. Trade Selection**
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_select_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_select_en.png?raw=true)
 
 
 > This sounds rule-breaking, but I believe that repeatedly refreshing villager trades to get desired offers is a complete waste of the player's time – requiring no real cost except hours of grinding. 
@@ -101,9 +101,9 @@ Displays nearby villagers' trade lists (with item icons) in chat, with click-to-
 
 **off by default**
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/tradecast_1_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/tradecast_1_en.png?raw=true)
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/tradecast_2_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/tradecast_2_en.png?raw=true)
 
 #### Commands
 
@@ -166,19 +166,19 @@ Take Selection mode for example:
 
 Quark's Ancient Tome:
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/compatible_ancient_tome.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/compatible_ancient_tome.png?raw=true)
 
 Apotheosis:
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/compatible_apotheosis.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/compatible_apotheosis.png?raw=true)
 
 PneumaticCraft:
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/compatible_pneumaticcraft.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/compatible_pneumaticcraft.png?raw=true)
 
 Applied Energistics 2:
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/compatible_ae2.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/compatible_ae2.png?raw=true)
 
 
 
