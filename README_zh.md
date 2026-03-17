@@ -10,7 +10,7 @@ Minecraft Forge mod
 
 ### 绿宝石手杖
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/craft1.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/craft1.png?raw=true)
 
 **使用：**
 
@@ -28,9 +28,9 @@ Minecraft Forge mod
 
 **1.职业清除**
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_reset_1.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_reset_1.png?raw=true)
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_reset_2_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_reset_2_en.png?raw=true)
 
 
 
@@ -42,7 +42,7 @@ Minecraft Forge mod
 
 **2.工作方块追踪**
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_track_block_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_track_block_en.png?raw=true)
 
 
 
@@ -54,7 +54,7 @@ Minecraft Forge mod
 
 **3.村民追踪**
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_track_villager_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_track_villager_en.png?raw=true)
 
 
 
@@ -66,8 +66,8 @@ Minecraft Forge mod
 
 
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_refresh_1.png?raw=true)
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_refresh_2_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_refresh_1.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_refresh_2_en.png?raw=true)
 
 + 使无业村民停止当前的大部分活动，尝试重新寻找最近的工作方块
 
@@ -75,7 +75,7 @@ Minecraft Forge mod
 
 **5.职业升级**
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_upgrade_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_upgrade_en.png?raw=true)
 
 
 
@@ -87,7 +87,7 @@ Minecraft Forge mod
 
 **交易选择**
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/mode_select_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_select_en.png?raw=true)
 
 > 作者：这个功能可能听上去过于强大，但我认为跟村民反复刷交易纯粹是浪费时间。作为玩家我们应该用有限的时间去做更有趣的事情。
 
@@ -112,9 +112,9 @@ Minecraft Forge mod
 
 
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/tradecast_1_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/tradecast_1_en.png?raw=true)
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/tradecast_2_en.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/tradecast_2_en.png?raw=true)
 
 
 
@@ -200,19 +200,19 @@ Minecraft Forge mod
 
 古卷 Quark's Ancient Tome:
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/compatible_ancient_tome.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/compatible_ancient_tome.png?raw=true)
 
 神化 Apotheosis:
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/compatible_apotheosis.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/compatible_apotheosis.png?raw=true)
 
 气动工艺 PneumaticCraft:
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/compatible_pneumaticcraft.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/compatible_pneumaticcraft.png?raw=true)
 
 应用能源2 Applied Energistics 2:
 
-![alt text](https://github.com/LostPatrol/TradeTweaks/blob/master/publish/assets/compatible_ae2.png?raw=true)
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/compatible_ae2.png?raw=true)
 
 
 
