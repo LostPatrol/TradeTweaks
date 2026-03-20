@@ -75,9 +75,9 @@ public class EmeraldWand extends Item {
     );
 
 
-    public void switchMode(ItemStack stack, Player player, boolean forward) {
+    public void switchMode(ItemStack stack, Player player, boolean forward, InteractionHand hand) {
         if (player.level().isClientSide) {
-            NetworkHandler.sendWandModeSwitchToServer(new PacketWandModeSwitch(forward));
+            NetworkHandler.sendWandModeSwitchToServer(new PacketWandModeSwitch(forward, hand));
         }
 
         WandMode current = getMode(stack);
