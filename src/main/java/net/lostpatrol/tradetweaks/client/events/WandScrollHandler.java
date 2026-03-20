@@ -16,9 +16,21 @@ public class WandScrollHandler {
         if (player == null || !player.isShiftKeyDown()) return;
         if (scroll == (double)0.0F) return;
 
+        net.minecraft.world.InteractionHand hand = null;
         ItemStack heldItem = player.getMainHandItem();
-        if (heldItem.getItem() instanceof EmeraldWand wand) {
-            wand.switchMode(heldItem, player, (scroll>(double) 0.0F));
+
+        if (heldItem.getItem() instanceof EmeraldWand) {
+            hand = net.minecraft.world.InteractionHand.MAIN_HAND;
+        } else {
+            ItemStack offhandItem = player.getOffhandItem();
+            if (offhandItem.getItem() instanceof EmeraldWand) {
+                heldItem = offhandItem;
+                hand = net.minecraft.world.InteractionHand.OFF_HAND;
+            }
+        }
+
+        if (hand != null && heldItem.getItem() instanceof EmeraldWand wand) {
+            wand.switchMode(heldItem, player, (scroll > (double) 0.0F), hand);
             event.setCanceled(true);
         }
     }

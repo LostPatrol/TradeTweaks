@@ -12,18 +12,18 @@ public class HandlerWandModeSwitch {
     public static void handle(PacketWandModeSwitch packet, IPayloadContext ctx) {
         ctx.enqueueWork(() -> {
             Player player = ctx.player();
-            ItemStack stack = player.getMainHandItem();
+            ItemStack stack = player.getItemInHand(packet.getHand());
             if (stack.getItem() instanceof EmeraldWand wand) {
-                handleModeSwitchServer(stack, player, packet.isForward());
+                handleModeSwitchServer(stack, player, packet.isForward(), packet.getHand());
             }
         });
     }
 
-    public static void handleModeSwitchServer(ItemStack stack, Player player, boolean forward) {
+    public static void handleModeSwitchServer(ItemStack stack, Player player, boolean forward, net.minecraft.world.InteractionHand hand) {
         EmeraldWand.WandMode current = getMode(stack);
         EmeraldWand.WandMode newMode = forward ? current.next() : current.previous();
         setMode(stack, newMode);
-        player.setItemInHand(player.getUsedItemHand(), stack);
+        player.setItemInHand(hand, stack);
     }
 }
 
