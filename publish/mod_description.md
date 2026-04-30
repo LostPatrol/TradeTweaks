@@ -18,7 +18,7 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 | Mode              | Target                | Effect                               |
 | ----------------- | --------------------- | ------------------------------------ |
 | Profession Clear  | Any employed villager | Resets villager to unemployed        |
-| Workblock Tracker | Any employed villager | Highlights linked workblock          |
+| Workblock Tracker | Any villager          | Highlights linked or potential workblock |
 | Villager Tracker  | Workstation blocks    | Highlights villager using it         |
 | AI Refresh        | Unemployed villagers  | Forces job search behavior           |
 | Upgrade           | Any employed villager | Increase villager's profession level |
@@ -38,7 +38,8 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_track_block_en.png?raw=true)
 
-*   Visually highlights the villager's linked workstation
+*   Visually highlights the villager's linked workstation in red
+*   When used on an unemployed villager, highlights the villager's current potential workstation in green (not shown in the image)
 *   Effective range: 64 blocks
 
 **3\. Villager Tracker**
