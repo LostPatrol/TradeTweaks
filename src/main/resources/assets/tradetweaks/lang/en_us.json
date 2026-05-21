@@ -1,6 +1,10 @@
 {
   "creativetab.tradetweaks_tab": "Trade Tweaks",
   "item.tradetweaks.emerald_wand": "Emerald Wand",
+  "item.tradetweaks.book_of_enlightenment": "Book of Enlightenment",
+  "item.tradetweaks.restoration_bottle": "Restoration Bottle",
+  "item.tradetweaks.reversion_bottle": "Reversion Bottle",
+  "item.tradetweaks.totem_of_village_hero": "Totem of Village Hero",
 
   "tradetweaks.tradecast.settings.header": "=== TradeTweaks-tradecast Settings ===",
   "tradetweaks.tradecast.settings.mode": "Your report mode: %s",

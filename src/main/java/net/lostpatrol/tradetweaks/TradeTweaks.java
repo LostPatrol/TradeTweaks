@@ -8,6 +8,7 @@ import net.lostpatrol.tradetweaks.config.ClientConfig;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.common.item.ModCreativeModeTab;
 import net.lostpatrol.tradetweaks.common.item.ModItems;
+import net.lostpatrol.tradetweaks.common.recipe.ModRecipeSerializers;
 import net.lostpatrol.tradetweaks.network.handler.HandlerBlockHighlight;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.lostpatrol.tradetweaks.network.handler.HandlerOpenTradeSelection;
@@ -46,5 +47,6 @@ public class TradeTweaks {
 
         ModItems.register(modEventBus);
         ModCreativeModeTab.register(modEventBus);
+        ModRecipeSerializers.register(modEventBus);
     }
 }

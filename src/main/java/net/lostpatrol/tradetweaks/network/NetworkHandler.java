@@ -6,6 +6,7 @@ import net.lostpatrol.tradetweaks.network.handler.HandlerOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.handler.HandlerTradeReplace;
 import net.lostpatrol.tradetweaks.network.handler.HandlerWandModeSwitch;
 import net.lostpatrol.tradetweaks.network.packet.PacketBlockHighlight;
+import net.lostpatrol.tradetweaks.network.packet.PacketItemActivation;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
 import net.lostpatrol.tradetweaks.network.packet.PacketWandModeSwitch;
@@ -18,7 +19,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 public class NetworkHandler {
     private static SimpleChannel INSTANCE;
 
-    private static final String PROTOCOL_VERSION = "1.0";
+    private static final String PROTOCOL_VERSION = "1.1";
 
     public static SimpleChannel getChannel() {
         if (INSTANCE == null) {
@@ -64,6 +65,13 @@ public class NetworkHandler {
                 PacketOpenTradeSelection::new,
                 HandlerOpenTradeSelection::handle
         );
+        INSTANCE.registerMessage(
+                id++,
+                PacketItemActivation.class,
+                PacketItemActivation::encode,
+                PacketItemActivation::new,
+                PacketItemActivation::handle
+        );
     }
 
     public static void sendBlockHighlightToPlayer(ServerPlayer player, PacketBlockHighlight packet) {
@@ -80,6 +88,10 @@ public class NetworkHandler {
 
     public static void sendTradeReplaceToServer(PacketTradeReplace packet){
         getChannel().sendToServer(packet);
+    }
+
+    public static void sendItemActivationToPlayer(ServerPlayer player, PacketItemActivation packet) {
+        INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), packet);
     }
 
 }

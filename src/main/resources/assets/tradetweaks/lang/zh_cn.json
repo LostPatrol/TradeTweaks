@@ -1,6 +1,10 @@
 {
   "creativetab.tradetweaks_tab": "交易优化",
   "item.tradetweaks.emerald_wand": "绿宝石手杖",
+  "item.tradetweaks.book_of_enlightenment": "启智之书",
+  "item.tradetweaks.restoration_bottle": "复生之瓶",
+  "item.tradetweaks.reversion_bottle": "转生之瓶",
+  "item.tradetweaks.totem_of_village_hero": "村庄英雄图腾",
 
   "tradetweaks.tradecast.settings.header": "=== TradeTweaks-交易播报设置 ===",
   "tradetweaks.tradecast.settings.mode": "你的播报模式: %s",
