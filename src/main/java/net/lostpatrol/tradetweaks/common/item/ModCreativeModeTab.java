@@ -21,6 +21,10 @@ public class ModCreativeModeTab {
                     .icon(() -> new ItemStack(ModItems.EMERALD_WAND.get()))
                     .displayItems((params, output) -> {
                         output.accept(ModItems.EMERALD_WAND.get());
+                        output.accept(ModItems.BOOK_OF_ENLIGHTENMENT.get());
+                        output.accept(ModItems.RESTORATION_BOTTLE.get());
+                        output.accept(ModItems.REVERSION_BOTTLE.get());
+                        output.accept(ModItems.TOTEM_OF_VILLAGE_HERO.get());
                     })
                     .build());
 
@@ -28,4 +32,3 @@ public class ModCreativeModeTab {
         TABS.register(eventBus);
     }
 }
-

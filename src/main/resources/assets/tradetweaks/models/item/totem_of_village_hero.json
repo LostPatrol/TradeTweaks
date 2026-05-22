@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tradetweaks:item/totem_of_village_hero"
+  }
+}

@@ -8,16 +8,19 @@ import net.lostpatrol.tradetweaks.config.ClientConfig;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.common.item.ModCreativeModeTab;
 import net.lostpatrol.tradetweaks.common.item.ModItems;
+import net.lostpatrol.tradetweaks.common.recipe.ModRecipeSerializers;
 import net.lostpatrol.tradetweaks.client.events.WandScrollHandler;
+import net.lostpatrol.tradetweaks.common.item.villager.VillagerConversionMemory;
+import net.lostpatrol.tradetweaks.events.VillagerToolInteractionHandler;
 import net.lostpatrol.tradetweaks.events.WandInteractionHandler;
 import net.lostpatrol.tradetweaks.network.handler.HandlerBlockHighlight;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.fml.ModContainer;
 import org.slf4j.Logger;
 
 @Mod(TradeTweaks.MODID)
@@ -30,6 +33,8 @@ public class TradeTweaks {
         modContainer.registerConfig(ModConfig.Type.COMMON, ClientConfig.SPEC);
 
         NeoForge.EVENT_BUS.register(WandInteractionHandler.class);
+        NeoForge.EVENT_BUS.register(VillagerToolInteractionHandler.class);
+        NeoForge.EVENT_BUS.register(VillagerConversionMemory.class);
         if (Dist.CLIENT.equals(net.neoforged.fml.loading.FMLEnvironment.dist)) {
             NeoForge.EVENT_BUS.register(HandlerBlockHighlight.class);
             NeoForge.EVENT_BUS.register(WandScrollHandler.class);
@@ -49,6 +54,6 @@ public class TradeTweaks {
 
         ModItems.register(modEventBus);
         ModCreativeModeTab.register(modEventBus);
+        ModRecipeSerializers.register(modEventBus);
     }
 }
-

@@ -5,6 +5,7 @@ import net.lostpatrol.tradetweaks.network.handler.HandlerOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.handler.HandlerTradeReplace;
 import net.lostpatrol.tradetweaks.network.handler.HandlerWandModeSwitch;
 import net.lostpatrol.tradetweaks.network.packet.PacketBlockHighlight;
+import net.lostpatrol.tradetweaks.network.packet.PacketItemActivation;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
 import net.lostpatrol.tradetweaks.network.packet.PacketWandModeSwitch;
@@ -27,6 +28,7 @@ public class NetworkHandler {
         registrar.playToClient(PacketBlockHighlight.TYPE, PacketBlockHighlight.STREAM_CODEC, HandlerBlockHighlight::handle);
         registrar.playToServer(PacketTradeReplace.TYPE, PacketTradeReplace.STREAM_CODEC, HandlerTradeReplace::handle);
         registrar.playToClient(PacketOpenTradeSelection.TYPE, PacketOpenTradeSelection.STREAM_CODEC, HandlerOpenTradeSelection::handle);
+        registrar.playToClient(PacketItemActivation.TYPE, PacketItemActivation.STREAM_CODEC, PacketItemActivation::handle);
     }
 
     public static void sendBlockHighlightToPlayer(ServerPlayer player, PacketBlockHighlight packet) {
@@ -43,5 +45,9 @@ public class NetworkHandler {
 
     public static void sendTradeReplaceToServer(PacketTradeReplace packet) {
         PacketDistributor.sendToServer(packet);
+    }
+
+    public static void sendItemActivationToPlayer(ServerPlayer player, PacketItemActivation packet) {
+        PacketDistributor.sendToPlayer(player, packet);
     }
 }

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "AAA",
+    " B "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:gems/emerald"
+    },
+    "B": {
+      "item": "minecraft:red_wool"
+    }
+  },
+  "result": {
+    "id": "tradetweaks:totem_of_village_hero"
+  }
+}
