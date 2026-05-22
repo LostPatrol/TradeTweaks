@@ -20,7 +20,8 @@ public final class ClientTradeSelectionOpener {
                 packet.getProfessionLevel(),
                 packet.getOffers(),
                 packet.getVillagerId(),
-                mc.level
+                mc.level,
+                packet.isLibrarianEnchantedBookSelectionEnabled()
         )));
     }
 }

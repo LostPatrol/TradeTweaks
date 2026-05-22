@@ -57,6 +57,16 @@ public class TradeBroadcastCommand {
                                                 BoolArgumentType.getBool(ctx, "flag")
                                         )))))
         );
+
+        event.getDispatcher().register(
+                Commands.literal("tradetweaks")
+                        .requires(source -> source.hasPermission(2))
+                        .then(Commands.literal("enchant_books_select")
+                                .then(Commands.argument("flag", BoolArgumentType.bool())
+                                        .executes(ctx -> setLibrarianEnchantedBookSelection(
+                                                ctx.getSource(),
+                                                BoolArgumentType.getBool(ctx, "flag")))))
+        );
     }
 
     private static int showSettings(CommandSourceStack source) {
@@ -71,7 +81,9 @@ public class TradeBroadcastCommand {
         message.append(Component.translatable("tradetweaks.tradecast.settings.interval",
                 ServerConfig.getCheckInterval())).append("\n");
         message.append(Component.translatable("tradetweaks.tradecast.settings.radius",
-                ServerConfig.getCheckRadius()));
+                ServerConfig.getCheckRadius())).append("\n");
+        message.append(Component.translatable("tradetweaks.tradecast.settings.enchant_books",
+                String.valueOf(ServerConfig.isLibrarianEnchantedBookSelectionEnabled())));
         source.sendSuccess(() -> message, false);
         return 1;
     }
@@ -89,6 +101,13 @@ public class TradeBroadcastCommand {
         source.sendSuccess(() ->
                 Component.translatable("tradetweaks.tradecast.radius.set", blocks), false);
         ServerConfig.tempRadiusBlocks = blocks;
+        return 1;
+    }
+
+    private static int setLibrarianEnchantedBookSelection(CommandSourceStack source, boolean enabled) {
+        ServerConfig.setLibrarianEnchantedBookSelection(enabled);
+        source.sendSuccess(() ->
+                Component.translatable("tradetweaks.tradecast.enchant_books.set", String.valueOf(enabled)), false);
         return 1;
     }
 

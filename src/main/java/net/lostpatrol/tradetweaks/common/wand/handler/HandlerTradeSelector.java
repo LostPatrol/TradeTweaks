@@ -3,6 +3,7 @@ package net.lostpatrol.tradetweaks.common.wand.handler;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.lostpatrol.tradetweaks.TradeTweaks;
 import net.lostpatrol.tradetweaks.common.wand.EmeraldWand;
+import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.integrations.QuarkCompat;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
@@ -59,14 +60,16 @@ public class HandlerTradeSelector {
                     villager.getOffers(),
                     villager.getVillagerData().getLevel(),
                     villager.getVillagerData().getProfession().name(),
-                    villager.getVillagerData().getType().toString()
+                    villager.getVillagerData().getType().toString(),
+                    ServerConfig.isLibrarianEnchantedBookSelectionEnabled()
             ));
         }
         return InteractionResult.CONSUME;
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static List<MerchantOffer> getPossibleTrades(MerchantOffer selectedOffer, int professionLevel, VillagerProfession profession, Villager dummyVillager) {
+    public static List<MerchantOffer> getPossibleTrades(MerchantOffer selectedOffer, int professionLevel, VillagerProfession profession,
+                                                        Villager dummyVillager, boolean allowEnchantedBookTrades) {
         if (Minecraft.getInstance().level == null)
             return null;
 
@@ -88,12 +91,14 @@ public class HandlerTradeSelector {
                     boolean isEnchantedBook = false;
                     try {
                         if (listing instanceof VillagerTrades.EnchantBookForEmeralds) {
-                            possibleTrades.addAll(getEnchantedBookOffers(dummyVillager, dummyVillager.getRandom(), selectedOffer.getXp()));
+                            if (allowEnchantedBookTrades) {
+                                possibleTrades.addAll(getEnchantedBookOffers(dummyVillager, dummyVillager.getRandom(), selectedOffer.getXp()));
+                            }
                             isEnchantedBook = true;
                         }
 
                         MerchantOffer offer = listing.getOffer(dummyVillager, dummyVillager.getRandom());
-                        if (offer != null && !isEnchantedBook && isValidReplacement(offer)) {
+                        if (offer != null && !isEnchantedBook && isValidReplacement(offer, allowEnchantedBookTrades)) {
                             possibleTrades.add(offer);
                         }
 
@@ -103,7 +108,7 @@ public class HandlerTradeSelector {
                 }
                 try {
                     // Quark's Ancient Tome
-                    if (QuarkCompat.isQuarkLoaded() && levelOfTrade == 5  && profession == VillagerProfession.LIBRARIAN){
+                    if (allowEnchantedBookTrades && QuarkCompat.isQuarkLoaded() && levelOfTrade == 5  && profession == VillagerProfession.LIBRARIAN){
                         TradeTweaks.LOGGER.info("Detected Quark loaded. Try to get Ancient Tome trades");
                         possibleTrades.addAll(QuarkCompat.getAncientTomeOffers(dummyVillager.level().registryAccess()));
                     }
@@ -115,9 +120,15 @@ public class HandlerTradeSelector {
         return possibleTrades;
     }
 
-    private static boolean isValidReplacement(MerchantOffer replacement) {
-        // TODO
-        return true;
+    private static boolean isValidReplacement(MerchantOffer replacement, boolean allowEnchantedBookTrades) {
+        return allowEnchantedBookTrades
+                || (!isEnchantedBookStack(replacement.getCostA())
+                && !isEnchantedBookStack(replacement.getCostB())
+                && !isEnchantedBookStack(replacement.getResult()));
+    }
+
+    private static boolean isEnchantedBookStack(ItemStack stack) {
+        return stack != null && stack.is(Items.ENCHANTED_BOOK);
     }
 
     private static int getLevelOfTrade(MerchantOffer selectedOffer, Int2ObjectMap<VillagerTrades.ItemListing[]> tradesMap, Villager dummyVillager){

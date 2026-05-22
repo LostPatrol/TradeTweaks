@@ -11,6 +11,7 @@ import net.lostpatrol.tradetweaks.common.item.ModItems;
 import net.lostpatrol.tradetweaks.common.recipe.ModRecipeSerializers;
 import net.lostpatrol.tradetweaks.client.events.WandScrollHandler;
 import net.lostpatrol.tradetweaks.common.item.villager.VillagerConversionMemory;
+import net.lostpatrol.tradetweaks.events.RaidRewardHandler;
 import net.lostpatrol.tradetweaks.events.VillagerToolInteractionHandler;
 import net.lostpatrol.tradetweaks.events.WandInteractionHandler;
 import net.lostpatrol.tradetweaks.network.handler.HandlerBlockHighlight;
@@ -35,6 +36,7 @@ public class TradeTweaks {
         NeoForge.EVENT_BUS.register(WandInteractionHandler.class);
         NeoForge.EVENT_BUS.register(VillagerToolInteractionHandler.class);
         NeoForge.EVENT_BUS.register(VillagerConversionMemory.class);
+        NeoForge.EVENT_BUS.register(RaidRewardHandler.class);
         if (Dist.CLIENT.equals(net.neoforged.fml.loading.FMLEnvironment.dist)) {
             NeoForge.EVENT_BUS.register(HandlerBlockHighlight.class);
             NeoForge.EVENT_BUS.register(WandScrollHandler.class);

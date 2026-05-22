@@ -35,6 +35,7 @@ public class TradeSelectionScreen extends Screen {
     private final int level;
     private final VillagerProfession profession;
     private final Villager dummyVillager;
+    private final boolean librarianEnchantedBookSelectionEnabled;
 
     TradeListWidget leftPanel;
     private TradeListWidget rightPanel;
@@ -53,6 +54,7 @@ public class TradeSelectionScreen extends Screen {
         this.level = dummyVillager.getProfessionLevel();
         this.profession = dummyVillager.getProfession();
         this.dummyVillager = dummyVillager.getDummyVillager();
+        this.librarianEnchantedBookSelectionEnabled = dummyVillager.isLibrarianEnchantedBookSelectionEnabled();
     }
 
     @Override
@@ -126,7 +128,13 @@ public class TradeSelectionScreen extends Screen {
 
         if (index >= 0 && index < offers.size()) {
             MerchantOffer selectedOffer = offers.get(index);
-            List<MerchantOffer> possibleTrades = HandlerTradeSelector.getPossibleTrades(selectedOffer, level, profession, dummyVillager);
+            List<MerchantOffer> possibleTrades = HandlerTradeSelector.getPossibleTrades(
+                    selectedOffer,
+                    level,
+                    profession,
+                    dummyVillager,
+                    librarianEnchantedBookSelectionEnabled
+            );
 
             if (possibleTrades != null) {
                 for (int i = 0; i < possibleTrades.size(); i++) {

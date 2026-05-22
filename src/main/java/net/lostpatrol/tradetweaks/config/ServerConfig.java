@@ -26,6 +26,10 @@ public class ServerConfig {
             .comment("List of items and amounts(range: 1-1000) required for villager upgrade in format 'modid:itemid:amount'. Items will be consumed in order.")
             .defineList("server.upgradeCosts", List.of("minecraft:emerald_block:1", "minecraft:emerald:9"), ServerConfig::validateItemEntry);
 
+    private static final ModConfigSpec.BooleanValue LIBRARIAN_ENCHANTED_BOOK_SELECTION = BUILDER
+            .comment("Whether librarian enchanted book related trades can appear in the trade selection replacement list.")
+            .define("server.librarianEnchantedBookSelection", true);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     private static boolean validateItemEntry(final Object obj) {
@@ -98,5 +102,14 @@ public class ServerConfig {
 
     public static int getCheckRadius() {
         return CHECK_RADIUS.get();
+    }
+
+    public static void setLibrarianEnchantedBookSelection(boolean enabled) {
+        LIBRARIAN_ENCHANTED_BOOK_SELECTION.set(enabled);
+        LIBRARIAN_ENCHANTED_BOOK_SELECTION.save();
+    }
+
+    public static boolean isLibrarianEnchantedBookSelectionEnabled() {
+        return LIBRARIAN_ENCHANTED_BOOK_SELECTION.get();
     }
 }

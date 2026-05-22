@@ -19,6 +19,7 @@ public class DummyVillager {
     private final int villagerId;
     private final Level level;
     private final Villager dummyVillager;
+    private final boolean librarianEnchantedBookSelectionEnabled;
 
     public DummyVillager(VillagerType villagerType, VillagerProfession profession, int professionLevel, MerchantOffers offers, int villagerId, Level level, EntityType<Villager> entityType) {
         this.entityType = entityType;
@@ -28,6 +29,7 @@ public class DummyVillager {
         this.offers = offers;
         this.villagerId = villagerId;
         this.level = level;
+        this.librarianEnchantedBookSelectionEnabled = true;
         this.dummyVillager = new Villager(
                 this.entityType,
                 this.level,
@@ -35,7 +37,8 @@ public class DummyVillager {
         );
     }
 
-    public DummyVillager(String typeName, String professionName, int professionLevel, MerchantOffers offers, int villagerId, Level level){
+    public DummyVillager(String typeName, String professionName, int professionLevel, MerchantOffers offers, int villagerId, Level level,
+                         boolean librarianEnchantedBookSelectionEnabled){
         this.villagerType = new VillagerType(typeName);
         ResourceLocation professionNameSrc = ResourceLocation.parse(professionName);
         this.profession = BuiltInRegistries.VILLAGER_PROFESSION.get(professionNameSrc);
@@ -44,6 +47,7 @@ public class DummyVillager {
         this.entityType = EntityType.VILLAGER;
         this.villagerId = villagerId;
         this.level = level;
+        this.librarianEnchantedBookSelectionEnabled = librarianEnchantedBookSelectionEnabled;
         this.dummyVillager = new Villager(
                 this.entityType,
                 this.level,
@@ -81,6 +85,10 @@ public class DummyVillager {
 
     public Level getLevel() {
         return level;
+    }
+
+    public boolean isLibrarianEnchantedBookSelectionEnabled() {
+        return librarianEnchantedBookSelectionEnabled;
     }
 }
 

@@ -18,13 +18,16 @@ public class PacketOpenTradeSelection implements CustomPacketPayload {
     private final int level;
     private final String profession;
     private final String type;
+    private final boolean librarianEnchantedBookSelectionEnabled;
 
-    public PacketOpenTradeSelection(int villagerId, MerchantOffers offers, int level, String profession, String type) {
+    public PacketOpenTradeSelection(int villagerId, MerchantOffers offers, int level, String profession, String type,
+                                    boolean librarianEnchantedBookSelectionEnabled) {
         this.villagerId = villagerId;
         this.offers = offers;
         this.level = level;
         this.profession = profession;
         this.type = type;
+        this.librarianEnchantedBookSelectionEnabled = librarianEnchantedBookSelectionEnabled;
     }
 
     public PacketOpenTradeSelection(RegistryFriendlyByteBuf buf) {
@@ -33,6 +36,7 @@ public class PacketOpenTradeSelection implements CustomPacketPayload {
         this.level = buf.readInt();
         this.profession = buf.readUtf();
         this.type = buf.readUtf();
+        this.librarianEnchantedBookSelectionEnabled = buf.readBoolean();
     }
 
     public void encode(RegistryFriendlyByteBuf buf) {
@@ -41,6 +45,7 @@ public class PacketOpenTradeSelection implements CustomPacketPayload {
         buf.writeInt(level);
         buf.writeUtf(profession);
         buf.writeUtf(type);
+        buf.writeBoolean(librarianEnchantedBookSelectionEnabled);
     }
 
     @Override
@@ -66,6 +71,10 @@ public class PacketOpenTradeSelection implements CustomPacketPayload {
 
     public String getVillagerType(){
         return type;
+    }
+
+    public boolean isLibrarianEnchantedBookSelectionEnabled() {
+        return librarianEnchantedBookSelectionEnabled;
     }
 }
 
