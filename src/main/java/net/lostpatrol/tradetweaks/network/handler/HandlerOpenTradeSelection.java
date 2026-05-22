@@ -33,7 +33,8 @@ public class HandlerOpenTradeSelection {
                 packet.getProfessionLevel(),
                 packet.getOffers(),
                 packet.getVillagerId(),
-                mc.level
+                mc.level,
+                packet.isLibrarianEnchantedBookSelectionEnabled()
         )));
         }
     }

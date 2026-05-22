@@ -12,6 +12,7 @@ import net.lostpatrol.tradetweaks.common.recipe.ModRecipeSerializers;
 import net.lostpatrol.tradetweaks.network.handler.HandlerBlockHighlight;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.lostpatrol.tradetweaks.network.handler.HandlerOpenTradeSelection;
+import net.lostpatrol.tradetweaks.events.RaidRewardHandler;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -34,6 +35,7 @@ public class TradeTweaks {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ClientConfig.SPEC);
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(RaidRewardHandler.class);
         if (FMLEnvironment.dist == Dist.CLIENT){
             MinecraftForge.EVENT_BUS.register(HandlerBlockHighlight.class);
             MinecraftForge.EVENT_BUS.register(HandlerOpenTradeSelection.class);

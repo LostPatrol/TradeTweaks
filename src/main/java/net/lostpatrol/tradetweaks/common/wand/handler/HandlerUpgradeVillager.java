@@ -6,6 +6,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -66,6 +68,7 @@ public class HandlerUpgradeVillager {
 
 //        villager.handleEntityEvent((byte) 14);    this doesn't work, so we add particles manually
         spawnHappyParticles(villager);
+        villager.level().playSound(null, villager.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
         return InteractionResult.SUCCESS;
     }

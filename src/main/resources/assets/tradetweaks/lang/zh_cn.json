@@ -59,5 +59,7 @@
   "tradetweaks.gui.confirm": "确定",
   "tradetweaks.gui.narration.trade_entry": "打开交易选择窗口",
 
+  "tradetweaks.settings.enchant_book_selection": "图书管理员附魔书自选已设置为: %s",
+
   "tradetweaks.tooltip.market_ruler": "市场支配"
 }

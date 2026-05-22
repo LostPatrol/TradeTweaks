@@ -9,13 +9,16 @@ public class PacketOpenTradeSelection {
     private final int level;
     private final String profession;
     private final String type;
+    private final boolean librarianEnchantedBookSelectionEnabled;
 
-    public PacketOpenTradeSelection(int villagerId, MerchantOffers offers, int level, String profession, String type) {
+    public PacketOpenTradeSelection(int villagerId, MerchantOffers offers, int level, String profession, String type,
+                                    boolean librarianEnchantedBookSelectionEnabled) {
         this.villagerId = villagerId;
         this.offers = offers;
         this.level = level;
         this.profession = profession;
         this.type = type;
+        this.librarianEnchantedBookSelectionEnabled = librarianEnchantedBookSelectionEnabled;
     }
 
     public PacketOpenTradeSelection(FriendlyByteBuf buf) {
@@ -24,6 +27,7 @@ public class PacketOpenTradeSelection {
         this.level = buf.readInt();
         this.profession = buf.readUtf();
         this.type = buf.readUtf();
+        this.librarianEnchantedBookSelectionEnabled = buf.readBoolean();
     }
 
     public void encode(FriendlyByteBuf buf) {
@@ -32,6 +36,7 @@ public class PacketOpenTradeSelection {
         buf.writeInt(level);
         buf.writeUtf(profession);
         buf.writeUtf(type);
+        buf.writeBoolean(librarianEnchantedBookSelectionEnabled);
     }
 
     public int getVillagerId() {
@@ -52,5 +57,9 @@ public class PacketOpenTradeSelection {
 
     public String getVillagerType(){
         return type;
+    }
+
+    public boolean isLibrarianEnchantedBookSelectionEnabled() {
+        return librarianEnchantedBookSelectionEnabled;
     }
 }
