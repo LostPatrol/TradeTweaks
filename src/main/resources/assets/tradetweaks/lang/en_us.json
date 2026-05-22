@@ -56,7 +56,7 @@
   "tradetweaks.gui.confirm": "OK",
   "tradetweaks.gui.narration.trade_entry": "Open Trade Selection Window",
 
-  "tradetweaks.settings.enchant_book_selection": "Librarian enchanted book selection set to: %s",
+  "tradetweaks.settings.enchant_books_selection": "Librarian enchanted book selection set to: %s",
 
   "tradetweaks.tooltip.market_ruler": "Master of Trades"
 }
