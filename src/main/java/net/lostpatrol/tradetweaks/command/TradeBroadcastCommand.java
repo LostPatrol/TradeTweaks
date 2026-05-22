@@ -107,7 +107,7 @@ public class TradeBroadcastCommand {
     private static int setLibrarianEnchantedBookSelection(CommandSourceStack source, boolean enabled) {
         ServerConfig.setLibrarianEnchantedBookSelection(enabled);
         source.sendSuccess(() ->
-                Component.translatable("tradetweaks.tradecast.enchant_books.set", String.valueOf(enabled)), false);
+                Component.translatable("tradetweaks.settings.enchant_books_selection", String.valueOf(enabled)), false);
         return 1;
     }
 

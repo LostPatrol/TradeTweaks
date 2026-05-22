@@ -10,12 +10,10 @@
   "tradetweaks.tradecast.settings.mode": "你的播报模式: %s",
   "tradetweaks.tradecast.settings.interval": "服务器检测间隔: %s秒",
   "tradetweaks.tradecast.settings.radius": "服务器监测半径: %s格",
-  "tradetweaks.tradecast.settings.enchant_books": "图书管理员附魔书自选: %s",
   "tradetweaks.tradecast.settings.render": "你的物品渲染模式: %s",
   "tradetweaks.tradecast.mode.set": "本地播报模式已设置为: %s",
   "tradetweaks.tradecast.interval.set": "服务器检测间隔已设置为: %s秒",
   "tradetweaks.tradecast.radius.set": "服务器监测半径已设置为: %s格",
-  "tradetweaks.tradecast.enchant_books.set": "图书管理员附魔书自选已设置为: %s",
   "tradetweaks.tradecast.mode.error": "此设置只能在本地客户端修改",
   "tradetweaks.tradecast.mode.off": "关闭",
   "tradetweaks.tradecast.mode.librarian": "仅图书管理员",
@@ -60,6 +58,8 @@
   "tradetweaks.gui.existing_trades":"现有交易",
   "tradetweaks.gui.confirm": "确定",
   "tradetweaks.gui.narration.trade_entry": "打开交易选择窗口",
+
+  "tradetweaks.settings.enchant_books_selection": "图书管理员附魔书自选已设置为: %s",
 
   "tradetweaks.tooltip.market_ruler": "市场支配"
 }
