@@ -50,10 +50,17 @@
   "tradetweaks.emerald_wand.mode.refresh": "已切换至刷新模式",
   "tradetweaks.emerald_wand.mode.upgrade": "已切换至升级模式",
   "tradetweaks.emerald_wand.mode.select": "已切换至自选交易模式",
+  "tradetweaks.emerald_wand.wheel.reset": "清除职业",
+  "tradetweaks.emerald_wand.wheel.tracking_block": "追踪工作方块",
+  "tradetweaks.emerald_wand.wheel.tracking_villager": "追踪村民",
+  "tradetweaks.emerald_wand.wheel.refresh": "刷新行为",
+  "tradetweaks.emerald_wand.wheel.upgrade": "职业升级",
+  "tradetweaks.emerald_wand.wheel.select": "自选交易",
 
   "tradetweaks.emerald_wand.text.copy": "点击复制到剪切板",
 
   "tradetweaks.gui.trade_selection": "选择交易",
+  "tradetweaks.gui.wand_mode_wheel": "绿宝石手杖模式",
   "tradetweaks.gui.replacement_options": "可交换项",
   "tradetweaks.gui.existing_trades":"现有交易",
   "tradetweaks.gui.confirm": "确定",
@@ -61,5 +68,8 @@
 
   "tradetweaks.settings.enchant_books_selection": "图书管理员附魔书自选已设置为: %s",
 
-  "tradetweaks.tooltip.market_ruler": "市场支配"
+  "tradetweaks.tooltip.market_ruler": "市场支配",
+
+  "key.categories.tradetweaks": "交易优化",
+  "key.tradetweaks.wand_mode_wheel": "打开绿宝石手杖模式轮盘"
 }

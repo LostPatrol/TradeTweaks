@@ -3,11 +3,13 @@ package net.lostpatrol.tradetweaks.network;
 import net.lostpatrol.tradetweaks.network.handler.HandlerBlockHighlight;
 import net.lostpatrol.tradetweaks.network.handler.HandlerOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.handler.HandlerTradeReplace;
+import net.lostpatrol.tradetweaks.network.handler.HandlerWandModeSet;
 import net.lostpatrol.tradetweaks.network.handler.HandlerWandModeSwitch;
 import net.lostpatrol.tradetweaks.network.packet.PacketBlockHighlight;
 import net.lostpatrol.tradetweaks.network.packet.PacketItemActivation;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
+import net.lostpatrol.tradetweaks.network.packet.PacketWandModeSet;
 import net.lostpatrol.tradetweaks.network.packet.PacketWandModeSwitch;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
@@ -29,6 +31,7 @@ public class NetworkHandler {
         registrar.playToServer(PacketTradeReplace.TYPE, PacketTradeReplace.STREAM_CODEC, HandlerTradeReplace::handle);
         registrar.playToClient(PacketOpenTradeSelection.TYPE, PacketOpenTradeSelection.STREAM_CODEC, HandlerOpenTradeSelection::handle);
         registrar.playToClient(PacketItemActivation.TYPE, PacketItemActivation.STREAM_CODEC, PacketItemActivation::handle);
+        registrar.playToServer(PacketWandModeSet.TYPE, PacketWandModeSet.STREAM_CODEC, HandlerWandModeSet::handle);
     }
 
     public static void sendBlockHighlightToPlayer(ServerPlayer player, PacketBlockHighlight packet) {
@@ -36,6 +39,10 @@ public class NetworkHandler {
     }
 
     public static void sendWandModeSwitchToServer(PacketWandModeSwitch packet) {
+        PacketDistributor.sendToServer(packet);
+    }
+
+    public static void sendWandModeSetToServer(PacketWandModeSet packet){
         PacketDistributor.sendToServer(packet);
     }
 

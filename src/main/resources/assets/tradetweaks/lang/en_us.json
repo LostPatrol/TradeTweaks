@@ -48,9 +48,16 @@
   "tradetweaks.emerald_wand.mode.refresh": "Switch to REFRESH mode",
   "tradetweaks.emerald_wand.mode.upgrade": "Switch to UPGRADE mode",
   "tradetweaks.emerald_wand.mode.select": "Switch to SELECT mode",
+  "tradetweaks.emerald_wand.wheel.reset": "Reset Profession",
+  "tradetweaks.emerald_wand.wheel.tracking_block": "Track Job Site",
+  "tradetweaks.emerald_wand.wheel.tracking_villager": "Track Villager",
+  "tradetweaks.emerald_wand.wheel.refresh": "Refresh Behavior",
+  "tradetweaks.emerald_wand.wheel.upgrade": "Upgrade Profession",
+  "tradetweaks.emerald_wand.wheel.select": "Trade Selection",
   "tradetweaks.emerald_wand.text.copy": "Copy to clipboard",
 
   "tradetweaks.gui.trade_selection": "Trade Selection",
+  "tradetweaks.gui.wand_mode_wheel": "Emerald Wand Mode",
   "tradetweaks.gui.replacement_options": "Replacements",
   "tradetweaks.gui.existing_trades":"Existing Trades",
   "tradetweaks.gui.confirm": "OK",
@@ -58,5 +65,8 @@
 
   "tradetweaks.settings.enchant_books_selection": "Librarian enchanted book selection set to: %s",
 
-  "tradetweaks.tooltip.market_ruler": "Master of Trades"
+  "tradetweaks.tooltip.market_ruler": "Master of Trades",
+
+  "key.categories.tradetweaks": "Trade Tweaks",
+  "key.tradetweaks.wand_mode_wheel": "Open Emerald Wand Mode Wheel"
 }

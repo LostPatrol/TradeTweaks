@@ -9,7 +9,9 @@ import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.common.item.ModCreativeModeTab;
 import net.lostpatrol.tradetweaks.common.item.ModItems;
 import net.lostpatrol.tradetweaks.common.recipe.ModRecipeSerializers;
+import net.lostpatrol.tradetweaks.client.events.ClientKeyMappings;
 import net.lostpatrol.tradetweaks.client.events.WandScrollHandler;
+import net.lostpatrol.tradetweaks.client.events.WandModeWheelHandler;
 import net.lostpatrol.tradetweaks.common.item.villager.VillagerConversionMemory;
 import net.lostpatrol.tradetweaks.events.RaidRewardHandler;
 import net.lostpatrol.tradetweaks.events.VillagerToolInteractionHandler;
@@ -40,6 +42,7 @@ public class TradeTweaks {
         if (Dist.CLIENT.equals(net.neoforged.fml.loading.FMLEnvironment.dist)) {
             NeoForge.EVENT_BUS.register(HandlerBlockHighlight.class);
             NeoForge.EVENT_BUS.register(WandScrollHandler.class);
+            NeoForge.EVENT_BUS.register(WandModeWheelHandler.class);
         }
 
         VillagerTradeReporter.register();
@@ -51,6 +54,7 @@ public class TradeTweaks {
         modEventBus.register(ServerConfig.class);
         if (Dist.CLIENT.equals(net.neoforged.fml.loading.FMLEnvironment.dist)) {
             modEventBus.register(ClientConfig.class);
+            modEventBus.register(ClientKeyMappings.class);
             modEventBus.register(net.lostpatrol.tradetweaks.client.events.PropertyRegistry.class);
         }
 
