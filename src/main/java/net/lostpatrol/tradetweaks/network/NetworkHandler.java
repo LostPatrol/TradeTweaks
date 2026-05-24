@@ -4,11 +4,13 @@ import net.lostpatrol.tradetweaks.TradeTweaks;
 import net.lostpatrol.tradetweaks.network.handler.HandlerBlockHighlight;
 import net.lostpatrol.tradetweaks.network.handler.HandlerOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.handler.HandlerTradeReplace;
+import net.lostpatrol.tradetweaks.network.handler.HandlerWandModeSet;
 import net.lostpatrol.tradetweaks.network.handler.HandlerWandModeSwitch;
 import net.lostpatrol.tradetweaks.network.packet.PacketBlockHighlight;
 import net.lostpatrol.tradetweaks.network.packet.PacketItemActivation;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
+import net.lostpatrol.tradetweaks.network.packet.PacketWandModeSet;
 import net.lostpatrol.tradetweaks.network.packet.PacketWandModeSwitch;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -72,6 +74,13 @@ public class NetworkHandler {
                 PacketItemActivation::new,
                 PacketItemActivation::handle
         );
+        INSTANCE.registerMessage(
+                id++,
+                PacketWandModeSet.class,
+                PacketWandModeSet::encode,
+                PacketWandModeSet::new,
+                HandlerWandModeSet::handle
+        );
     }
 
     public static void sendBlockHighlightToPlayer(ServerPlayer player, PacketBlockHighlight packet) {
@@ -79,6 +88,10 @@ public class NetworkHandler {
     }
 
     public static void sendWandModeSwitchToServer(PacketWandModeSwitch packet){
+        getChannel().sendToServer(packet);
+    }
+
+    public static void sendWandModeSetToServer(PacketWandModeSet packet){
         getChannel().sendToServer(packet);
     }
 
