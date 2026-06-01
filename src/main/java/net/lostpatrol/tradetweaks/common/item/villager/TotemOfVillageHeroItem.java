@@ -20,7 +20,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nonnull;
 
 public class TotemOfVillageHeroItem extends Item {
-    private static final int DURATION_INCREMENT = 20 * 60 * 20;
+    private static final int DURATION_INCREMENT = 5 * 60 * 20;
     private static final int MAX_AMPLIFIER = 4;
 
     public TotemOfVillageHeroItem(Properties properties) {
