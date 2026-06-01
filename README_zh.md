@@ -2,7 +2,7 @@
 
 Minecraft Forge mod
 
-提供功能多样实用的工具手杖以及游戏内选项，提升玩家与村民交易时的游戏体验
+提供功能多样实用的工具手杖、功能道具以及游戏内选项，提升玩家与村民交易时的游戏体验
 
 > 目前为早期预览版本，诸多功能有待实现
 
@@ -14,8 +14,16 @@ Minecraft Forge mod
 
 **使用：**
 
+方法1：
+
 + 潜行状态下使用鼠标滚轮切换不同模式
-+ 潜行状态下右键使用：
++ 潜行状态下右键使用
+
+方法2：
+
++ 按键（默认为`Alt`）启用模式快捷选择轮盘
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_wheel.png?raw=true)
 
 | 模式         | 应用对象                       | 效果                     |
 | ------------ | ------------------------------ | ------------------------ |
@@ -98,10 +106,53 @@ Minecraft Forge mod
 + 任何与当前交易选项有着相同职业要求和职业等级要求的交易，都将被视为“可能出现的交易”
 + 允许一个村民有多个重复的交易选项，并且兼容多人游戏
 + 需要1个下界之星对手杖进行升级以使用此功能
-+ 实际上，可以利用这一功能强制村民补货，或许会被认为是bug，但是暂无修复计划
-+ 特别地，对于图书管理员，可以选择所有魔咒的最高等级所对应的附魔书，且有更高几率出现较低的交易价格
++ 特别地，对于图书管理员，可以选择所有魔咒的最高等级所对应的附魔书，且有更高几率出现较低的交易价格（此特性可由服务器配置关闭）
 
 
+
+### 一次性道具
+
+添加了一些消耗性的功能道具。
+
+
+
+**启智之书**
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/book_of_enlightenment.png?raw=true)
+
+将傻子村民（Nitwit)变为无业村民；
+
+
+
+**转生之瓶**
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/reversion_bottle.png?raw=true)
+
+将村民立刻转为僵尸村民；
+
+
+
+**复生之瓶**
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/restoration_bottle.png?raw=true)
+
+将僵尸村民立刻救回村民，效果等同于使用原版方法手动医治；
+
+
+
+**村庄英雄图腾**
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/totem_of_village_hero.png?raw=true)
+
+获得5:00村庄英雄效果；已有村庄英雄buff时，将buff等级+1(最高5级)，时间+5:00；劫掠事件胜利后，将视劫掠等级奖励玩家一定数量的该物品；
+
+
+
+**补货令**
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/restock_writ.png?raw=true)
+
+强制村民立刻补货，同一天内对同一村民多次使用将会增加单次消耗个数。
 
 
 
@@ -167,9 +218,15 @@ Minecraft Forge mod
 /tradecast time [seconds]
 ```
 
-服务端命令修改服务器更新检测间隔，需要权限
+服务端命令 修改服务器更新检测间隔，需要权限
 
 
+
+```
+/tradetweaks enchant_books_select [bool]
+```
+
+服务端命令 
 
 ### ...
 

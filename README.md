@@ -1,10 +1,12 @@
 # Trade Tweaks
 
-A Minecraft Forge mod that provides versatile utility staffs and in-game options to enhance the player experience when trading with villagers.
+Minecraft Forge mod
 
-> Currently in early preview - many features are still under development.
+Provides versatile utility wands, useful item, and in-game options to improve the player experience when trading with villagers.
 
-## Key Features
+> Currently in early preview. Many features are still under development.
+
+## Main Content
 
 ### Emerald Wand
 
@@ -12,95 +14,115 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 **Usage:**
 
-*   Sneak + Mouse Wheel: Cycle through modes
-*   Sneak + Right Click: Activate current mode
+Method 1:
 
-| Mode              | Target                | Effect                               |
-| ----------------- | --------------------- | ------------------------------------ |
-| Profession Clear  | Any employed villager | Resets villager to unemployed        |
-| Workblock Tracker | Any villager          | Highlights linked or potential workblock |
-| Villager Tracker  | Workstation blocks    | Highlights villager using it         |
-| AI Refresh        | Unemployed villagers  | Forces job search behavior           |
-| Upgrade           | Any employed villager | Increase villager's profession level |
-| Trade Select      | Any employed villager | Freely select available trades       |
++ Sneak and use the mouse wheel to switch modes
++ Sneak and right-click to use
 
-**1\. Profession Clear**
+Method 2:
 
++ Press the keybind (`Alt` by default) to open the quick mode selection wheel
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_wheel_en.png?raw=true)
+
+| Mode              | Target                                      | Effect                                               |
+| ----------------- | ------------------------------------------- | ---------------------------------------------------- |
+| Profession Clear  | Any villager with a profession              | Resets the villager to unemployed                    |
+| Work Block Track  | Any villager                                | Highlights the villager's work block or desired work block |
+| Villager Track    | A work block used by a villager profession  | Highlights the villager occupying that block         |
+| Villager AI Refresh | Unemployed villagers                      | Makes the villager search for a work block again     |
+| Profession Upgrade | Any villager with a profession             | Increases the villager's profession level            |
+| Trade Selection   | Any villager with a profession              | Freely select the villager's available trades        |
+
+**1. Profession Clear**
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_reset_1.png?raw=true)
+
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_reset_2_en.png?raw=true)
 
-*   Removes profession from any villager
-*   Works even on leveled/traded villagers
-*   Resets their trade progression completely
++ Clears any villager's profession
++ Can clear the profession of villagers that have already traded or leveled up, resetting their trade level and trade experience to 0
 
-**2\. Workblock(JobSite) Tracker**
+**2. Work Block Track**
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_track_block_en.png?raw=true)
 
-*   Visually highlights the villager's linked workstation in red
-*   When used on an unemployed villager, highlights the villager's current potential workstation in green (not shown in the image)
-*   Effective range: 64 blocks
++ Shows the villager's current work block through walls with a red highlight
++ When used on an unemployed villager, shows that villager's current desired work block with a green highlight (not shown in the image)
++ Effective detection range is within a 64-block radius
 
-**3\. Villager Tracker**
+**3. Villager Track**
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_track_villager_en.png?raw=true)
 
-*   Applies glowing effect to villager using the targeted workstation
++ If a villager is using the targeted block as a work block, that villager receives the glowing effect
 
-**4\. Villager AI Refresh**
+**4. Villager AI Refresh**
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_refresh_1.png?raw=true)
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_refresh_2_en.png?raw=true)
 
-*   Forces unemployed villagers to stop current activities
-*   Makes them (try to) immediately search for nearest valid workstation
++ Makes an unemployed villager stop most current activities and try to find the nearest work block again
 
-
-
-
-
-**5\. Villager Instant Upgrade**
+**5. Profession Upgrade**
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_upgrade_en.png?raw=true)
 
-+ Increases villager's profession level immediately
-+ Consumes `1 Emerald Block` or `9 Emerald` by default. Block will be consumed first.
-+ Items and counts costs can be modified in `serverconfig/tradetweaks-server.toml` freely.  it's convenient for some modpacks, to modify it to other mods' or custom items.
++ Immediately increases the villager's profession level by 1
++ Consumes 1 emerald block first, or 9 emeralds by default
++ The consumed item and amount can be customized in `serverconfig/tradetweaks-server.toml`
 
-
-
-**6\. Trade Selection**
+**Trade Selection**
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_select_en.png?raw=true)
 
+> Author: This feature may sound too powerful, but I think repeatedly rerolling villager trades is simply a waste of time. As players, we should spend our limited time doing more interesting things.
 
-> This sounds rule-breaking, but I believe that repeatedly refreshing villager trades to get desired offers is a complete waste of the player's time – requiring no real cost except hours of grinding.
->
-> Therefore, I don't consider this feature to break Minecraft's balance or gameplay integrity. **As players, we should value our limited playtime and spend it on actually fun experiences.**
++ Allows players to manually select any possible trade for a villager as its current trade option
++ Any trade with the same profession requirement and profession level requirement as the current trade option is considered a possible trade
++ Allows a villager to have multiple duplicate trade options, and supports multiplayer
++ Requires 1 nether star to upgrade the wand before this feature can be used
++ For librarians specifically, players can select enchanted books for the highest level of every enchantment, with a higher chance of lower trade prices. This feature can be disabled in the server config
 
+### Consumable Items
 
+Adds several consumable utility items.
 
-+ Allows players to manually select available trades from villager's potential offer pool
-+ Any trade with the same profession and profession level required, will be considered as an available trade.
-+ Allow duplicated trades
-+ Compatible with multiplayers
-+ A Nether Star is required to upgrade your wand to use this mode.
-+ Honestly, you can use this to force the villager to restock... but it doesn't matter and i don't want to fix.
-+ Specially for librarian, if you select a trade of enchanted book, you will be allowed to choose the enchantment and its level.
+**Book of Enlightenment**
 
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/book_of_enlightenment.png?raw=true)
 
+Turns a nitwit villager into an unemployed villager.
 
+**Reversion Bottle**
 
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/reversion_bottle.png?raw=true)
 
+Immediately turns a villager into a zombie villager.
 
+**Restoration Bottle**
 
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/restoration_bottle.png?raw=true)
 
-## Trade Broadcast System
+Immediately cures a zombie villager back into a villager, equivalent to curing it manually with the vanilla method.
 
-Displays nearby villagers' trade lists (with item icons) in chat, with click-to-highlight functionality. Won't repeat broadcasts for unchanged trades.
+**Totem of Village Hero**
 
-**off by default**
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/totem_of_village_hero.png?raw=true)
+
+Grants 5:00 of Hero of the Village. If the player already has Hero of the Village, increases the effect level by 1 (up to level 5) and adds 5:00 duration. After winning a raid, the player receives a number of this item based on the raid level.
+
+**Restock Writ**
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/restock_writ.png?raw=true)
+
+Forces a villager to restock immediately. Using it multiple times on the same villager on the same day increases the cost per use.
+
+### Trade Broadcast
+
+Allows nearby villagers' trade lists, including item icons, to be broadcast to the player's chat, with clickable messages that highlight the matching villager. The same villager will not be broadcast again if its trades have not changed.
+
+**Disabled by default**
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/tradecast_1_en.png?raw=true)
 
@@ -112,69 +134,94 @@ Displays nearby villagers' trade lists (with item icons) in chat, with click-to-
 /tradecast mode [option]
 ```
 
-(Client-side) Filters which villagers get broadcast:
+Client command. Selects which villager type to broadcast.
 
-
-
-| Option    |Effect                    |
-| --------- |------------------------- |
-| <code>all</code> |All villagers             |
-| <code>librarian</code> |Only librarians           |
-| <code>off</code> |Disables broadcast system |
-
-
-
+| option      | Effect                      |
+| ----------- | --------------------------- |
+| `all`       | Broadcast all villagers     |
+| `librarian` | Broadcast librarians only   |
+| `off`       | **Disable trade broadcast** |
 
 ```
 /tradecast radius [blocks]
 ```
 
-
-(Server-side) Sets broadcast range (1-32 blocks). Requires permissions.
-
+Server command. Changes the server broadcast range (1-32 blocks). Requires permission.
 
 ```
 /tradecast refresh
 ```
 
-(Client-side) Clears cached villager/trade data.
+Client command. Clears recorded villager and trade list information.
 
 ```
 /tradecast render [bool]
 ```
 
-(Client-side) Toggles item icon rendering (if true, text-only mode will be available for compatibility).
+Client command. Enables or disables item icon rendering. When disabled, only text content is output.
 
-
++ This is for mod compatibility. If rendering errors, offsets, or similar issues occur, disable this option
 
 ```
 /tradecast time [seconds]
 ```
 
-(Server-side) Adjusts trade check interval. Requires permissions.
+Server command. Changes the server update check interval. Requires permission.
 
-### …
+```
+/tradetweaks enchant_books_select [bool]
+```
+
+Server command.
+
+### ...
 
 ## Compatibility
 
-*   Should work with all mod-added villager professions
-*   Potential rendering conflicts when used with Showcase Item/Quark's inventory icon features (disable client rendering if overlap occurs)
++ Compatible with all villager professions and trades added by mods through standard methods
++ Compatible with all enchantments added by mods, such as Apotheosis, through standard methods, as long as the enchantment is tradeable
++ Compatible with Easy Villagers, but cannot trade directly with villagers placed inside trader blocks
++ Compatible with Quark's Ancient Tomes. When Quark is installed, librarian master-level trades treat all Ancient Tomes as replaceable trades
 
+Known issues:
 
-## Credits and Licensing
++ When Showcase Item and Quark are installed together, and each mod has item icon rendering in inventories enabled, rendering issues such as icon offsets or overlaps may occur. Disable client rendering if needed. In practice, this mod, Showcase Item, and Quark all render item icons into inventories in the same general way, so enabling any two of them at the same time may cause rendering issues
++ The trade list of the Ars Nouveau villager profession "Scribe" may not be read correctly
 
-This mod incorporates resources from the following third-party projects, and we gratefully acknowledge their contributions:
+> Standard methods refer to common Forge mod development practices: when possible, using APIs provided directly by Forge or following vanilla Minecraft's implementation style, instead of using forceful or special approaches.
 
-### Code Attribution
+Compatibility showcases with well-known mods:
 
-The item rendering functionality in this mod is derived from **\[ShowcaseItem\]**, which is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0) license.
+Quark's Ancient Tome:
 
-*   Original source: [starforcraft/Showcase-Item: Allows you to showcase your item in the chat](https://github.com/starforcraft/Showcase-Item)
-*   Modifications: Enhanced the ChatComponentMixin and ItemRenderer implementations.
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/compatible_ancient_tome.png?raw=true)
 
-### Assets Attribution
+Apotheosis:
 
-The texture `textures/emerald_wand.png` is a modified version of an asset from **\[ConstructionWand\]**, licensed under the MIT License.
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/compatible_apotheosis.png?raw=true)
 
-*   Original asset: [Theta-Dev/ConstructionWand: Minecraft Mod - Construction Wands make building easier!](https://github.com/Theta-Dev/ConstructionWand)
-*   Changes: Recolored.
+PneumaticCraft:
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/compatible_pneumaticcraft.png?raw=true)
+
+Applied Energistics 2:
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/compatible_ae2.png?raw=true)
+
+## Credits and Acknowledgements
+
+This mod uses or partially references resources or code from the following third-party projects. Copyright belongs to their respective owners, with thanks and acknowledgement here.
+
+### Code References
+
+The chat item rendering code is based on the **[ShowcaseItem]** project. The original project is licensed under CC BY-NC-SA 3.0:
+
+- Original project: [starforcraft/Showcase-Item: Allows you to showcase your item in the chat](https://github.com/starforcraft/Showcase-Item)
+- Modifications: Optimized some mixins with MixinExtra and improved part of the item rendering logic
+
+### Asset References
+
+The texture file `textures/emerald_wand.png` is modified from an asset from **[ConstructionWand]**. The original asset is licensed under MIT:
+
+- Original asset: [Theta-Dev/ConstructionWand: Minecraft Mod - Construction Wands make building easier!](https://github.com/Theta-Dev/ConstructionWand)
+- Modifications: Hue adjustment
