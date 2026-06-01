@@ -5,6 +5,7 @@
   "item.tradetweaks.restoration_bottle": "Restoration Bottle",
   "item.tradetweaks.reversion_bottle": "Reversion Bottle",
   "item.tradetweaks.totem_of_village_hero": "Totem of Village Hero",
+  "item.tradetweaks.restock_writ": "Restock Writ",
 
   "tradetweaks.tradecast.settings.header": "=== TradeTweaks-tradecast Settings ===",
   "tradetweaks.tradecast.settings.mode": "Your report mode: %s",
@@ -66,6 +67,11 @@
   "tradetweaks.settings.enchant_books_selection": "Librarian enchanted book selection set to: %s",
 
   "tradetweaks.tooltip.market_ruler": "Master of Trades",
+
+  "tradetweaks.restock_writ.success": "Forced villager restock. Use #%s today, consumed %s Restock Writ(s)",
+  "tradetweaks.restock_writ.fail.villager_not_occupied": "Restock Writ cannot be used on an unemployed villager",
+  "tradetweaks.restock_writ.fail.no_out_of_stock_trades": "This villager has no out-of-stock trades",
+  "tradetweaks.restock_writ.fail.insufficient_writs": "Not enough Restock Writs. This use requires %s",
 
   "key.categories.tradetweaks": "Trade Tweaks",
   "key.tradetweaks.wand_mode_wheel": "Open Emerald Wand Mode Wheel"

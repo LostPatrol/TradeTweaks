@@ -23,7 +23,8 @@ public class VillagerToolInteractionHandler {
         Item item = stack.getItem();
         if (item != ModItems.BOOK_OF_ENLIGHTENMENT.get()
                 && item != ModItems.RESTORATION_BOTTLE.get()
-                && item != ModItems.REVERSION_BOTTLE.get()) {
+                && item != ModItems.REVERSION_BOTTLE.get()
+                && item != ModItems.RESTOCK_WRIT.get()) {
             return;
         }
 
