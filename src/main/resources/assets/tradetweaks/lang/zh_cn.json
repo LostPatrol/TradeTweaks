@@ -5,6 +5,7 @@
   "item.tradetweaks.restoration_bottle": "复生之瓶",
   "item.tradetweaks.reversion_bottle": "转生之瓶",
   "item.tradetweaks.totem_of_village_hero": "村庄英雄图腾",
+  "item.tradetweaks.restock_writ": "补货令",
 
   "tradetweaks.tradecast.settings.header": "=== TradeTweaks-交易播报设置 ===",
   "tradetweaks.tradecast.settings.mode": "你的播报模式: %s",
@@ -69,6 +70,11 @@
   "tradetweaks.settings.enchant_books_selection": "图书管理员附魔书自选已设置为: %s",
 
   "tradetweaks.tooltip.market_ruler": "市场支配",
+
+  "tradetweaks.restock_writ.success": "已强制村民补货。今日第%s次使用，消耗%s个补货令",
+  "tradetweaks.restock_writ.fail.villager_not_occupied": "不能对无业村民使用补货令",
+  "tradetweaks.restock_writ.fail.no_out_of_stock_trades": "该村民没有缺货的交易",
+  "tradetweaks.restock_writ.fail.insufficient_writs": "补货令不足，本次需要%s个",
 
   "key.categories.tradetweaks": "交易优化",
   "key.tradetweaks.wand_mode_wheel": "打开绿宝石手杖模式轮盘"

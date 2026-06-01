@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LLL",
+    "LEL",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "E": {
+      "tag": "c:storage_blocks/emerald"
+    }
+  },
+  "result": {
+    "id": "tradetweaks:restock_writ",
+    "count": 16
+  }
+}

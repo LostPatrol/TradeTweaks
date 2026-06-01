@@ -2,6 +2,7 @@ package net.lostpatrol.tradetweaks.common.item;
 
 import net.lostpatrol.tradetweaks.TradeTweaks;
 import net.lostpatrol.tradetweaks.common.item.villager.BookOfEnlightenmentItem;
+import net.lostpatrol.tradetweaks.common.item.villager.RestockWritItem;
 import net.lostpatrol.tradetweaks.common.item.villager.RestorationBottleItem;
 import net.lostpatrol.tradetweaks.common.item.villager.ReversionBottleItem;
 import net.lostpatrol.tradetweaks.common.item.villager.TotemOfVillageHeroItem;
@@ -26,6 +27,8 @@ public class ModItems {
             () -> new ReversionBottleItem(new Item.Properties().stacksTo(16)));
     public static final DeferredHolder<Item, Item> TOTEM_OF_VILLAGE_HERO = ITEMS.register("totem_of_village_hero",
             () -> new TotemOfVillageHeroItem(new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON)));
+    public static final DeferredHolder<Item, Item> RESTOCK_WRIT = ITEMS.register("restock_writ",
+            () -> new RestockWritItem(new Item.Properties()));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

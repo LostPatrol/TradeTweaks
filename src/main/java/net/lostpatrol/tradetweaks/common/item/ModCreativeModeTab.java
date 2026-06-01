@@ -25,6 +25,7 @@ public class ModCreativeModeTab {
                         output.accept(ModItems.RESTORATION_BOTTLE.get());
                         output.accept(ModItems.REVERSION_BOTTLE.get());
                         output.accept(ModItems.TOTEM_OF_VILLAGE_HERO.get());
+                        output.accept(ModItems.RESTOCK_WRIT.get());
                     })
                     .build());
 
