@@ -1,6 +1,6 @@
 # Trade Tweaks
 
-A Minecraft Forge mod that provides versatile utility staffs and in-game options to enhance the player experience when trading with villagers.
+A Minecraft Forge mod that provides versatile utility staffs, useful items, and in-game options to enhance the player experience when trading with villagers.
 
 > Currently in early preview - many features are still under development.
 
@@ -12,8 +12,16 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 **Usage:**
 
+Method 1:
+
 *   Sneak + Mouse Wheel: Cycle through modes
 *   Sneak + Right Click: Activate current mode
+
+Method 2:
+
+*   Press the keybind (`Alt` by default) to open the quick mode selection wheel
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_wheel_en.png?raw=true)
 
 | Mode              | Target                | Effect                               |
 | ----------------- | --------------------- | ------------------------------------ |
@@ -38,7 +46,7 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/mode_track_block_en.png?raw=true)
 
-*   Visually highlights the villager's linked workstation
+*   Visually highlights the villager's linked workstation in red
 *   When used on an unemployed villager, highlights the villager's current potential workstation in green (not shown in the image)
 *   Effective range: 64 blocks
 
@@ -86,8 +94,7 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 + Allow duplicated trades
 + Compatible with multiplayers
 + A Nether Star is required to upgrade your wand to use this mode.
-+ Honestly, you can use this to force the villager to restock... but it doesn't matter and I don't want to fix.
-+ Specially for librarian, if you select a trade of enchanted book, you will be allowed to choose all the max-level enchantments (usually)at lower price.
++ Specially for librarian, if you select a trade of enchanted book, you will be allowed to choose all the max-level enchantments, with a higher chance of lower trade prices. This feature can be disabled in the server config.
 
 
 
@@ -95,6 +102,40 @@ A Minecraft Forge mod that provides versatile utility staffs and in-game options
 
 
 
+
+## Consumable Items
+
+Adds several consumable utility items.
+
+**Book of Enlightenment**
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/book_of_enlightenment.png?raw=true)
+
+Turns a nitwit villager into an unemployed villager.
+
+**Reversion Bottle**
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/reversion_bottle.png?raw=true)
+
+Immediately turns a villager into a zombie villager.
+
+**Restoration Bottle**
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/restoration_bottle.png?raw=true)
+
+Immediately cures a zombie villager back into a villager, equivalent to curing it manually with the vanilla method.
+
+**Totem of Village Hero**
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/totem_of_village_hero.png?raw=true)
+
+Grants 5:00 of Hero of the Village. If the player already has Hero of the Village, increases the effect level by 1 (up to level 5) and adds 5:00 duration. After winning a raid, the player receives a number of this item based on the raid level.
+
+**Restock Writ**
+
+![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/restock_writ.png?raw=true)
+
+Forces a villager to restock immediately. Using it multiple times on the same villager on the same day increases the cost per use.
 
 ## Trade Broadcast System
 
@@ -152,6 +193,12 @@ Displays nearby villagers' trade lists (with item icons) in chat, with click-to-
 ```
 
 (Server-side) Adjusts trade check interval. Requires permissions.
+
+```
+/tradetweaks enchant_books_select [bool]
+```
+
+(Server-side) Determines whether the wand's Trade Selection feature can be used to select librarians' enchanted books. Requires permissions.
 
 ### …
 
