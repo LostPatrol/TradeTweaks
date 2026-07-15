@@ -128,7 +128,7 @@ Minecraft Forge mod
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/reversion_bottle.png?raw=true)
 
-将村民立刻转为僵尸村民；
+将村民立刻转为僵尸村民；无序合成配方需要1个玻璃瓶、2个腐肉和1个时钟；
 
 
 
@@ -136,7 +136,7 @@ Minecraft Forge mod
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/restoration_bottle.png?raw=true)
 
-将僵尸村民立刻救回村民，效果等同于使用原版方法手动医治；
+将僵尸村民立刻救回村民，效果等同于使用原版方法手动医治；无序合成配方需要1瓶虚弱药水、1个金苹果和1个时钟；
 
 
 
