@@ -22,6 +22,7 @@ public class RestorationBottleRecipe extends CustomRecipe {
     public boolean matches(CraftingInput container, Level level) {
         boolean foundGoldenApple = false;
         boolean foundWeaknessPotion = false;
+        boolean foundClock = false;
 
         for (int i = 0; i < container.size(); i++) {
             ItemStack stack = container.getItem(i);
@@ -33,12 +34,14 @@ public class RestorationBottleRecipe extends CustomRecipe {
                 foundGoldenApple = true;
             } else if (isWeaknessPotion(stack) && !foundWeaknessPotion) {
                 foundWeaknessPotion = true;
+            } else if (stack.is(Items.CLOCK) && !foundClock) {
+                foundClock = true;
             } else {
                 return false;
             }
         }
 
-        return foundGoldenApple && foundWeaknessPotion;
+        return foundGoldenApple && foundWeaknessPotion && foundClock;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class RestorationBottleRecipe extends CustomRecipe {
 
     @Override
     public boolean canCraftInDimensions(int width, int height) {
-        return width * height >= 2;
+        return width * height >= 3;
     }
 
     @Override

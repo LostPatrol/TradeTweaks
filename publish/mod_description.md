@@ -117,13 +117,13 @@ Turns a nitwit villager into an unemployed villager.
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/reversion_bottle.png?raw=true)
 
-Immediately turns a villager into a zombie villager.
+Immediately turns a villager into a zombie villager. Its shapeless recipe uses a glass bottle, two pieces of rotten flesh, and a clock.
 
 **Restoration Bottle**
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/restoration_bottle.png?raw=true)
 
-Immediately cures a zombie villager back into a villager, equivalent to curing it manually with the vanilla method.
+Immediately cures a zombie villager back into a villager, equivalent to curing it manually with the vanilla method. Its shapeless recipe uses a Potion of Weakness, a golden apple, and a clock.
 
 **Totem of Village Hero**
 
