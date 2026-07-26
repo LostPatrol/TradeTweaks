@@ -7,45 +7,58 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.trading.MerchantOffers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 public class PacketOpenTradeSelection implements CustomPacketPayload {
     public static final Type<PacketOpenTradeSelection> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath(TradeTweaks.MODID, "open_trade_selection"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketOpenTradeSelection> STREAM_CODEC =
             StreamCodec.of((buf, packet) -> packet.encode(buf), PacketOpenTradeSelection::new);
 
-    private final int villagerId;
+    private final UUID sessionId;
     private final MerchantOffers offers;
-    private final int level;
-    private final String profession;
-    private final String type;
-    private final boolean librarianEnchantedBookSelectionEnabled;
+    private final int[] candidatePoolIndices;
+    private final List<MerchantOffers> candidatePools;
 
-    public PacketOpenTradeSelection(int villagerId, MerchantOffers offers, int level, String profession, String type,
-                                    boolean librarianEnchantedBookSelectionEnabled) {
-        this.villagerId = villagerId;
+    public PacketOpenTradeSelection(
+            UUID sessionId,
+            MerchantOffers offers,
+            int[] candidatePoolIndices,
+            List<MerchantOffers> candidatePools
+    ) {
+        this.sessionId = sessionId;
         this.offers = offers;
-        this.level = level;
-        this.profession = profession;
-        this.type = type;
-        this.librarianEnchantedBookSelectionEnabled = librarianEnchantedBookSelectionEnabled;
+        this.candidatePoolIndices = candidatePoolIndices;
+        this.candidatePools = candidatePools;
     }
 
     public PacketOpenTradeSelection(RegistryFriendlyByteBuf buf) {
-        this.villagerId = buf.readInt();
+        this.sessionId = buf.readUUID();
         this.offers = MerchantOffers.STREAM_CODEC.decode(buf);
-        this.level = buf.readInt();
-        this.profession = buf.readUtf();
-        this.type = buf.readUtf();
-        this.librarianEnchantedBookSelectionEnabled = buf.readBoolean();
+        this.candidatePoolIndices = new int[buf.readVarInt()];
+        for (int i = 0; i < candidatePoolIndices.length; i++) {
+            candidatePoolIndices[i] = buf.readVarInt();
+        }
+        int poolCount = buf.readVarInt();
+        this.candidatePools = new ArrayList<>(poolCount);
+        for (int i = 0; i < poolCount; i++) {
+            candidatePools.add(MerchantOffers.STREAM_CODEC.decode(buf));
+        }
     }
 
     public void encode(RegistryFriendlyByteBuf buf) {
-        buf.writeInt(villagerId);
+        buf.writeUUID(sessionId);
         MerchantOffers.STREAM_CODEC.encode(buf, offers);
-        buf.writeInt(level);
-        buf.writeUtf(profession);
-        buf.writeUtf(type);
-        buf.writeBoolean(librarianEnchantedBookSelectionEnabled);
+        buf.writeVarInt(candidatePoolIndices.length);
+        for (int poolIndex : candidatePoolIndices) {
+            buf.writeVarInt(poolIndex);
+        }
+        buf.writeVarInt(candidatePools.size());
+        for (MerchantOffers candidatePool : candidatePools) {
+            MerchantOffers.STREAM_CODEC.encode(buf, candidatePool);
+        }
     }
 
     @Override
@@ -53,28 +66,20 @@ public class PacketOpenTradeSelection implements CustomPacketPayload {
         return TYPE;
     }
 
-    public int getVillagerId() {
-        return villagerId;
+    public UUID getSessionId() {
+        return sessionId;
     }
 
     public MerchantOffers getOffers() {
         return offers;
     }
 
-    public int getProfessionLevel(){
-        return level;
+    public int[] getCandidatePoolIndices() {
+        return candidatePoolIndices;
     }
 
-    public String getProfessionName(){
-        return profession;
-    }
-
-    public String getVillagerType(){
-        return type;
-    }
-
-    public boolean isLibrarianEnchantedBookSelectionEnabled() {
-        return librarianEnchantedBookSelectionEnabled;
+    public List<MerchantOffers> getCandidatePools() {
+        return candidatePools;
     }
 }
 

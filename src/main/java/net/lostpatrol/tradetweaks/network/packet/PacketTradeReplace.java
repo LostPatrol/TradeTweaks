@@ -5,8 +5,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.item.trading.MerchantOffers;
+
+import java.util.UUID;
 
 public class PacketTradeReplace implements CustomPacketPayload {
     public static final Type<PacketTradeReplace> TYPE =
@@ -14,27 +14,26 @@ public class PacketTradeReplace implements CustomPacketPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketTradeReplace> STREAM_CODEC =
             StreamCodec.of((buf, packet) -> packet.encode(buf), PacketTradeReplace::new);
 
-    private final int villagerId;
+    private final UUID sessionId;
     private final int tradeIndex;
-    private final MerchantOffers replacement;
+    private final int candidateIndex;
 
-    public PacketTradeReplace(int villagerId, int tradeIndex, MerchantOffer replacement) {
-        this.villagerId = villagerId;
+    public PacketTradeReplace(UUID sessionId, int tradeIndex, int candidateIndex) {
+        this.sessionId = sessionId;
         this.tradeIndex = tradeIndex;
-        this.replacement = new MerchantOffers();
-        this.replacement.add(replacement);
+        this.candidateIndex = candidateIndex;
     }
 
     public PacketTradeReplace(RegistryFriendlyByteBuf buf) {
-        this.villagerId = buf.readInt();
-        this.tradeIndex = buf.readInt();
-        this.replacement = MerchantOffers.STREAM_CODEC.decode(buf);
+        this.sessionId = buf.readUUID();
+        this.tradeIndex = buf.readVarInt();
+        this.candidateIndex = buf.readVarInt();
     }
 
     public void encode(RegistryFriendlyByteBuf buf) {
-        buf.writeInt(villagerId);
-        buf.writeInt(tradeIndex);
-        MerchantOffers.STREAM_CODEC.encode(buf, replacement);
+        buf.writeUUID(sessionId);
+        buf.writeVarInt(tradeIndex);
+        buf.writeVarInt(candidateIndex);
     }
 
     @Override
@@ -42,20 +41,16 @@ public class PacketTradeReplace implements CustomPacketPayload {
         return TYPE;
     }
 
-    public int getVillagerId() {
-        return this.villagerId;
+    public UUID getSessionId() {
+        return sessionId;
     }
 
     public int getTradeIndex() {
-        return this.tradeIndex;
+        return tradeIndex;
     }
 
-    public MerchantOffers getReplacement() {
-        return this.replacement;
-    }
-
-    public MerchantOffer getReplacementOffer(){
-        return this.replacement.get(0);
+    public int getCandidateIndex() {
+        return candidateIndex;
     }
 }
 
