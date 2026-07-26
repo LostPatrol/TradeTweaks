@@ -167,9 +167,10 @@ public final class TradeSelectionSessionManager {
                     continue;
                 }
 
-                MerchantOffer offer = listing.getOffer(villager, random);
-                if (offer != null && isValidReplacement(offer, allowEnchantedBooks)) {
-                    candidates.add(offer);
+                for (MerchantOffer offer : ListingVariantGenerator.generate(listing, villager, level)) {
+                    if (isValidReplacement(offer, allowEnchantedBooks)) {
+                        candidates.add(offer);
+                    }
                 }
             } catch (Exception e) {
                 TradeTweaks.LOGGER.error("Failed to generate a level {} trade candidate", level, e);
