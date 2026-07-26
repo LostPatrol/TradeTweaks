@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 final class ListingVariantGenerator {
-    private static final int MIN_PROBES = 32;
     private static final int STABLE_PROBES = 32;
     private static final int MAX_PROBES = 16_384;
 
@@ -34,7 +33,7 @@ final class ListingVariantGenerator {
 
         int probeLimit = Math.min(
                 MAX_PROBES,
-                Math.max(MIN_PROBES, BuiltInRegistries.ITEM.size())
+                Math.max(1, BuiltInRegistries.ITEM.size())
         );
         int maximumObservedBound = 1;
         int probesWithoutNewVariant = 0;
@@ -56,7 +55,7 @@ final class ListingVariantGenerator {
             int completedProbes = selector + 1;
             int requiredProbes = Math.min(
                     probeLimit,
-                    Math.max(MIN_PROBES, maximumObservedBound)
+                    maximumObservedBound
             );
             if (completedProbes >= requiredProbes
                     && (variants.size() <= 1 || probesWithoutNewVariant >= STABLE_PROBES)) {
