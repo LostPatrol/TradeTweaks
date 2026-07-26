@@ -1,46 +1,41 @@
 package net.lostpatrol.tradetweaks.network.packet;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.item.trading.MerchantOffers;
+
+import java.util.UUID;
 
 public class PacketTradeReplace {
-    private final int villagerId;
+    private final UUID sessionId;
     private final int tradeIndex;
-    private final MerchantOffers replacement;
+    private final int candidateIndex;
 
-    public PacketTradeReplace(int villagerId, int tradeIndex, MerchantOffer replacement) {
-        this.villagerId = villagerId;
+    public PacketTradeReplace(UUID sessionId, int tradeIndex, int candidateIndex) {
+        this.sessionId = sessionId;
         this.tradeIndex = tradeIndex;
-        this.replacement = new MerchantOffers();
-        this.replacement.add(replacement);
+        this.candidateIndex = candidateIndex;
     }
 
     public PacketTradeReplace(FriendlyByteBuf buf) {
-        this.villagerId = buf.readInt();
-        this.tradeIndex = buf.readInt();
-        this.replacement = MerchantOffers.createFromStream(buf);
+        this.sessionId = buf.readUUID();
+        this.tradeIndex = buf.readVarInt();
+        this.candidateIndex = buf.readVarInt();
     }
 
     public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(villagerId);
-        buf.writeInt(tradeIndex);
-        replacement.writeToStream(buf);
+        buf.writeUUID(sessionId);
+        buf.writeVarInt(tradeIndex);
+        buf.writeVarInt(candidateIndex);
     }
 
-    public int getVillagerId() {
-        return this.villagerId;
+    public UUID getSessionId() {
+        return sessionId;
     }
 
     public int getTradeIndex() {
-        return this.tradeIndex;
+        return tradeIndex;
     }
 
-    public MerchantOffers getReplacement() {
-        return this.replacement;
-    }
-
-    public MerchantOffer getReplacementOffer(){
-        return this.replacement.get(0);
+    public int getCandidateIndex() {
+        return candidateIndex;
     }
 }

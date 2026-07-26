@@ -1,23 +1,20 @@
 package net.lostpatrol.tradetweaks.client.gui;
 
-import net.lostpatrol.tradetweaks.common.dummy.DummyVillager;
-import net.lostpatrol.tradetweaks.common.wand.handler.HandlerTradeSelector;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
+import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.UUID;
 
 
 @OnlyIn(Dist.CLIENT)
@@ -30,12 +27,10 @@ public class TradeSelectionScreen extends Screen {
     private static final int CONTAINER_PADDING = 10; // Space around entire container
     private static final int CONTAINER_WIDTH = (PANEL_WIDTH * 2) + PANEL_SPACING;
 
-    private final int villagerId;
+    private final UUID sessionId;
     private final MerchantOffers offers;
-    private final int level;
-    private final VillagerProfession profession;
-    private final Villager dummyVillager;
-    private final boolean librarianEnchantedBookSelectionEnabled;
+    private final int[] candidatePoolIndices;
+    private final List<MerchantOffers> candidatePools;
 
     TradeListWidget leftPanel;
     private TradeListWidget rightPanel;
@@ -47,14 +42,12 @@ public class TradeSelectionScreen extends Screen {
     private final Component RIGHT_TITLE = Component.translatable("tradetweaks.gui.replacement_options").withStyle(ChatFormatting.GREEN);
 
     @OnlyIn(Dist.CLIENT)
-    public TradeSelectionScreen(DummyVillager dummyVillager) {
+    public TradeSelectionScreen(PacketOpenTradeSelection packet) {
         super(Component.translatable("tradetweaks.gui.trade_selection").withStyle(ChatFormatting.BOLD));
-        this.villagerId = dummyVillager.getVillagerId();
-        this.offers = dummyVillager.getOffers();
-        this.level = dummyVillager.getProfessionLevel();
-        this.profession = dummyVillager.getProfession();
-        this.dummyVillager = dummyVillager.getDummyVillager();
-        this.librarianEnchantedBookSelectionEnabled = dummyVillager.isLibrarianEnchantedBookSelectionEnabled();
+        this.sessionId = packet.getSessionId();
+        this.offers = packet.getOffers();
+        this.candidatePoolIndices = packet.getCandidatePoolIndices();
+        this.candidatePools = packet.getCandidatePools();
     }
 
     @Override
@@ -121,17 +114,10 @@ public class TradeSelectionScreen extends Screen {
         rightPanel.clearTrades();
         updateConfirmButton();
 
-        if (index >= 0 && index < offers.size()) {
-            MerchantOffer selectedOffer = offers.get(index);
-            List<MerchantOffer> possibleTrades = HandlerTradeSelector.getPossibleTrades(
-                    selectedOffer,
-                    level,
-                    profession,
-                    dummyVillager,
-                    librarianEnchantedBookSelectionEnabled
-            );
-
-            if (possibleTrades != null) {
+        if (index >= 0 && index < offers.size() && index < candidatePoolIndices.length) {
+            int poolIndex = candidatePoolIndices[index];
+            if (poolIndex >= 0 && poolIndex < candidatePools.size()) {
+                MerchantOffers possibleTrades = candidatePools.get(poolIndex);
                 for (int i = 0; i < possibleTrades.size(); i++) {
                     rightPanel.addTrade(possibleTrades.get(i), i);
                 }
@@ -151,9 +137,12 @@ public class TradeSelectionScreen extends Screen {
 
     private void confirmReplacement() {
         if (selectedTradeIndex >= 0 && selectedReplacementIndex >= 0) {
-            MerchantOffer replacement = rightPanel.getTrade(selectedReplacementIndex);
-            if (replacement != null) {
-                NetworkHandler.sendTradeReplaceToServer(new PacketTradeReplace(villagerId, selectedTradeIndex, replacement));
+            if (rightPanel.getTrade(selectedReplacementIndex) != null) {
+                NetworkHandler.sendTradeReplaceToServer(new PacketTradeReplace(
+                        sessionId,
+                        selectedTradeIndex,
+                        selectedReplacementIndex
+                ));
                 this.onClose();
             }
         }

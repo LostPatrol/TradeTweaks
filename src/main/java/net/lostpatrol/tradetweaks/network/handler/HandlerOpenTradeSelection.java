@@ -1,9 +1,7 @@
 package net.lostpatrol.tradetweaks.network.handler;
 
 import net.lostpatrol.tradetweaks.client.gui.TradeSelectionScreen;
-import net.lostpatrol.tradetweaks.common.dummy.DummyVillager;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -24,17 +22,6 @@ public class HandlerOpenTradeSelection {
 
     @OnlyIn(Dist.CLIENT)
     private static void handleClient(PacketOpenTradeSelection packet) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null) return;
-
-        mc.setScreen(new TradeSelectionScreen(new DummyVillager(
-                packet.getVillagerType(),
-                packet.getProfessionName(),
-                packet.getProfessionLevel(),
-                packet.getOffers(),
-                packet.getVillagerId(),
-                mc.level,
-                packet.isLibrarianEnchantedBookSelectionEnabled()
-        )));
-        }
+        net.minecraft.client.Minecraft.getInstance().setScreen(new TradeSelectionScreen(packet));
     }
+}
