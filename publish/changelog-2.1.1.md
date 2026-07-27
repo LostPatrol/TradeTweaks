@@ -8,3 +8,4 @@
 + Trade levels are resolved from the villager's actual career unlock order. Both trade slots unlocked at the same level now share the same candidate pool.
 + Librarian replacement options still include every tradeable enchantment at its maximum level.
 + Trade replacement now uses short-lived server sessions and validates the selected candidate, villager, distance, wand, and original offer before applying a change.
++ The trade selection screen no longer pauses single-player worlds, preventing the emerald wand's nearly finished cooldown overlay from flickering.

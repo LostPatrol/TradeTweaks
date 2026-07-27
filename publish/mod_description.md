@@ -92,6 +92,7 @@ Method 2:
 + Allows players to manually select available trades from villager's potential offer pool
 + Any trade with the same profession and profession level required, will be considered as an available trade.
 + Randomized category trades from mods are expanded into distinct item variants, so tag-like choices such as different logs or signs are all shown instead of one random example.
++ The selection screen behaves like the vanilla trading screen and does not pause a single-player world.
 + Allow duplicated trades
 + Compatible with multiplayers
 + A Nether Star is required to upgrade your wand to use this mode.
