@@ -8,6 +8,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -19,6 +21,7 @@ import java.util.UUID;
 
 @OnlyIn(Dist.CLIENT)
 public class TradeSelectionScreen extends Screen {
+    private static final double MAX_INTERACTION_DISTANCE_SQUARED = 64.0D;
     private static final int PANEL_WIDTH = 160;
     private static final int PANEL_MARGIN = 10;
     private static final int ITEM_HEIGHT = 20;
@@ -28,6 +31,7 @@ public class TradeSelectionScreen extends Screen {
     private static final int CONTAINER_WIDTH = (PANEL_WIDTH * 2) + PANEL_SPACING;
 
     private final UUID sessionId;
+    private final int villagerId;
     private final MerchantOffers offers;
     private final int[] candidatePoolIndices;
     private final List<MerchantOffers> candidatePools;
@@ -45,6 +49,7 @@ public class TradeSelectionScreen extends Screen {
     public TradeSelectionScreen(PacketOpenTradeSelection packet) {
         super(Component.translatable("tradetweaks.gui.trade_selection").withStyle(ChatFormatting.BOLD));
         this.sessionId = packet.getSessionId();
+        this.villagerId = packet.getVillagerId();
         this.offers = packet.getOffers();
         this.candidatePoolIndices = packet.getCandidatePoolIndices();
         this.candidatePools = packet.getCandidatePools();
@@ -108,6 +113,25 @@ public class TradeSelectionScreen extends Screen {
     @Override
     public boolean isPauseScreen() {
         return false;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.minecraft == null) {
+            return;
+        }
+        if (this.minecraft.level == null || this.minecraft.player == null) {
+            this.onClose();
+            return;
+        }
+
+        Entity entity = this.minecraft.level.getEntity(villagerId);
+        if (!(entity instanceof Villager villager)
+                || !villager.isAlive()
+                || this.minecraft.player.distanceToSqr(villager) > MAX_INTERACTION_DISTANCE_SQUARED) {
+            this.onClose();
+        }
     }
 
     public void selectExistingTrade(int index) {

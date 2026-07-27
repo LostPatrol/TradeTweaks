@@ -21,7 +21,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 public class NetworkHandler {
     private static SimpleChannel INSTANCE;
 
-    private static final String PROTOCOL_VERSION = "2";
+    private static final String PROTOCOL_VERSION = "3";
 
     public static SimpleChannel getChannel() {
         if (INSTANCE == null) {

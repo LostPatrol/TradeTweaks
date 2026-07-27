@@ -9,17 +9,20 @@ import java.util.UUID;
 
 public class PacketOpenTradeSelection {
     private final UUID sessionId;
+    private final int villagerId;
     private final MerchantOffers offers;
     private final int[] candidatePoolIndices;
     private final List<MerchantOffers> candidatePools;
 
     public PacketOpenTradeSelection(
             UUID sessionId,
+            int villagerId,
             MerchantOffers offers,
             int[] candidatePoolIndices,
             List<MerchantOffers> candidatePools
     ) {
         this.sessionId = sessionId;
+        this.villagerId = villagerId;
         this.offers = offers;
         this.candidatePoolIndices = candidatePoolIndices;
         this.candidatePools = candidatePools;
@@ -27,6 +30,7 @@ public class PacketOpenTradeSelection {
 
     public PacketOpenTradeSelection(FriendlyByteBuf buf) {
         this.sessionId = buf.readUUID();
+        this.villagerId = buf.readVarInt();
         this.offers = MerchantOffers.createFromStream(buf);
         this.candidatePoolIndices = new int[buf.readVarInt()];
         for (int i = 0; i < candidatePoolIndices.length; i++) {
@@ -41,6 +45,7 @@ public class PacketOpenTradeSelection {
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeUUID(sessionId);
+        buf.writeVarInt(villagerId);
         offers.writeToStream(buf);
         buf.writeVarInt(candidatePoolIndices.length);
         for (int poolIndex : candidatePoolIndices) {
@@ -54,6 +59,10 @@ public class PacketOpenTradeSelection {
 
     public UUID getSessionId() {
         return sessionId;
+    }
+
+    public int getVillagerId() {
+        return villagerId;
     }
 
     public MerchantOffers getOffers() {
