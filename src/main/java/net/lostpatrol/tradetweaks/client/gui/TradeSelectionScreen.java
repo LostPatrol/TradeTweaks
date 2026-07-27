@@ -110,6 +110,11 @@ public class TradeSelectionScreen extends Screen {
 
     }
 
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
     public void selectExistingTrade(int index) {
         if (this.selectedTradeIndex == index)
             return;
