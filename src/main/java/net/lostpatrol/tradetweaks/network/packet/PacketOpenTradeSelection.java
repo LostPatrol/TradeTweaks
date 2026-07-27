@@ -18,17 +18,20 @@ public class PacketOpenTradeSelection implements CustomPacketPayload {
             StreamCodec.of((buf, packet) -> packet.encode(buf), PacketOpenTradeSelection::new);
 
     private final UUID sessionId;
+    private final int villagerId;
     private final MerchantOffers offers;
     private final int[] candidatePoolIndices;
     private final List<MerchantOffers> candidatePools;
 
     public PacketOpenTradeSelection(
             UUID sessionId,
+            int villagerId,
             MerchantOffers offers,
             int[] candidatePoolIndices,
             List<MerchantOffers> candidatePools
     ) {
         this.sessionId = sessionId;
+        this.villagerId = villagerId;
         this.offers = offers;
         this.candidatePoolIndices = candidatePoolIndices;
         this.candidatePools = candidatePools;
@@ -36,6 +39,7 @@ public class PacketOpenTradeSelection implements CustomPacketPayload {
 
     public PacketOpenTradeSelection(RegistryFriendlyByteBuf buf) {
         this.sessionId = buf.readUUID();
+        this.villagerId = buf.readVarInt();
         this.offers = MerchantOffers.STREAM_CODEC.decode(buf);
         this.candidatePoolIndices = new int[buf.readVarInt()];
         for (int i = 0; i < candidatePoolIndices.length; i++) {
@@ -50,6 +54,7 @@ public class PacketOpenTradeSelection implements CustomPacketPayload {
 
     public void encode(RegistryFriendlyByteBuf buf) {
         buf.writeUUID(sessionId);
+        buf.writeVarInt(villagerId);
         MerchantOffers.STREAM_CODEC.encode(buf, offers);
         buf.writeVarInt(candidatePoolIndices.length);
         for (int poolIndex : candidatePoolIndices) {
@@ -68,6 +73,10 @@ public class PacketOpenTradeSelection implements CustomPacketPayload {
 
     public UUID getSessionId() {
         return sessionId;
+    }
+
+    public int getVillagerId() {
+        return villagerId;
     }
 
     public MerchantOffers getOffers() {

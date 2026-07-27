@@ -79,6 +79,7 @@ public final class TradeSelectionSessionManager {
 
         return new PacketOpenTradeSelection(
                 sessionId,
+                villager.getId(),
                 offers,
                 candidatePoolIndices,
                 candidatePools
