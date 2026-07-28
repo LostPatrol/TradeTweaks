@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:visible_hand",
+  "display": {
+    "icon": {
+      "id": "minecraft:enchanted_book"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.lite_enchantment_library.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.lite_enchantment_library.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "select_enchanted_book": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "select_enchanted_book"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

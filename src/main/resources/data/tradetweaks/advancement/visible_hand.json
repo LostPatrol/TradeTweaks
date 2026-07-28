@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:market_dominance",
+  "display": {
+    "icon": {
+      "id": "minecraft:emerald"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.visible_hand.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.visible_hand.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "replace_trade": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "replace_trade"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

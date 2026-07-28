@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:trade_rumor",
+  "display": {
+    "icon": {
+      "id": "minecraft:experience_bottle"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.smell_mending.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.smell_mending.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "find_mending": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "find_mending"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

@@ -1,5 +1,7 @@
 package net.lostpatrol.tradetweaks.common.wand.handler;
 
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.util.VillagerUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -42,6 +44,7 @@ public class HandlerTrackVillager {
 
         Villager villager = optionalVillager.get();
         VillagerUtil.highlightVillagerWithEntity(villager, DURATION_TICKS);
+        ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.TRACK_VILLAGER);
 
         player.sendSystemMessage(TRACK_VILLAGER_SUCCESS(villager));
         return InteractionResult.SUCCESS;

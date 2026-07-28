@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:quack_doctor",
+  "display": {
+    "icon": {
+      "id": "tradetweaks:restoration_bottle"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.miracle_doctor.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.miracle_doctor.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "restore_villager": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "restore_villager"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

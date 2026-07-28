@@ -1,5 +1,7 @@
 package net.lostpatrol.tradetweaks.common.wand.handler;
 
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.util.VillagerUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -41,6 +43,7 @@ public class HandlerVillagerRefresh {
         }
 
         player.displayClientMessage(REFRESH_SUCCESS, true);
+        ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.REFRESH);
 
         return InteractionResult.SUCCESS;
     }

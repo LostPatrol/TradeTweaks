@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:root",
+  "display": {
+    "icon": {
+      "id": "tradetweaks:totem_of_village_hero"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.hero_proof.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.hero_proof.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "use_hero_totem": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "use_hero_totem"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

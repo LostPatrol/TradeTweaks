@@ -2,6 +2,8 @@ package net.lostpatrol.tradetweaks.common.tradeselect;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.lostpatrol.tradetweaks.TradeTweaks;
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.common.wand.EmeraldWand;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.integrations.QuarkCompat;
@@ -155,6 +157,11 @@ public final class TradeSelectionSessionManager {
             }
 
             currentOffers.set(tradeIndex, replacement);
+            ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.REPLACE_TRADE);
+            if (villager.getVillagerData().getProfession() == VillagerProfession.LIBRARIAN
+                    && replacement.getResult().is(Items.ENCHANTED_BOOK)) {
+                ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.SELECT_ENCHANTED_BOOK);
+            }
         } finally {
             if (SESSIONS.remove(player.getUUID(), session)) {
                 releaseVillager(player.getServer(), player.getUUID(), session);

@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:root",
+  "display": {
+    "icon": {
+      "id": "tradetweaks:restock_writ"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.restock.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.restock.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "restock": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "restock"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

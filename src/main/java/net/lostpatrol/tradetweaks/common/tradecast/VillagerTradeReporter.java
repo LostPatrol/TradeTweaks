@@ -1,5 +1,7 @@
 package net.lostpatrol.tradetweaks.common.tradecast;
 
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.config.ClientConfig;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.util.VillagerUtil;
@@ -133,6 +135,9 @@ public class VillagerTradeReporter {
         if (offers.isEmpty()) {
             return;
         }
+        if (!usingWand) {
+            ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.RECEIVE_TRADE_REPORT);
+        }
 
         VillagerData data = villager.getVillagerData();
         Component professionName = VillagerUtil.getProfessionComponent(data.getProfession());
@@ -177,6 +182,7 @@ public class VillagerTradeReporter {
 
         if (!usingWand && hasMending) {
             VillagerUtil.highlightVillagerWithEntity(villager, 600);
+            ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.FIND_MENDING);
         }
     }
 

@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:root",
+  "display": {
+    "icon": {
+      "id": "minecraft:spyglass"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.trade_rumor.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.trade_rumor.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "receive_trade_report": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "receive_trade_report"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

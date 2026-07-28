@@ -1,5 +1,7 @@
 package net.lostpatrol.tradetweaks.common.item.villager;
 
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.TradeTweaks;
 import net.lostpatrol.tradetweaks.util.VillagerUtil;
 import net.minecraft.ChatFormatting;
@@ -78,6 +80,7 @@ public class RestockWritItem extends Item {
 
         player.displayClientMessage(RESTOCK_SUCCESS(useCount, useCount), true);
         player.awardStat(Stats.ITEM_USED.get(this));
+        ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.RESTOCK);
         player.swing(hand, true);
         villager.level().broadcastEntityEvent(villager, (byte) 14);
         VillagerItemEffects.playSound((ServerLevel) player.level(), villager, SoundEvents.VILLAGER_YES);

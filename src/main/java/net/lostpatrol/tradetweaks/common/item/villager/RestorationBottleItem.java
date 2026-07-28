@@ -1,5 +1,7 @@
 package net.lostpatrol.tradetweaks.common.item.villager;
 
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -42,6 +44,7 @@ public class RestorationBottleItem extends Item {
 
         VillagerItemEffects.consumeOne(player, stack);
         player.awardStat(Stats.ITEM_USED.get(this));
+        ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.RESTORE_VILLAGER);
         player.swing(hand, true);
         return InteractionResult.SUCCESS;
     }

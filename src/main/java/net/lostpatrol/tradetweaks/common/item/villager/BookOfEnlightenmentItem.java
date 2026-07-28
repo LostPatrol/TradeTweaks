@@ -1,5 +1,7 @@
 package net.lostpatrol.tradetweaks.common.item.villager;
 
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.util.VillagerUtil;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -46,6 +48,7 @@ public class BookOfEnlightenmentItem extends Item {
         player.awardStat(Stats.ITEM_USED.get(this));
         VillagerItemEffects.playSound(level, villager, SoundEvents.PLAYER_LEVELUP);
         VillagerItemEffects.spawnEmeraldPattern(level, villager);
+        ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.ENLIGHTEN_NITWIT);
         player.swing(hand, true);
         return InteractionResult.SUCCESS;
     }

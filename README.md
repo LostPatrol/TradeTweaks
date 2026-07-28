@@ -178,7 +178,29 @@ Server command. Changes the server update check interval. Requires permission.
 
 Server command.
 
-### ...
+### Advancements
+
+Trade Tweaks includes a dedicated advancement tab with 17 advancements covering every wand mode, trade selection, consumable items, and trade broadcasts.
+
+| Advancement | Type | Requirement |
+| --- | --- | --- |
+| Not a Builder's Wand | Root | Craft or obtain an Emerald Wand |
+| Pinpoint | Task | Locate a workstation from a villager |
+| Reverse Lookup | Task | Locate a villager from its workstation |
+| You're Fired! | Task | Successfully clear a villager's profession |
+| Clear Your Head | Task | Successfully refresh an unemployed villager's behavior |
+| Hired on the Spot | Task | Upgrade a villager's profession level |
+| Market Dominance | Goal | Obtain a Nether Star-upgraded Emerald Wand |
+| The Visible Hand | Challenge | Replace a villager trade |
+| Enchantment Library Lite | Goal | Select an enchanted book trade for a librarian |
+| Wand Virtuoso | Challenge | Successfully use all six Emerald Wand modes |
+| Knowledge Overload | Challenge | Educate a nitwit with a Book of Enlightenment |
+| Quack | Goal | Infect a villager with a Reversion Bottle |
+| Miracle Worker | Goal | Restore a zombie villager with a Restoration Bottle |
+| Hand It Over! | Goal | Successfully use a Restock Writ |
+| Proof of Heroism | Goal | Use a Totem of Village Hero |
+| Word on the Street | Task | Receive a non-empty trade report |
+| I Smell Mending | Goal | Have a trade report find and highlight a Mending villager |
 
 ## Compatibility
 

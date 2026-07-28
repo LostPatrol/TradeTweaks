@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:root",
+  "display": {
+    "icon": {
+      "id": "tradetweaks:book_of_enlightenment"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.enlighten_nitwit.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.enlighten_nitwit.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "enlighten_nitwit": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "enlighten_nitwit"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

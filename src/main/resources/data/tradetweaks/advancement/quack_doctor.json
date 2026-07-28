@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:root",
+  "display": {
+    "icon": {
+      "id": "tradetweaks:reversion_bottle"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.quack_doctor.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.quack_doctor.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "revert_villager": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "revert_villager"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}
