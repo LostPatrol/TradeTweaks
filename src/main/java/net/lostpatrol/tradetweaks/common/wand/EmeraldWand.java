@@ -2,6 +2,7 @@ package net.lostpatrol.tradetweaks.common.wand;
 
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.lostpatrol.tradetweaks.network.packet.PacketWandModeSwitch;
+import net.lostpatrol.tradetweaks.util.VillagerUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -141,6 +142,13 @@ public class EmeraldWand extends Item {
         }
 
         WandMode mode = getMode(stack);
+        if (VillagerUtil.isTradingWithOtherPlayer(villager, player)
+                && (mode == WandMode.RESET_MODE
+                || mode == WandMode.UPGRADE_MODE
+                || mode == WandMode.SELECT_MODE)) {
+            VillagerUtil.refuseInteraction(villager);
+            return InteractionResult.SUCCESS;
+        }
         if (ENTITY_MODES.contains(mode)){
             player.getCooldowns().addCooldown(this, COOLDOWN_TICKS);
             player.swing(InteractionHand.MAIN_HAND);

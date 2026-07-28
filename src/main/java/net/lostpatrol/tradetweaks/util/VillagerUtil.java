@@ -2,10 +2,12 @@ package net.lostpatrol.tradetweaks.util;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.UUID;
 
@@ -43,6 +45,16 @@ public class VillagerUtil {
 
     public static boolean isLibrarian(Villager villager){
         return villager.getVillagerData().getProfession() == VillagerProfession.LIBRARIAN;
+    }
+
+    public static boolean isTradingWithOtherPlayer(Villager villager, Player player) {
+        Player tradingPlayer = villager.getTradingPlayer();
+        return tradingPlayer != null && !tradingPlayer.getUUID().equals(player.getUUID());
+    }
+
+    public static void refuseInteraction(Villager villager) {
+        villager.setUnhappyCounter(40);
+        villager.playSound(SoundEvents.VILLAGER_NO, 1.0F, 1.0F);
     }
 
     @Deprecated

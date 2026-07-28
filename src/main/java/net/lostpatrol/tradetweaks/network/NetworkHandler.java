@@ -1,11 +1,13 @@
 package net.lostpatrol.tradetweaks.network;
 
 import net.lostpatrol.tradetweaks.network.handler.HandlerBlockHighlight;
+import net.lostpatrol.tradetweaks.network.handler.HandlerCloseTradeSelection;
 import net.lostpatrol.tradetweaks.network.handler.HandlerOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.handler.HandlerTradeReplace;
 import net.lostpatrol.tradetweaks.network.handler.HandlerWandModeSet;
 import net.lostpatrol.tradetweaks.network.handler.HandlerWandModeSwitch;
 import net.lostpatrol.tradetweaks.network.packet.PacketBlockHighlight;
+import net.lostpatrol.tradetweaks.network.packet.PacketCloseTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketItemActivation;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
@@ -18,7 +20,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class NetworkHandler {
-    private static final String PROTOCOL_VERSION = "3";
+    private static final String PROTOCOL_VERSION = "4";
 
     public static void register(IEventBus modEventBus) {
         modEventBus.addListener(NetworkHandler::registerPayloads);
@@ -29,6 +31,11 @@ public class NetworkHandler {
         registrar.playToServer(PacketWandModeSwitch.TYPE, PacketWandModeSwitch.STREAM_CODEC, HandlerWandModeSwitch::handle);
         registrar.playToClient(PacketBlockHighlight.TYPE, PacketBlockHighlight.STREAM_CODEC, HandlerBlockHighlight::handle);
         registrar.playToServer(PacketTradeReplace.TYPE, PacketTradeReplace.STREAM_CODEC, HandlerTradeReplace::handle);
+        registrar.playToServer(
+                PacketCloseTradeSelection.TYPE,
+                PacketCloseTradeSelection.STREAM_CODEC,
+                HandlerCloseTradeSelection::handle
+        );
         registrar.playToClient(PacketOpenTradeSelection.TYPE, PacketOpenTradeSelection.STREAM_CODEC, HandlerOpenTradeSelection::handle);
         registrar.playToClient(PacketItemActivation.TYPE, PacketItemActivation.STREAM_CODEC, PacketItemActivation::handle);
         registrar.playToServer(PacketWandModeSet.TYPE, PacketWandModeSet.STREAM_CODEC, HandlerWandModeSet::handle);
@@ -51,6 +58,10 @@ public class NetworkHandler {
     }
 
     public static void sendTradeReplaceToServer(PacketTradeReplace packet) {
+        PacketDistributor.sendToServer(packet);
+    }
+
+    public static void sendCloseTradeSelectionToServer(PacketCloseTradeSelection packet) {
         PacketDistributor.sendToServer(packet);
     }
 

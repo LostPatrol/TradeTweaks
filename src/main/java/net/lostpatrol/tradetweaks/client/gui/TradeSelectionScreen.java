@@ -2,10 +2,12 @@ package net.lostpatrol.tradetweaks.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
+import net.lostpatrol.tradetweaks.network.packet.PacketCloseTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -77,6 +79,8 @@ public class TradeSelectionScreen extends Screen {
     private int selectedReplacementIndex = -1;
     private boolean draggingExistingScroller;
     private boolean draggingReplacementScroller;
+    private boolean replacementSubmitted;
+    private boolean closePacketSent;
 
     public TradeSelectionScreen(PacketOpenTradeSelection packet) {
         super(Component.translatable("tradetweaks.gui.trade_selection"));
@@ -118,15 +122,17 @@ public class TradeSelectionScreen extends Screen {
         this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         renderPanelBackground(guiGraphics, this.leftPos);
         renderPanelBackground(guiGraphics, this.rightPos);
-        renderPanelTitle(guiGraphics, LEFT_TITLE, this.leftPos);
-        renderPanelTitle(guiGraphics, RIGHT_TITLE, this.rightPos);
         updateButtonStates();
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        for (Renderable renderable : this.renderables) {
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
 
         renderOffers(guiGraphics, this.offers, this.leftPos, this.existingScrollOff);
         renderOffers(guiGraphics, this.replacementOffers, this.rightPos, this.replacementScrollOff);
         renderScroller(guiGraphics, this.leftPos, this.offers, this.existingScrollOff);
         renderScroller(guiGraphics, this.rightPos, this.replacementOffers, this.replacementScrollOff);
+        renderPanelTitle(guiGraphics, LEFT_TITLE, this.leftPos);
+        renderPanelTitle(guiGraphics, RIGHT_TITLE, this.rightPos);
         renderButtonTooltips(guiGraphics, this.existingTradeButtons, mouseX, mouseY);
         renderButtonTooltips(guiGraphics, this.replacementTradeButtons, mouseX, mouseY);
         RenderSystem.enableDepthTest();
@@ -330,10 +336,31 @@ public class TradeSelectionScreen extends Screen {
                 || this.selectedReplacementIndex >= this.replacementOffers.size()) {
             return;
         }
+        this.replacementSubmitted = true;
         NetworkHandler.sendTradeReplaceToServer(
                 new PacketTradeReplace(this.sessionId, this.selectedTradeIndex, this.selectedReplacementIndex)
         );
         this.onClose();
+    }
+
+    @Override
+    public void onClose() {
+        sendClosePacket();
+        super.onClose();
+    }
+
+    @Override
+    public void removed() {
+        sendClosePacket();
+        super.removed();
+    }
+
+    private void sendClosePacket() {
+        if (this.replacementSubmitted || this.closePacketSent) {
+            return;
+        }
+        this.closePacketSent = true;
+        NetworkHandler.sendCloseTradeSelectionToServer(new PacketCloseTradeSelection(this.sessionId));
     }
 
     private boolean canScroll(MerchantOffers panelOffers) {
