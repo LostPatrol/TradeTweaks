@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.lostpatrol.tradetweaks.command.InternalCommand;
 import net.lostpatrol.tradetweaks.command.TradeBroadcastCommand;
 import net.lostpatrol.tradetweaks.common.tradecast.VillagerTradeReporter;
+import net.lostpatrol.tradetweaks.common.tradeselect.TradeSelectionSessionManager;
 import net.lostpatrol.tradetweaks.config.ClientConfig;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.common.item.ModCreativeModeTab;
@@ -36,6 +37,7 @@ public class TradeTweaks {
 
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(RaidRewardHandler.class);
+        MinecraftForge.EVENT_BUS.register(TradeSelectionSessionManager.class);
         if (FMLEnvironment.dist == Dist.CLIENT){
             MinecraftForge.EVENT_BUS.register(HandlerBlockHighlight.class);
             MinecraftForge.EVENT_BUS.register(HandlerOpenTradeSelection.class);

@@ -49,6 +49,11 @@ public class RestockWritItem extends Item {
             return InteractionResult.SUCCESS;
         }
 
+        if (VillagerUtil.isTradingWithOtherPlayer(villager, player)) {
+            VillagerUtil.refuseInteraction(villager);
+            return InteractionResult.SUCCESS;
+        }
+
         if (VillagerUtil.isUnemployed(villager) || VillagerUtil.isNitwit(villager)) {
             player.displayClientMessage(RESTOCK_FAIL_NOT_OCCUPIED, true);
             return InteractionResult.SUCCESS;

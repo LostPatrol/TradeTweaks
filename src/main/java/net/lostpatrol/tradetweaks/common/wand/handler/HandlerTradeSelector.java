@@ -29,10 +29,10 @@ public class HandlerTradeSelector {
         }
 
         if (player instanceof ServerPlayer serverPlayer){
-            NetworkHandler.sendOpenTradeSelectionToPlayer(
-                    serverPlayer,
-                    TradeSelectionSessionManager.createSession(serverPlayer, villager)
-            );
+            var packet = TradeSelectionSessionManager.createSession(serverPlayer, villager);
+            if (packet != null) {
+                NetworkHandler.sendOpenTradeSelectionToPlayer(serverPlayer, packet);
+            }
         }
         return InteractionResult.CONSUME;
     }

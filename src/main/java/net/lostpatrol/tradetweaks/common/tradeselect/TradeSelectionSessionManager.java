@@ -6,13 +6,17 @@ import net.lostpatrol.tradetweaks.common.wand.EmeraldWand;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.integrations.QuarkCompat;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
+import net.lostpatrol.tradetweaks.util.VillagerUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -20,9 +24,14 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -35,9 +44,17 @@ public final class TradeSelectionSessionManager {
     private TradeSelectionSessionManager() {
     }
 
+    @Nullable
     public static PacketOpenTradeSelection createSession(ServerPlayer player, Villager villager) {
         long now = System.currentTimeMillis();
-        SESSIONS.values().removeIf(session -> now - session.createdAtMillis() > SESSION_LIFETIME_MILLIS);
+        cleanupSessions(player.getServer(), now);
+
+        SelectionSession previousSession = SESSIONS.remove(player.getUUID());
+        releaseVillager(player.getServer(), player.getUUID(), previousSession);
+        if (villager.isTrading()) {
+            VillagerUtil.refuseInteraction(villager);
+            return null;
+        }
 
         MerchantOffers offers = villager.getOffers();
         int careerLevel = villager.getVillagerData().getLevel();
@@ -69,6 +86,8 @@ public final class TradeSelectionSessionManager {
                 candidatePoolIndices,
                 candidatePools
         );
+        villager.setTradingPlayer(player);
+        villager.getNavigation().stop();
         SESSIONS.put(player.getUUID(), session);
 
         return new PacketOpenTradeSelection(
@@ -85,51 +104,143 @@ public final class TradeSelectionSessionManager {
         if (session == null || !session.id().equals(sessionId)) {
             return;
         }
-        SESSIONS.remove(player.getUUID());
+        try {
+            if (System.currentTimeMillis() - session.createdAtMillis() > SESSION_LIFETIME_MILLIS) {
+                return;
+            }
 
-        if (System.currentTimeMillis() - session.createdAtMillis() > SESSION_LIFETIME_MILLIS) {
-            return;
+            Entity entity = player.serverLevel().getEntity(session.villagerId());
+            if (!(entity instanceof Villager villager)
+                    || !villager.isAlive()
+                    || !isSessionOwner(villager, player.getUUID())
+                    || player.distanceToSqr(villager) > MAX_REPLACE_DISTANCE_SQUARED
+                    || !hasSelectionWand(player)) {
+                return;
+            }
+
+            MerchantOffers currentOffers = villager.getOffers();
+            if (tradeIndex < 0
+                    || tradeIndex >= currentOffers.size()
+                    || tradeIndex >= session.originalOffers().size()
+                    || tradeIndex >= session.originalSnapshots().size()
+                    || tradeIndex >= session.candidatePoolIndices().length) {
+                return;
+            }
+
+            MerchantOffer currentOffer = currentOffers.get(tradeIndex);
+            if (currentOffer != session.originalOffers().get(tradeIndex)
+                    || !session.originalSnapshots().get(tradeIndex).matches(currentOffer)) {
+                return;
+            }
+
+            int poolIndex = session.candidatePoolIndices()[tradeIndex];
+            if (poolIndex < 0 || poolIndex >= session.candidatePools().size()) {
+                return;
+            }
+
+            MerchantOffers candidatePool = session.candidatePools().get(poolIndex);
+            if (candidateIndex < 0 || candidateIndex >= candidatePool.size()) {
+                return;
+            }
+
+            MerchantOffer replacement = candidatePool.get(candidateIndex);
+            if (!ServerConfig.isLibrarianEnchantedBookSelectionEnabled() && containsEnchantedBook(replacement)) {
+                return;
+            }
+
+            currentOffers.set(tradeIndex, replacement);
+        } finally {
+            if (SESSIONS.remove(player.getUUID(), session)) {
+                releaseVillager(player.getServer(), player.getUUID(), session);
+            }
         }
+    }
 
-        Entity entity = player.serverLevel().getEntity(session.villagerId());
-        if (!(entity instanceof Villager villager)
-                || !villager.isAlive()
-                || player.distanceToSqr(villager) > MAX_REPLACE_DISTANCE_SQUARED
-                || !hasSelectionWand(player)) {
-            return;
+    public static void closeSession(ServerPlayer player, UUID sessionId) {
+        SelectionSession session = SESSIONS.get(player.getUUID());
+        if (session != null
+                && session.id().equals(sessionId)
+                && SESSIONS.remove(player.getUUID(), session)) {
+            releaseVillager(player.getServer(), player.getUUID(), session);
         }
+    }
 
-        MerchantOffers currentOffers = villager.getOffers();
-        if (tradeIndex < 0
-                || tradeIndex >= currentOffers.size()
-                || tradeIndex >= session.originalOffers().size()
-                || tradeIndex >= session.originalSnapshots().size()
-                || tradeIndex >= session.candidatePoolIndices().length) {
-            return;
+    public static boolean isSelectionLocked(Villager villager) {
+        Player tradingPlayer = villager.getTradingPlayer();
+        if (tradingPlayer == null) {
+            return false;
         }
+        SelectionSession session = SESSIONS.get(tradingPlayer.getUUID());
+        return session != null && session.villagerId().equals(villager.getUUID());
+    }
 
-        MerchantOffer currentOffer = currentOffers.get(tradeIndex);
-        if (currentOffer != session.originalOffers().get(tradeIndex)
-                || !session.originalSnapshots().get(tradeIndex).matches(currentOffer)) {
-            return;
+    @SubscribeEvent
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase == TickEvent.Phase.END && event.getServer().getTickCount() % 20 == 0) {
+            cleanupSessions(event.getServer(), System.currentTimeMillis());
         }
+    }
 
-        int poolIndex = session.candidatePoolIndices()[tradeIndex];
-        if (poolIndex < 0 || poolIndex >= session.candidatePools().size()) {
-            return;
+    @SubscribeEvent
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            SelectionSession session = SESSIONS.remove(player.getUUID());
+            releaseVillager(player.getServer(), player.getUUID(), session);
         }
+    }
 
-        MerchantOffers candidatePool = session.candidatePools().get(poolIndex);
-        if (candidateIndex < 0 || candidateIndex >= candidatePool.size()) {
-            return;
+    private static void cleanupSessions(MinecraftServer server, long now) {
+        Iterator<Map.Entry<UUID, SelectionSession>> iterator = SESSIONS.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<UUID, SelectionSession> entry = iterator.next();
+            UUID playerId = entry.getKey();
+            SelectionSession session = entry.getValue();
+            ServerPlayer player = server.getPlayerList().getPlayer(playerId);
+            Villager villager = findVillager(server, session.villagerId());
+            boolean invalid = now - session.createdAtMillis() > SESSION_LIFETIME_MILLIS
+                    || player == null
+                    || villager == null
+                    || !villager.isAlive()
+                    || player.level() != villager.level()
+                    || player.distanceToSqr(villager) > MAX_REPLACE_DISTANCE_SQUARED
+                    || !isSessionOwner(villager, playerId);
+            if (invalid) {
+                iterator.remove();
+                releaseVillager(villager, playerId);
+            }
         }
+    }
 
-        MerchantOffer replacement = candidatePool.get(candidateIndex);
-        if (!ServerConfig.isLibrarianEnchantedBookSelectionEnabled() && containsEnchantedBook(replacement)) {
-            return;
+    @Nullable
+    private static Villager findVillager(MinecraftServer server, UUID villagerId) {
+        for (ServerLevel level : server.getAllLevels()) {
+            Entity entity = level.getEntity(villagerId);
+            if (entity instanceof Villager villager) {
+                return villager;
+            }
         }
+        return null;
+    }
 
-        currentOffers.set(tradeIndex, replacement);
+    private static void releaseVillager(
+            MinecraftServer server,
+            UUID playerId,
+            @Nullable SelectionSession session
+    ) {
+        if (session != null) {
+            releaseVillager(findVillager(server, session.villagerId()), playerId);
+        }
+    }
+
+    private static void releaseVillager(@Nullable Villager villager, UUID playerId) {
+        if (villager != null && isSessionOwner(villager, playerId)) {
+            villager.setTradingPlayer(null);
+        }
+    }
+
+    private static boolean isSessionOwner(Villager villager, UUID playerId) {
+        Player tradingPlayer = villager.getTradingPlayer();
+        return tradingPlayer != null && tradingPlayer.getUUID().equals(playerId);
     }
 
     private static Int2ObjectMap<VillagerTrades.ItemListing[]> getTrades(Villager villager) {

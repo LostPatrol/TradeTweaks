@@ -2,11 +2,13 @@ package net.lostpatrol.tradetweaks.network;
 
 import net.lostpatrol.tradetweaks.TradeTweaks;
 import net.lostpatrol.tradetweaks.network.handler.HandlerBlockHighlight;
+import net.lostpatrol.tradetweaks.network.handler.HandlerCloseTradeSelection;
 import net.lostpatrol.tradetweaks.network.handler.HandlerOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.handler.HandlerTradeReplace;
 import net.lostpatrol.tradetweaks.network.handler.HandlerWandModeSet;
 import net.lostpatrol.tradetweaks.network.handler.HandlerWandModeSwitch;
 import net.lostpatrol.tradetweaks.network.packet.PacketBlockHighlight;
+import net.lostpatrol.tradetweaks.network.packet.PacketCloseTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketItemActivation;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
@@ -21,7 +23,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 public class NetworkHandler {
     private static SimpleChannel INSTANCE;
 
-    private static final String PROTOCOL_VERSION = "3";
+    private static final String PROTOCOL_VERSION = "4";
 
     public static SimpleChannel getChannel() {
         if (INSTANCE == null) {
@@ -59,6 +61,13 @@ public class NetworkHandler {
                 PacketTradeReplace::encode,
                 PacketTradeReplace::new,
                 HandlerTradeReplace::handle
+        );
+        INSTANCE.registerMessage(
+                id++,
+                PacketCloseTradeSelection.class,
+                PacketCloseTradeSelection::encode,
+                PacketCloseTradeSelection::new,
+                HandlerCloseTradeSelection::handle
         );
         INSTANCE.registerMessage(
                 id++,
@@ -100,6 +109,10 @@ public class NetworkHandler {
     }
 
     public static void sendTradeReplaceToServer(PacketTradeReplace packet){
+        getChannel().sendToServer(packet);
+    }
+
+    public static void sendCloseTradeSelectionToServer(PacketCloseTradeSelection packet) {
         getChannel().sendToServer(packet);
     }
 
