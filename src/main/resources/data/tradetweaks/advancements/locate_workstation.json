@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:compass"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.locate_workstation.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.locate_workstation.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "track_block": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "track_block"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

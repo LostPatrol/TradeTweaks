@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:clock"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.refresh_villager.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.refresh_villager.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "refresh": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "refresh"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

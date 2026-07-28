@@ -1,5 +1,7 @@
 package net.lostpatrol.tradetweaks.common.item.villager;
 
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.common.item.ModItems;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.lostpatrol.tradetweaks.network.packet.PacketItemActivation;
@@ -47,6 +49,7 @@ public class TotemOfVillageHeroItem extends Item {
         player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, duration, amplifier));
         VillagerItemEffects.consumeOne(player, stack);
         player.awardStat(Stats.ITEM_USED.get(this));
+        ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.USE_HERO_TOTEM);
         ServerLevel serverLevel = (ServerLevel) level;
         VillagerItemEffects.spawnFireworkTrail(serverLevel, player);
         level.playSound(null, player.blockPosition(), SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.AMBIENT, 3.0F, 1.0F);

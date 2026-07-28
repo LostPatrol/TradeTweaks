@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:bell"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.locate_villager.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.locate_villager.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "track_villager": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "track_villager"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

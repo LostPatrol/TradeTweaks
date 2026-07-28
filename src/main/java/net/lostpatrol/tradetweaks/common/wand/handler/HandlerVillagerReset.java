@@ -1,5 +1,7 @@
 package net.lostpatrol.tradetweaks.common.wand.handler;
 
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.util.VillagerUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
@@ -56,6 +58,7 @@ public class HandlerVillagerReset {
         }
 
         player.displayClientMessage(RESET_SUCCESS, true);
+        ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.RESET);
         spawnSmokeParticles(villager);
         villager.level().playSound(null, villager.blockPosition(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1.0F, 1.0F);
 

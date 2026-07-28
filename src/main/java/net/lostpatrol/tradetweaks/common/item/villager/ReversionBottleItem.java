@@ -1,5 +1,7 @@
 package net.lostpatrol.tradetweaks.common.item.villager;
 
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -71,6 +73,7 @@ public class ReversionBottleItem extends Item {
         VillagerItemEffects.spawnBloodParticles(level, zombieVillager);
         VillagerItemEffects.consumeOne(player, stack);
         player.awardStat(Stats.ITEM_USED.get(this));
+        ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.REVERT_VILLAGER);
         player.swing(hand, true);
         return InteractionResult.SUCCESS;
     }

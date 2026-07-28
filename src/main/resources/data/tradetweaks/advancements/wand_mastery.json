@@ -1,0 +1,77 @@
+{
+  "parent": "tradetweaks:market_dominance",
+  "display": {
+    "icon": {
+      "item": "tradetweaks:emerald_wand"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.wand_mastery.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.wand_mastery.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "reset": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "reset"
+      }
+    },
+    "track_block": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "track_block"
+      }
+    },
+    "track_villager": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "track_villager"
+      }
+    },
+    "refresh": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "refresh"
+      }
+    },
+    "upgrade": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "upgrade"
+      }
+    },
+    "open_selection": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "open_selection"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "reset"
+    ],
+    [
+      "track_block"
+    ],
+    [
+      "track_villager"
+    ],
+    [
+      "refresh"
+    ],
+    [
+      "upgrade"
+    ],
+    [
+      "open_selection"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

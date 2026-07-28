@@ -1,5 +1,10 @@
 # 2.1.1 CHANGELOG
 
+# NEW
+
++ Added a dedicated Trade Tweaks advancement tab with 17 advancements covering all Emerald Wand modes, trade selection, consumable villager tools, and trade broadcasts.
++ Successful mod actions now feed event-driven advancement criteria, including an all-six-modes challenge and Mending discovery through trade broadcasts.
+
 # FIX
 
 + Trade replacement candidates are now generated from the server's fully loaded trade tables, adding generic support for modded villager professions and data-driven trades.

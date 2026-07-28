@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "item": "tradetweaks:emerald_wand"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.root.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.root.description"
+    },
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "has_emerald_wand": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tradetweaks:emerald_wand"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

@@ -1,5 +1,7 @@
 package net.lostpatrol.tradetweaks.common.wand.handler;
 
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.common.tradeselect.TradeSelectionSessionManager;
 import net.lostpatrol.tradetweaks.common.wand.EmeraldWand;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
@@ -31,6 +33,7 @@ public class HandlerTradeSelector {
         if (player instanceof ServerPlayer serverPlayer){
             var packet = TradeSelectionSessionManager.createSession(serverPlayer, villager);
             if (packet != null) {
+                ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.OPEN_SELECTION);
                 NetworkHandler.sendOpenTradeSelectionToPlayer(serverPlayer, packet);
             }
         }

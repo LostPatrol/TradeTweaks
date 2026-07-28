@@ -1,5 +1,7 @@
 package net.lostpatrol.tradetweaks.common.wand.handler;
 
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.util.VillagerUtil;
 import net.minecraft.ChatFormatting;
@@ -69,6 +71,7 @@ public class HandlerUpgradeVillager {
 //        villager.handleEntityEvent((byte) 14);    this doesn't work, so we add particles manually
         spawnHappyParticles(villager);
         villager.level().playSound(null, villager.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.NEUTRAL, 1.0F, 1.0F);
+        ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.UPGRADE);
 
         return InteractionResult.SUCCESS;
     }

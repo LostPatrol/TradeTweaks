@@ -1,6 +1,7 @@
 package net.lostpatrol.tradetweaks;
 
 import com.mojang.logging.LogUtils;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.command.InternalCommand;
 import net.lostpatrol.tradetweaks.command.TradeBroadcastCommand;
 import net.lostpatrol.tradetweaks.common.tradecast.VillagerTradeReporter;
@@ -52,5 +53,6 @@ public class TradeTweaks {
         ModItems.register(modEventBus);
         ModCreativeModeTab.register(modEventBus);
         ModRecipeSerializers.register(modEventBus);
+        ModCriteriaTriggers.register();
     }
 }

@@ -1,5 +1,7 @@
 package net.lostpatrol.tradetweaks.common.wand.handler;
 
+import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
+import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.lostpatrol.tradetweaks.network.packet.PacketBlockHighlight;
 import net.lostpatrol.tradetweaks.util.VillagerUtil;
@@ -62,6 +64,7 @@ public class HandlerTrackBlock {
     }
 
     private static void highlightBlock(Player player, BlockPos pos, float red, float green, float blue) {
+        ModCriteriaTriggers.trigger(player, AdvancementEventTrigger.Event.TRACK_BLOCK);
         player.sendSystemMessage(TRACK_BLOCK_SUCCESS(pos));
         if (player instanceof ServerPlayer serverPlayer) {
             NetworkHandler.sendBlockHighlightToPlayer(

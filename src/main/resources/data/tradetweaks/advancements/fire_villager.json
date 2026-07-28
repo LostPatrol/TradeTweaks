@@ -1,0 +1,27 @@
+{
+  "parent": "tradetweaks:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:barrier"
+    },
+    "title": {
+      "translate": "advancements.tradetweaks.fire_villager.title"
+    },
+    "description": {
+      "translate": "advancements.tradetweaks.fire_villager.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "reset": {
+      "trigger": "tradetweaks:event",
+      "conditions": {
+        "event": "reset"
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}
