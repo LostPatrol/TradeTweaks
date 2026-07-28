@@ -81,7 +81,7 @@ Method 2:
 + Allows players to manually select any possible trade for a villager as its current trade option
 + Any trade with the same profession requirement and profession level requirement as the current trade option is considered a possible trade
 + Randomized category trades from mods are expanded into distinct item variants, so tag-like choices such as different logs or signs are all shown instead of one random example
-+ The selection screen behaves like the vanilla trading screen and does not pause a single-player world
++ The selection screen reuses the vanilla villager trading visuals and controls, with current trades on the left and available replacements on the right; it does not pause a single-player world
 + The selection screen closes automatically if the villager dies, unloads, or moves more than 8 blocks away
 + Allows a villager to have multiple duplicate trade options, and supports multiplayer
 + Requires 1 nether star to upgrade the wand before this feature can be used
