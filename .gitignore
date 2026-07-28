@@ -25,10 +25,9 @@ runs
 run-data
 useless
 repo
-assets
-agents/codex
+/assets/
+codex
 grok
-
 agents
 .agents
 AGENTS.md
