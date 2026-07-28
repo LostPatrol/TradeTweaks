@@ -62,7 +62,7 @@
   "tradetweaks.gui.replacement_options": "Replacements",
   "tradetweaks.gui.existing_trades":"Existing Trades",
   "tradetweaks.gui.confirm": "OK",
-  "tradetweaks.gui.narration.trade_entry": "Open Trade Selection Window",
+  "tradetweaks.gui.narration.trade_entry": "Trade %s for %s",
 
   "tradetweaks.settings.enchant_books_selection": "Librarian enchanted book selection set to: %s",
 

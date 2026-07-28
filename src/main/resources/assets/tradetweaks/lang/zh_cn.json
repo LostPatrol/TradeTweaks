@@ -65,7 +65,7 @@
   "tradetweaks.gui.replacement_options": "可交换项",
   "tradetweaks.gui.existing_trades":"现有交易",
   "tradetweaks.gui.confirm": "确定",
-  "tradetweaks.gui.narration.trade_entry": "打开交易选择窗口",
+  "tradetweaks.gui.narration.trade_entry": "使用%s交易%s",
 
   "tradetweaks.settings.enchant_books_selection": "图书管理员附魔书自选已设置为: %s",
 

@@ -10,3 +10,4 @@
 + Trade replacement now uses short-lived server sessions and validates the selected candidate, villager, distance, wand, and original offer before applying a change.
 + The trade selection screen no longer pauses single-player worlds, preventing the emerald wand's nearly finished cooldown overlay from flickering.
 + The trade selection screen now closes if its villager dies, unloads, or moves more than 8 blocks away.
++ The custom trade selection lists have been replaced with a two-column interface using the vanilla villager trading visuals and controls, with current trades on the left and available replacements on the right.
