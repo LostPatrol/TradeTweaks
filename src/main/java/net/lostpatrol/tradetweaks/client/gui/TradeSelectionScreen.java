@@ -44,6 +44,7 @@ public class TradeSelectionScreen extends Screen {
     private static final int SCROLLER_WIDTH = 6;
     private static final int SCROLLER_HEIGHT = 27;
     private static final int SCROLL_BAR_HEIGHT = 139;
+    private static final int SCROLLER_MAX_Y = SCROLL_BAR_HEIGHT - SCROLLER_HEIGHT + 1;
     private static final int SCREEN_HEIGHT = PANEL_HEIGHT + 25;
     private static final Component LEFT_TITLE = Component.translatable("tradetweaks.gui.existing_trades");
     private static final Component RIGHT_TITLE = Component.translatable("tradetweaks.gui.replacement_options");
@@ -212,15 +213,10 @@ public class TradeSelectionScreen extends Screen {
     }
 
     private void renderScroller(GuiGraphics guiGraphics, int panelX, MerchantOffers panelOffers, int scrollOff) {
-        int scrollRange = panelOffers.size() + 1 - OFFER_COUNT;
-        if (scrollRange > 1) {
-            int remainder = SCROLL_BAR_HEIGHT
-                    - (SCROLLER_HEIGHT + (scrollRange - 1) * SCROLL_BAR_HEIGHT / scrollRange);
-            int step = 1 + remainder / scrollRange + SCROLL_BAR_HEIGHT / scrollRange;
-            int scrollY = Math.min(113, scrollOff * step);
-            if (scrollOff == scrollRange - 1) {
-                scrollY = 113;
-            }
+        int maxOffset = panelOffers.size() - OFFER_COUNT;
+        if (maxOffset > 0) {
+            int normalizedOffset = Mth.clamp(scrollOff, 0, maxOffset);
+            int scrollY = normalizedOffset * SCROLLER_MAX_Y / maxOffset;
             guiGraphics.blit(
                     VILLAGER_LOCATION,
                     panelX + SCROLLER_X,
@@ -425,7 +421,7 @@ public class TradeSelectionScreen extends Screen {
     private int dragScroller(double mouseY, MerchantOffers panelOffers) {
         int maxOffset = panelOffers.size() - OFFER_COUNT;
         float progress = ((float) mouseY - (this.topPos + SCROLLER_Y) - 13.5F)
-                / (SCROLL_BAR_HEIGHT - SCROLLER_HEIGHT);
+                / SCROLLER_MAX_Y;
         return Mth.clamp((int) (progress * maxOffset + 0.5F), 0, maxOffset);
     }
 
