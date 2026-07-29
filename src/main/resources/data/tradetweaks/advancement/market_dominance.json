@@ -23,9 +23,7 @@
           {
             "items": "tradetweaks:emerald_wand",
             "predicates": {
-              "minecraft:custom_data": {
-                "upgrade": true
-              }
+              "minecraft:custom_data": "{upgrade:1b}"
             }
           }
         ]

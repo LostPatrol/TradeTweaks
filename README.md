@@ -182,6 +182,8 @@ Server command.
 
 Trade Tweaks includes a dedicated advancement tab with 17 advancements covering every wand mode, trade selection, consumable items, and trade broadcasts.
 
+Inventory-based advancements inspect the wand's stored upgrade data, so crafting or otherwise obtaining an upgraded Emerald Wand grants Market Dominance.
+
 | Advancement | Type | Requirement |
 | --- | --- | --- |
 | Not a Builder's Wand | Root | Craft or obtain an Emerald Wand |
