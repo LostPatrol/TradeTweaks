@@ -81,7 +81,7 @@ Method 2:
 + Allows players to manually select any possible trade for a villager as its current trade option
 + Any trade with the same profession requirement and profession level requirement as the current trade option is considered a possible trade
 + Randomized category trades from mods are expanded into distinct item variants, so tag-like choices such as different logs or signs are all shown instead of one random example
-+ The selection screen reuses the vanilla villager trading visuals and controls, with current trades on the left and available replacements on the right; it does not pause a single-player world
++ The selection screen reuses the vanilla villager trading visuals and controls, with current trades on the left and available replacements on the right; each scrollbar tracks its entire list proportionally, and the screen does not pause a single-player world
 + While the selection screen is open, the villager is occupied just as in vanilla trading and will not wander. Other players cannot trade with it or use TradeTweaks' select, upgrade, reset, or restock actions until the session ends; rejected attempts make the villager shake its head and play its refusal sound
 + The selection screen closes automatically if the villager dies, unloads, or moves more than 8 blocks away
 + Allows a villager to have multiple duplicate trade options, and supports multiplayer
