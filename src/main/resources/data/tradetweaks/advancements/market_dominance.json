@@ -24,7 +24,7 @@
             "items": [
               "tradetweaks:emerald_wand"
             ],
-            "nbt": "{upgrade:1b}"
+            "nbt": "{upgrade:1}"
           }
         ]
       }

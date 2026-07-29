@@ -7,6 +7,7 @@
 
 # FIX
 
++ Fixed Market Dominance failing to unlock for crafted Nether Star-upgraded Emerald Wands on Minecraft 1.20.1 because the advancement predicate expected a different NBT numeric type.
 + Trade replacement candidates are now generated from the server's fully loaded trade tables, adding generic support for modded villager professions and data-driven trades.
 + Randomized category-based trade factories now expose every distinct item variant they can generate instead of showing only one random example, covering modded groups such as logs and signs without profession-specific rules.
 + Candidate generation now uses the real villager context without consuming the villager's random sequence.
