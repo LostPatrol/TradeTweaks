@@ -93,6 +93,7 @@ Method 2:
 + Any trade with the same profession and profession level required, will be considered as an available trade.
 + Randomized category trades from mods are expanded into distinct item variants, so tag-like choices such as different logs or signs are all shown instead of one random example.
 + The selection screen reuses the vanilla villager trading visuals and controls, with current trades on the left and available replacements on the right; each scrollbar tracks its entire list proportionally, and the screen does not pause a single-player world.
++ The replacement column has a live JEI-style search field that checks every input and output item in each trade. Plain text searches names and tooltips; use `@` for mod names, `#` for tags, `$` for tooltips, `%` for creative tabs, `^` for colors, and `&` for resource IDs. Spaces combine terms, `|` separates alternatives, `-` excludes a term, and quotes preserve phrases. Press `Tab` to focus the field and `Enter` or `Esc` to leave it.
 + While the selection screen is open, the villager is occupied just as in vanilla trading and will not wander. Other players cannot trade with it or use TradeTweaks' select, upgrade, reset, or restock actions until the session ends; rejected attempts make the villager shake its head and play its refusal sound.
 + The selection screen closes automatically if the villager dies, unloads, or moves more than 8 blocks away.
 + Allow duplicated trades

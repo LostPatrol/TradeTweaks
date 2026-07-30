@@ -5,8 +5,10 @@ import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.lostpatrol.tradetweaks.network.packet.PacketCloseTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -21,6 +23,7 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -51,6 +54,11 @@ public class TradeSelectionScreen extends Screen {
     private static final int OFFER_BUTTON_Y = 18;
     private static final int OFFER_BUTTON_WIDTH = 88;
     private static final int OFFER_BUTTON_HEIGHT = 20;
+    private static final int SEARCH_BOX_X = 5;
+    private static final int SEARCH_BOX_Y = 4;
+    private static final int SEARCH_BOX_WIDTH = 88;
+    private static final int SEARCH_BOX_HEIGHT = 12;
+    private static final int SEARCH_BOX_MAX_LENGTH = 128;
     private static final int SCROLLER_X = 94;
     private static final int SCROLLER_Y = 18;
     private static final int SCROLLER_WIDTH = 6;
@@ -59,7 +67,6 @@ public class TradeSelectionScreen extends Screen {
     private static final int SCROLLER_MAX_Y = SCROLL_BAR_HEIGHT - SCROLLER_HEIGHT + 1;
     private static final int SCREEN_HEIGHT = PANEL_HEIGHT + 25;
     private static final Component LEFT_TITLE = Component.translatable("tradetweaks.gui.existing_trades");
-    private static final Component RIGHT_TITLE = Component.translatable("tradetweaks.gui.replacement_options");
 
     private final UUID sessionId;
     private final int villagerId;
@@ -68,9 +75,13 @@ public class TradeSelectionScreen extends Screen {
     private final List<MerchantOffers> candidatePools;
     private final TradeOfferButton[] existingTradeButtons = new TradeOfferButton[OFFER_COUNT];
     private final TradeOfferButton[] replacementTradeButtons = new TradeOfferButton[OFFER_COUNT];
+    private final TradeSearchMatcher searchMatcher = new TradeSearchMatcher();
 
     private MerchantOffers replacementOffers = new MerchantOffers();
+    private int[] replacementOfferIndices;
     private Button confirmButton;
+    private EditBox searchBox;
+    private String searchText = "";
     private int leftPos;
     private int rightPos;
     private int topPos;
@@ -99,6 +110,23 @@ public class TradeSelectionScreen extends Screen {
         this.leftPos = (this.width - screenWidth) / 2;
         this.rightPos = this.leftPos + PANEL_WIDTH + PANEL_GAP;
         this.topPos = (this.height - SCREEN_HEIGHT) / 2;
+
+        this.searchBox = new EditBox(
+                this.font,
+                this.rightPos + SEARCH_BOX_X,
+                this.topPos + SEARCH_BOX_Y,
+                SEARCH_BOX_WIDTH,
+                SEARCH_BOX_HEIGHT,
+                Component.translatable("tradetweaks.gui.search_replacements")
+        );
+        this.searchBox.setMaxLength(SEARCH_BOX_MAX_LENGTH);
+        this.searchBox.setHint(
+                Component.translatable("tradetweaks.gui.search_replacements")
+                        .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)
+        );
+        this.searchBox.setValue(this.searchText);
+        this.searchBox.setResponder(this::setSearchText);
+        this.addRenderableWidget(this.searchBox);
 
         for (int row = 0; row < OFFER_COUNT; row++) {
             int buttonY = this.topPos + OFFER_BUTTON_Y + row * OFFER_BUTTON_HEIGHT;
@@ -133,7 +161,6 @@ public class TradeSelectionScreen extends Screen {
         renderScroller(guiGraphics, this.leftPos, this.offers, this.existingScrollOff);
         renderScroller(guiGraphics, this.rightPos, this.replacementOffers, this.replacementScrollOff);
         renderPanelTitle(guiGraphics, LEFT_TITLE, this.leftPos);
-        renderPanelTitle(guiGraphics, RIGHT_TITLE, this.rightPos);
         renderButtonTooltips(guiGraphics, this.existingTradeButtons, mouseX, mouseY);
         renderButtonTooltips(guiGraphics, this.replacementTradeButtons, mouseX, mouseY);
         RenderSystem.enableDepthTest();
@@ -302,9 +329,7 @@ public class TradeSelectionScreen extends Screen {
             return;
         }
         this.selectedTradeIndex = index;
-        this.selectedReplacementIndex = -1;
-        this.replacementScrollOff = 0;
-        this.replacementOffers = getReplacementOffers(index);
+        applySearchFilter();
         updateButtonStates();
     }
 
@@ -317,6 +342,32 @@ public class TradeSelectionScreen extends Screen {
             return new MerchantOffers();
         }
         return this.candidatePools.get(poolIndex);
+    }
+
+    private void setSearchText(String searchText) {
+        if (this.searchText.equals(searchText)) {
+            return;
+        }
+        this.searchText = searchText;
+        applySearchFilter();
+        updateButtonStates();
+    }
+
+    private void applySearchFilter() {
+        this.selectedReplacementIndex = -1;
+        this.replacementScrollOff = 0;
+        MerchantOffers unfilteredOffers = getReplacementOffers(this.selectedTradeIndex);
+        this.replacementOfferIndices = this.searchMatcher.findMatches(unfilteredOffers, this.searchText);
+        if (this.replacementOfferIndices == null) {
+            this.replacementOffers = unfilteredOffers;
+            return;
+        }
+
+        MerchantOffers filteredOffers = new MerchantOffers();
+        for (int offerIndex : this.replacementOfferIndices) {
+            filteredOffers.add(unfilteredOffers.get(offerIndex));
+        }
+        this.replacementOffers = filteredOffers;
     }
 
     private void selectReplacement(int index) {
@@ -332,9 +383,12 @@ public class TradeSelectionScreen extends Screen {
                 || this.selectedReplacementIndex >= this.replacementOffers.size()) {
             return;
         }
+        int candidateIndex = this.replacementOfferIndices == null
+                ? this.selectedReplacementIndex
+                : this.replacementOfferIndices[this.selectedReplacementIndex];
         this.replacementSubmitted = true;
         NetworkHandler.sendTradeReplaceToServer(
-                new PacketTradeReplace(this.sessionId, this.selectedTradeIndex, this.selectedReplacementIndex)
+                new PacketTradeReplace(this.sessionId, this.selectedTradeIndex, candidateIndex)
         );
         this.onClose();
     }
@@ -402,6 +456,9 @@ public class TradeSelectionScreen extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.draggingExistingScroller = false;
         this.draggingReplacementScroller = false;
+        if (this.searchBox != null && this.searchBox.isFocused() && !this.searchBox.isMouseOver(mouseX, mouseY)) {
+            this.setFocused(null);
+        }
         if (isInsideScroller(mouseX, mouseY, this.leftPos, this.offers)) {
             this.draggingExistingScroller = true;
             return true;
@@ -438,6 +495,24 @@ public class TradeSelectionScreen extends Screen {
         this.draggingExistingScroller = false;
         this.draggingReplacementScroller = false;
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_TAB && this.searchBox != null) {
+            this.setFocused(this.searchBox);
+            this.searchBox.moveCursorToEnd(false);
+            return true;
+        }
+        if (this.searchBox != null
+                && this.searchBox.isFocused()
+                && (keyCode == GLFW.GLFW_KEY_ENTER
+                || keyCode == GLFW.GLFW_KEY_KP_ENTER
+                || keyCode == GLFW.GLFW_KEY_ESCAPE)) {
+            this.setFocused(null);
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override

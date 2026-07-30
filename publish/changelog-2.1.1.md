@@ -4,6 +4,7 @@
 
 + Added a dedicated Trade Tweaks advancement tab with 17 advancements covering all Emerald Wand modes, trade selection, consumable villager tools, and trade broadcasts.
 + Successful mod actions now feed event-driven advancement criteria, including an all-six-modes challenge and Mending discovery through trade broadcasts.
++ Added a live JEI-style replacement search field to the trade selection screen, including prefix filters, combined/excluded terms, and keyboard-focused text editing.
 
 # FIX
 
