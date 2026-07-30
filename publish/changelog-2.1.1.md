@@ -19,6 +19,7 @@
 + The trade selection screen no longer pauses single-player worlds, preventing the emerald wand's nearly finished cooldown overlay from flickering.
 + The trade selection screen now closes if its villager dies, unloads, or moves more than 8 blocks away.
 + The custom trade selection lists have been replaced with a two-column interface using the vanilla villager trading visuals and controls, with current trades on the left and available replacements on the right.
++ Fixed the right edge of each trade selection column being cut off, restoring the complete vanilla border and shadow.
 + Fixed the trade selection panel and title text being blurred by a second background render.
 + Opening the trade selection screen now occupies the villager through its vanilla trading state, preventing it from wandering until the session ends.
 + Vanilla trading and trade selection now lock the villager for other players. Conflicting trade selection, upgrade, profession reset, and restock actions are rejected with the villager's normal head shake and refusal sound, without an extra failure message.
