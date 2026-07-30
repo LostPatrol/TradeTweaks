@@ -32,7 +32,10 @@ import java.util.UUID;
 public class TradeSelectionScreen extends Screen {
     private static final ResourceLocation VILLAGER_LOCATION = new ResourceLocation("textures/gui/container/villager2.png");
     private static final double MAX_INTERACTION_DISTANCE_SQUARED = 64.0D;
-    private static final int PANEL_WIDTH = 103;
+    private static final int PANEL_BODY_WIDTH = 103;
+    private static final int PANEL_RIGHT_EDGE_TEXTURE_X = 273;
+    private static final int PANEL_RIGHT_EDGE_WIDTH = 3;
+    private static final int PANEL_WIDTH = PANEL_BODY_WIDTH + PANEL_RIGHT_EDGE_WIDTH;
     private static final int PANEL_HEIGHT = 166;
     private static final int PANEL_GAP = 4;
     private static final int PANEL_TEXTURE_WIDTH = 512;
@@ -160,7 +163,19 @@ public class TradeSelectionScreen extends Screen {
                 0,
                 0.0F,
                 0.0F,
-                PANEL_WIDTH,
+                PANEL_BODY_WIDTH,
+                PANEL_HEIGHT,
+                PANEL_TEXTURE_WIDTH,
+                PANEL_TEXTURE_HEIGHT
+        );
+        guiGraphics.blit(
+                VILLAGER_LOCATION,
+                panelX + PANEL_BODY_WIDTH,
+                this.topPos,
+                0,
+                PANEL_RIGHT_EDGE_TEXTURE_X,
+                0.0F,
+                PANEL_RIGHT_EDGE_WIDTH,
                 PANEL_HEIGHT,
                 PANEL_TEXTURE_WIDTH,
                 PANEL_TEXTURE_HEIGHT
