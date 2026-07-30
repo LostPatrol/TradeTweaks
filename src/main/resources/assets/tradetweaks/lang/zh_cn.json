@@ -64,6 +64,7 @@
   "tradetweaks.gui.wand_mode_wheel": "绿宝石手杖模式",
   "tradetweaks.gui.replacement_options": "可交换项",
   "tradetweaks.gui.existing_trades":"现有交易",
+  "tradetweaks.gui.search_replacements": "搜索可选交易",
   "tradetweaks.gui.confirm": "确定",
   "tradetweaks.gui.narration.trade_entry": "使用%s交易%s",
 
