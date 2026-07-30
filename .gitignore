@@ -31,3 +31,4 @@ agents
 grok
 codex
 AGENTS.md
+/logs/
