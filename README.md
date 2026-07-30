@@ -81,10 +81,7 @@ Method 2:
 + Allows players to manually select any possible trade for a villager as its current trade option
 + Any trade with the same profession requirement and profession level requirement as the current trade option is considered a possible trade
 + Randomized category trades from mods are expanded into distinct item variants, so tag-like choices such as different logs or signs are all shown instead of one random example
-+ The selection screen reuses the vanilla villager trading visuals and controls, with current trades on the left and available replacements on the right; both columns retain the complete vanilla border and shadow, each scrollbar tracks its entire list proportionally, and the screen does not pause a single-player world
-+ The replacement column has a live JEI-style search field that checks every input and output item in each trade. Plain text searches names and tooltips; use `@` for mod names, `#` for tooltips, `$` for tags, `%` for creative tabs, `^` for colors, and `&` for resource IDs. Spaces combine terms, `|` separates alternatives, `-` excludes a term, and quotes preserve phrases. Press `Tab` to focus the field and `Enter` or `Esc` to leave it
-+ While the selection screen is open, the villager is occupied just as in vanilla trading and will not wander. Other players cannot trade with it or use TradeTweaks' select, upgrade, reset, or restock actions until the session ends; rejected attempts make the villager shake its head and play its refusal sound
-+ The selection screen closes automatically if the villager dies, unloads, or moves more than 8 blocks away
++ The replacement column has a live JEI-style search field. Use `@` for mod names, `#` for tooltips, `$` for tags, `%` for creative tabs, `^` for colors, and `&` for resource IDs. Spaces combine terms, `|` separates alternatives, `-` excludes a term, and quotes preserve phrases. Press `Tab` to focus the field and `Enter` or `Esc` to leave it
 + Allows a villager to have multiple duplicate trade options, and supports multiplayer
 + Requires 1 nether star to upgrade the wand before this feature can be used
 + For librarians specifically, players can select enchanted books for the highest level of every enchantment, with a higher chance of lower trade prices. This feature can be disabled in the server config
@@ -179,35 +176,9 @@ Server command. Changes the server update check interval. Requires permission.
 
 Server command. Determines whether the wand's Trade Selection feature can be used to select librarians' enchanted books.
 
-### Advancements
-
-Trade Tweaks includes a dedicated advancement tab with 17 advancements covering every wand mode, trade selection, consumable items, and trade broadcasts.
-
-Inventory-based advancements inspect the wand's stored upgrade data, so crafting or otherwise obtaining an upgraded Emerald Wand grants Market Dominance.
-
-| Advancement | Type | Requirement |
-| --- | --- | --- |
-| Not a Builder's Wand | Root | Craft or obtain an Emerald Wand |
-| Pinpoint | Task | Locate a workstation from a villager |
-| Reverse Lookup | Task | Locate a villager from its workstation |
-| You're Fired! | Task | Successfully clear a villager's profession |
-| Clear Your Head | Task | Successfully refresh an unemployed villager's behavior |
-| Hired on the Spot | Task | Upgrade a villager's profession level |
-| Market Dominance | Goal | Obtain a Nether Star-upgraded Emerald Wand |
-| The Visible Hand | Challenge | Replace a villager trade |
-| Enchantment Library Lite | Goal | Select an enchanted book trade for a librarian |
-| Wand Virtuoso | Challenge | Successfully use all six Emerald Wand modes |
-| Knowledge Overload | Challenge | Educate a nitwit with a Book of Enlightenment |
-| Quack | Goal | Infect a villager with a Reversion Bottle |
-| Miracle Worker | Goal | Restore a zombie villager with a Restoration Bottle |
-| Hand It Over! | Goal | Successfully use a Restock Writ |
-| Proof of Heroism | Goal | Use a Totem of Village Hero |
-| Word on the Street | Task | Receive a non-empty trade report |
-| I Smell Mending | Goal | Have a trade report find and highlight a Mending villager |
-
 ## Compatibility
 
-+ Compatible with all villager professions and trades added by mods through standard methods
++ Compatible with all villager professions and trades added by mods through standard methods (I hope)
 + Compatible with all enchantments added by mods, such as Apotheosis, through standard methods, as long as the enchantment is tradeable
 + Compatible with Easy Villagers, but cannot trade directly with villagers placed inside trader blocks
 + Compatible with Quark's Ancient Tomes. When Quark is installed, librarian master-level trades treat all Ancient Tomes as replaceable trades
