@@ -10,7 +10,6 @@ import net.lostpatrol.tradetweaks.config.ClientConfig;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.common.item.ModCreativeModeTab;
 import net.lostpatrol.tradetweaks.common.item.ModItems;
-import net.lostpatrol.tradetweaks.common.recipe.ModRecipeSerializers;
 import net.lostpatrol.tradetweaks.client.events.ClientKeyMappings;
 import net.lostpatrol.tradetweaks.client.events.WandScrollHandler;
 import net.lostpatrol.tradetweaks.client.events.WandModeWheelHandler;
@@ -63,7 +62,6 @@ public class TradeTweaks {
 
         ModItems.register(modEventBus);
         ModCreativeModeTab.register(modEventBus);
-        ModRecipeSerializers.register(modEventBus);
         ModCriteriaTriggers.register(modEventBus);
     }
 }

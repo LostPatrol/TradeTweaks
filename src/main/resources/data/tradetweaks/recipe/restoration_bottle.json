@@ -1,4 +1,45 @@
 {
-  "type": "tradetweaks:restoration_bottle",
-  "category": "misc"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:golden_apple"
+    },
+    {
+      "item": "minecraft:clock"
+    },
+    {
+      "type": "neoforge:compound",
+      "children": [
+        {
+          "type": "neoforge:components",
+          "items": [
+            "minecraft:potion",
+            "minecraft:splash_potion",
+            "minecraft:lingering_potion"
+          ],
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:weakness"
+            }
+          }
+        },
+        {
+          "type": "neoforge:components",
+          "items": [
+            "minecraft:potion",
+            "minecraft:splash_potion",
+            "minecraft:lingering_potion"
+          ],
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:long_weakness"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "result": {
+    "id": "tradetweaks:restoration_bottle"
+  }
 }
