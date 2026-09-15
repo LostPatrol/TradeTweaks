@@ -27,7 +27,10 @@ useless
 repo
 /assets/
 agents
-.agents
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/tradetweaks-release/
 grok
 codex
 AGENTS.md
