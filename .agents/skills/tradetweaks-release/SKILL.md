@@ -1,6 +1,6 @@
 ---
 name: tradetweaks-release
-description: "Complete TradeTweaks releases end to end from one invocation: prepare and build selected branches, publish GitHub Release assets, synchronize CurseForge and Modrinth, and verify every destination."
+description: "Complete TradeTweaks releases end to end using user-chosen versions and channel-aware cumulative notes: build selected branches, publish GitHub assets, synchronize CurseForge and Modrinth, and verify every destination."
 ---
 
 <!-- One-invocation release orchestration; Codex owns GitHub publication and platform follow-through. -->
@@ -12,15 +12,15 @@ A request to run this skill for a release authorizes the complete chain: prepare
 
 A request to edit/explain this skill or to dry-run is not a request to publish a real version. Honor narrower user scope, including GitHub-only or preparation-only requests.
 
-Read `MEMORY.md`, repository instructions, and `publish/AUTOMATED_RELEASE.md`. For the GitHub operations, read [references/github-release.md](references/github-release.md).
+Read repository instructions and local `MEMORY.md` when it exists. Read [references/release-policy.md](references/release-policy.md) whenever preparing or reviewing a release. For GitHub operations, also read [references/github-release.md](references/github-release.md).
 
 ## Resolve the release
 
 - Before publishing, inspect recent existing releases on each destination for the same Minecraft branch. Match their display-name structure, version-number structure and changelog formatting; record the reference version in the report. Explicit user formatting takes precedence. The confirmed display-name format is `Trade Tweaks <minecraft>-<mod-version>` (for example `Trade Tweaks 1.21.1-2.2.1`), with no loader suffix or parentheses. Keep loaders in structured compatibility metadata. Do not copy old version values, dates, compatibility ranges or changelog facts. If a platform cannot be read, use this confirmed format and disclose the unavailable comparison.
 - Use the requested branch set; otherwise use the branch set already established in the active task, falling back to the current checked-out Minecraft branch. Never silently add the other branch. `1.20.1` uses Forge / Java 17; `1.21.1` uses NeoForge / Java 21.
-- Use the requested version; otherwise use the version agreed in the task or the selected branch's `mod_version`. Do not invent a new version increment. If it is already released and there are no new production changes, verify it and recover only missing destinations. If new production changes would overwrite an existing version and no new version is specified, ask only for that missing version.
-- For two branches with one requested mod version, set each `mod_version` to its own `<minecraft>-<version>`. If distinct branch versions were explicitly requested, retain them; use the explicit Release tag or the current selected branch's mod-version suffix as the tag. A tag points to one selected branch commit, while attachments can contain both builds.
-- Reuse existing changelog content when correct. Otherwise derive a concise player-facing changelog from actual changes since the preceding release, using `publish/changelog-<version>.md`. Never implement TODO items as part of release preparation. For differing branch versions, combine their labeled sections into a release changelog file and use its exact content as the Release body.
+- Version selection, version increments and release timing belong to the user. Never choose a next version, increment a version, align branch versions, fill a skipped version, or edit `mod_version` unless the user explicitly supplied that exact version change. Read the version already declared on each selected branch and compare it with the user's stated version. Ask for the missing exact version or tag when the intended values cannot be established without making a versioning decision.
+- Branch versions may be equal, different or non-consecutive. Preserve the user's choice. Do not treat a skipped number as an error and do not reuse a published version for different content. A tag points to one selected branch commit, while attachments can contain builds with distinct versions.
+- Build the GitHub Release body and platform release notes according to `references/release-policy.md`. Base notes on each selected branch's actual code and each destination's last published version. Never assume that a GitHub release, another Minecraft branch, or another platform was available to that audience. Never implement TODO items as part of release preparation.
 
 ## Build and publish GitHub automatically
 
