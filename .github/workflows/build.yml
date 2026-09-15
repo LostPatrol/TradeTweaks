@@ -26,3 +26,11 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Upload production jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: tradetweaks-${{ github.ref_name }}
+          path: build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 7
