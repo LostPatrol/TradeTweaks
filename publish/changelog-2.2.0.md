@@ -1,4 +1,4 @@
-# 2.1.3 CHANGELOG
+# 2.2.0 CHANGELOG
 
 # FIX
 
