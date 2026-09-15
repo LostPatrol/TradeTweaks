@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Update only the display name
-        shell: pwsh
+        shell: node {0}
         env:
           PLATFORM: ${{ inputs.platform }}
           VERSION_ID: ${{ inputs.id }}
@@ -32,23 +32,41 @@ jobs:
           CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           MR_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         run: |
-          $ErrorActionPreference = 'Stop'
-          if ($env:MOD_VERSION -notmatch '^(1\.20\.1|1\.21\.1)-\d+\.\d+\.\d+(-[A-Za-z0-9.-]+)?$') { throw 'Invalid version' }
-          $name = "Trade Tweaks $env:MOD_VERSION"
-          if ($env:PLATFORM -eq 'modrinth') {
-            if ($env:VERSION_ID -notmatch '^[A-Za-z0-9]+$') { throw 'Invalid version ID' }
-            $uri = "https://api.modrinth.com/v2/version/$env:VERSION_ID"
-            $headers = @{ Authorization = $env:MR_TOKEN; 'User-Agent' = 'LostPatrol/TradeTweaks release-maintenance' }
-            $before = Invoke-RestMethod $uri -Headers $headers
-            if ($before.project_id -ne $env:MR_PROJECT -or $before.version_number -ne $env:MOD_VERSION) { throw 'Version identity mismatch' }
-            Invoke-RestMethod $uri -Method Patch -Headers $headers -ContentType 'application/json' -Body (@{ name = $name } | ConvertTo-Json) | Out-Null
-            $after = Invoke-RestMethod $uri -Headers $headers
-            if ($after.name -ne $name) { throw 'Name verification failed' }
-            "Verified $($after.id): $($after.name)" >> $env:GITHUB_STEP_SUMMARY
-          } else {
-            if ($env:VERSION_ID -notmatch '^\d+$' -or $env:CF_PROJECT -notmatch '^\d+$') { throw 'Invalid CurseForge ID' }
-            $metadata = @{ fileID = [long]$env:VERSION_ID; displayName = $name } | ConvertTo-Json -Compress
-            $result = Invoke-RestMethod "https://minecraft.curseforge.com/api/projects/$env:CF_PROJECT/update-file" -Method Post -Headers @{ 'X-Api-Token' = $env:CF_TOKEN } -Form @{ metadata = $metadata }
-            if ($result.id -ne [long]$env:VERSION_ID) { throw 'Unexpected updated file ID' }
-            "API accepted display name update for $($result.id): $name" >> $env:GITHUB_STEP_SUMMARY
+          const fs = require('node:fs');
+          const e = process.env;
+          async function request(url, options = {}) {
+            const response = await fetch(url, { ...options, signal: AbortSignal.timeout(30000) });
+            if (!response.ok) throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+            return response.status === 204 ? null : response.json();
           }
+          async function main() {
+            if (!/^(1\.20\.1|1\.21\.1)-\d+\.\d+\.\d+(-[A-Za-z0-9.-]+)?$/.test(e.MOD_VERSION)) throw new Error('Invalid version');
+            const name = `Trade Tweaks ${e.MOD_VERSION}`;
+            if (e.PLATFORM === 'modrinth') {
+              if (!/^[A-Za-z0-9]+$/.test(e.VERSION_ID)) throw new Error('Invalid version ID');
+              const url = `https://api.modrinth.com/v2/version/${e.VERSION_ID}`;
+              const headers = { Authorization: e.MR_TOKEN, 'User-Agent': 'LostPatrol/TradeTweaks release-maintenance' };
+              const before = await request(url, { headers });
+              if (before.project_id !== e.MR_PROJECT || before.version_number !== e.MOD_VERSION) throw new Error('Version identity mismatch');
+              if (before.name !== name) await request(url, { method: 'PATCH', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
+              // Allow cached reads to catch up after a successful metadata update.
+              for (let attempt = 0; attempt < 5; attempt++) {
+                const after = await request(`${url}?verify=${Date.now()}`, { headers });
+                if (after.name === name) {
+                  fs.appendFileSync(e.GITHUB_STEP_SUMMARY, `Verified ${after.id}: ${after.name}\n`);
+                  return;
+                }
+                await new Promise(resolve => setTimeout(resolve, 2000));
+              }
+              throw new Error('Name verification failed');
+            }
+            if (!/^\d+$/.test(e.VERSION_ID) || !/^\d+$/.test(e.CF_PROJECT)) throw new Error('Invalid CurseForge ID');
+            const form = new FormData();
+            form.set('metadata', JSON.stringify({ fileID: Number(e.VERSION_ID), displayName: name }));
+            const result = await request(`https://minecraft.curseforge.com/api/projects/${e.CF_PROJECT}/update-file`, {
+              method: 'POST', headers: { 'X-Api-Token': e.CF_TOKEN }, body: form,
+            });
+            if (result.id !== Number(e.VERSION_ID)) throw new Error('Unexpected updated file ID');
+            fs.appendFileSync(e.GITHUB_STEP_SUMMARY, `API accepted display name update for ${result.id}: ${name}\n`);
+          }
+          main().catch(error => { console.error(error.message); process.exitCode = 1; });
