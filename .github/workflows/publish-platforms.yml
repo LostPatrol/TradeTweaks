@@ -1,0 +1,120 @@
+# Distribute the exact published Release assets, independently for each branch and platform.
+name: Publish CurseForge and Modrinth
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing GitHub Release tag
+        required: true
+        type: string
+      branch:
+        description: Release assets to distribute
+        type: choice
+        options: [all, '1.20.1', '1.21.1']
+        default: all
+      platform:
+        description: Destination (select one for a partial retry)
+        type: choice
+        options: [all, curseforge, modrinth]
+        default: all
+      dry_run:
+        description: Validate assets without uploading to either platform
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-platforms-${{ github.event.release.tag_name || inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test release selection
+        run: node --test .github/scripts/release-plan.test.cjs
+      - name: Snapshot published assets
+        id: plan
+        uses: actions/github-script@v7
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_BRANCH: ${{ inputs.branch }}
+          RELEASE_PLATFORM: ${{ inputs.platform }}
+        with:
+          script: |
+            await require('./.github/scripts/prepare-release.cjs')({ github, context, core });
+      - name: Validate embedded JAR metadata
+        shell: pwsh
+        run: ./.github/scripts/validate-release.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: platform-release-${{ github.run_id }}
+          path: release-assets/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  publish:
+    needs: prepare
+    if: ${{ github.event_name == 'release' || !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    name: ${{ matrix.minecraft }} / ${{ matrix.platform }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: platform-release-${{ github.run_id }}
+          path: release-assets
+      - name: Check destination configuration
+        shell: pwsh
+        env:
+          PLATFORM: ${{ matrix.platform }}
+          CURSEFORGE_PROJECT_ID: ${{ vars.CURSEFORGE_PROJECT_ID }}
+          MODRINTH_PROJECT_ID: ${{ vars.MODRINTH_PROJECT_ID }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: |
+          $prefix = $env:PLATFORM.ToUpperInvariant()
+          if (-not [Environment]::GetEnvironmentVariable("${prefix}_PROJECT_ID") -or
+              -not [Environment]::GetEnvironmentVariable("${prefix}_TOKEN")) {
+            throw 'Configure the destination PROJECT_ID variable and TOKEN secret in repository Settings > Secrets and variables > Actions.'
+          }
+      - name: Upload to selected platform
+        id: upload
+        uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3
+        with:
+          curseforge-id: ${{ matrix.platform == 'curseforge' && vars.CURSEFORGE_PROJECT_ID || '' }}
+          curseforge-token: ${{ matrix.platform == 'curseforge' && secrets.CURSEFORGE_TOKEN || '' }}
+          modrinth-id: ${{ matrix.platform == 'modrinth' && vars.MODRINTH_PROJECT_ID || '' }}
+          modrinth-token: ${{ matrix.platform == 'modrinth' && secrets.MODRINTH_TOKEN || '' }}
+          files: release-assets/${{ matrix.name }}
+          name: Trade Tweaks ${{ matrix.version }} (${{ matrix.loader }})
+          version: ${{ matrix.version }}
+          version-type: ${{ matrix.versionType }}
+          changelog-file: release-assets/changelog.md
+          loaders: ${{ matrix.loader }}
+          game-versions: ${{ matrix.minecraft }}
+          java: ${{ matrix.java }}
+          retry-attempts: 1
+          fail-mode: fail
+      - name: Record upload result
+        if: always()
+        shell: pwsh
+        env:
+          UPLOAD_STATUS: ${{ steps.upload.outcome }}
+          UPLOAD_URL: ${{ steps.upload.outputs.curseforge-url || steps.upload.outputs.modrinth-url }}
+        run: |
+          "Upload: $env:UPLOAD_STATUS`n`n$env:UPLOAD_URL" >> $env:GITHUB_STEP_SUMMARY
