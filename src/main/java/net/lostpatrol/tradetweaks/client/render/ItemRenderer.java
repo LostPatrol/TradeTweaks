@@ -1,3 +1,4 @@
+/** Renders item icons embedded in formatted chat messages. */
 package net.lostpatrol.tradetweaks.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -102,14 +103,13 @@ public class ItemRenderer {
             if (a > 0) {
                 alphaValue = a;
 
-                guiGraphics.pose().pushPose();
+                pose.pushPose();
 
-                guiGraphics.pose().mulPose(pose.last().pose());
-
-                guiGraphics.pose().translate(x_shift + x, y, 0);
-                guiGraphics.pose().scale(0.5f, 0.5f, 0.5f);
+                // The chat pose already contains the HUD transform; applying it again can move the icon out of view.
+                pose.translate(x_shift + x + mc.font.width("  ") / 2.0F, y, 0);
+                pose.scale(0.5f, 0.5f, 0.5f);
                 guiGraphics.renderItem(stack, 0, 0);
-                guiGraphics.pose().popPose();
+                pose.popPose();
 
                 RenderSystem.applyModelViewMatrix();
 
