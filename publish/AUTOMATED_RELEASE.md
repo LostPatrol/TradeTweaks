@@ -7,15 +7,15 @@
 
 | Secret 名称 | 内容 | 获取入口 |
 | --- | --- | --- |
-| `CURSEFORGE_TOKEN` | 有该项目上传权限的作者 API Token | [CurseForge API Tokens](https://authors.curseforge.com/account/api-tokens) |
+| `CURSEFORGE_TOKEN` | 有该项目上传权限的作者 API Token | [CurseForge API Tokens](https://authors-old.curseforge.com/account/api-tokens)（[官方说明](https://support.curseforge.com/support/solutions/articles/9000197321)） |
 | `MODRINTH_TOKEN` | 有该项目创建版本权限的 Personal Access Token | [Modrinth PAT](https://modrinth.com/settings/pats) |
 
-在 [GitHub Actions Variables](https://github.com/LostPatrol/TradeTweaks/settings/variables/actions) 点击 **New repository variable**，添加：
+以下项目 ID 已核实并配置在 [GitHub Actions Variables](https://github.com/LostPatrol/TradeTweaks/settings/variables/actions)，无需再次填写；迁移仓库时按此恢复：
 
 | Variable 名称 | 内容 |
 | --- | --- |
-| `CURSEFORGE_PROJECT_ID` | CurseForge 项目页面显示的数字 Project ID |
-| `MODRINTH_PROJECT_ID` | Modrinth 项目 ID |
+| `CURSEFORGE_PROJECT_ID` | `1316814`（[Trade Tweaks](https://www.curseforge.com/minecraft/mc-mods/trade-tweaks)） |
+| `MODRINTH_PROJECT_ID` | `P5pFKnk6`（[Trade Tweaks](https://modrinth.com/mod/trade-tweaks)） |
 
 两个 Minecraft 分支共用同一个平台项目。Token 只保存在 Secrets，不写入仓库或 Release 正文。GitHub 下载附件使用自动提供的只读 `GITHUB_TOKEN`，无需另配下载 Token。
 

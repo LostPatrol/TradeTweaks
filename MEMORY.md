@@ -20,3 +20,10 @@
 ## Environment risk
 
 - On 2026-09-15, local Gradle startup was blocked before project configuration by a host Java NIO loopback connection failure. GitHub Actions is the authoritative full Gradle build fallback until the host networking issue is resolved.
+
+## Automated distribution
+
+- Both Minecraft branches carry `.agents/skills/tradetweaks-release/SKILL.md` and the `publish-platforms.yml` workflow. Published GitHub Releases distribute their attached production JARs independently to CurseForge and Modrinth; absent branches are not built or published.
+- Upload all intended JARs to a draft before publishing. Each JAR carries its own Minecraft/mod version; platform changelogs use the Release body. Manual dispatch supports dry runs and targeted recovery of historical or failed uploads.
+- Repository project variables are configured: CurseForge `1316814`, Modrinth `P5pFKnk6`. The user still needs to configure `CURSEFORGE_TOKEN` and `MODRINTH_TOKEN` repository secrets. Single-branch and dual-branch GitHub dry runs passed on 2026-09-15; live uploads remain unverified.
+- Workflow-created Releases using the built-in `GITHUB_TOKEN` require an explicit dispatch or different authorized publishing token. Check remote acceptance before retrying an ambiguous upload; automatic deduplication is not guaranteed.
