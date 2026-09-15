@@ -26,7 +26,8 @@ run-data
 useless
 repo
 /assets/
-agents
+/agent/
+/MEMORY.md
 .agents/*
 !.agents/skills/
 .agents/skills/*
