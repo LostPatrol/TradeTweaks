@@ -19,7 +19,20 @@
 
 两个 Minecraft 分支共用同一个平台项目。Token 只保存在 Secrets，不写入仓库或 Release 正文。GitHub 下载附件使用自动提供的只读 `GITHUB_TOKEN`，无需另配下载 Token。
 
-## 发布步骤
+## 一句话发布（推荐）
+
+直接调用项目 skill，例如：
+
+- `$tradetweaks-release 发布当前分支的 2.2.2`
+- `$tradetweaks-release 同时发布 1.20.1 和 1.21.1，版本 2.2.2`
+
+Codex 会自动完成版本与更新日志准备、所选分支构建、GitHub Draft 创建、全部 JAR 上传、正式发布，以及 CurseForge / Modrinth 同步与结果检查。无需自己创建 Draft、上传文件或点击工作流按钮。
+
+未指定分支时沿用当前任务范围，否则使用当前 Minecraft 分支；未指定版本时沿用任务约定或 `mod_version`，不会自行猜测新版本号。若已有同版本 Release，则核验并仅补发缺失的平台；若新代码需要占用一个已发布版本，会询问新的版本号。平台 Token 已于 2026-09-15 配置并核对名称，实际有效性由正式上传验证。
+
+本地构建不可用时，skill 可自动调用 `build.yml` 的 `workflow_dispatch`，等待并下载对应提交的构建产物。发布说明中的下列步骤均由 Codex 代为执行，保留作为维护参考。
+
+## 发布步骤（skill 自动执行）
 
 1. 构建并验证本次需要发布的分支，将更新日志写入 `publish/changelog-<版本号>.md`。
 2. 创建 **Draft Release**，正文使用更新日志内容，上传本次所有正式 JAR。

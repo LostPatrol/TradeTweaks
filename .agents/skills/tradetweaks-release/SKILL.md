@@ -1,20 +1,44 @@
 ---
 name: tradetweaks-release
-description: Prepare, publish, verify, or recover TradeTweaks GitHub Releases and their automated CurseForge and Modrinth distribution, including single or dual Minecraft branch releases.
+description: "Complete TradeTweaks releases end to end from one invocation: prepare and build selected branches, publish GitHub Release assets, synchronize CurseForge and Modrinth, and verify every destination."
 ---
 
-<!-- Project-specific release procedure; automated uploads are implemented by GitHub Actions. -->
+<!-- One-invocation release orchestration; Codex owns GitHub publication and platform follow-through. -->
 # TradeTweaks release
 
-Read `publish/AUTOMATED_RELEASE.md` from the repository root for configuration links and recovery steps.
+## Invocation contract
 
-- Work only on the branches included in the user's release request. `1.20.1` uses Forge / Java 17; `1.21.1` uses NeoForge / Java 21. A Release tag points to one commit, but its attached JARs can include builds from both branches.
-- Read `MEMORY.md`, repository instructions and each selected branch's `gradle.properties`. Build and verify each selected branch at its intended commit. Keep existing local changes; do not merge the Minecraft implementations together.
-- Keep `publish/changelog-<version>.md` concise and player-facing. Set the GitHub Release body to the corresponding changelog content; the workflow forwards that exact body to both platforms. If branch versions differ, include both branch-specific change sections in the Release body.
-- Create a draft Release, attach all intended production JARs named `tradetweaks-<minecraft>-<mod-version>.jar`, verify their identities and then publish the draft. Never publish first and upload the other branch later: `release.published` snapshots the assets once. Never infer both branches from a shared tag or silently build the omitted branch.
-- The `.github/workflows/publish-platforms.yml` workflow must already exist at the tagged commit. Keep its scripts, workflow and this skill synchronized across both existing branches. Manual dispatch additionally requires the workflow on the default branch.
-- Publish via GitHub API using the existing user-authorized authentication; this machine has no `gh`. A Release created with a workflow's built-in `GITHUB_TOKEN` does not trigger another release workflow; use a suitable PAT / GitHub App token or explicitly dispatch the publishing workflow from that automation.
-- The workflow publishes automatically once the user-authorized GitHub Release is published. No additional per-platform approval is required for this configured flow. Do not publish unrelated releases or create a live test release merely to test the configuration.
-- Check every selected branch/platform job separately, including the recorded platform URLs. Report an upload accepted for review separately from a publicly downloadable release.
-- For failure recovery, first inspect the remote platform and logs for an accepted upload. A timeout can occur after acceptance. Use **Re-run failed jobs**, or manual dispatch with a specific tag, branch and platform and `dry_run=false`, only for confirmed missing uploads. Do not rerun successful destinations or promise automatic deduplication.
-- Run `node --test .github/scripts/release-plan.test.cjs` when changing selection logic. Use manual dry runs against existing single and dual Release assets for download and embedded metadata checks. Do not expose token values. Maintain the task report and project memory after code changes.
+A request to run this skill for a release authorizes the complete chain: prepare release metadata, build, commit/push the relevant changes on existing branches, create/upload/publish the GitHub Release, trigger platform synchronization, and verify the results. Perform those steps yourself; do not hand the user draft-creation, upload, publish, or workflow buttons to click. Do not stop at a draft or a dispatched workflow and call it complete. Existing session authorization covers the steps; no additional routine publication confirmation is needed.
+
+A request to edit/explain this skill or to dry-run is not a request to publish a real version. Honor narrower user scope, including GitHub-only or preparation-only requests.
+
+Read `MEMORY.md`, repository instructions, and `publish/AUTOMATED_RELEASE.md`. For the GitHub operations, read [references/github-release.md](references/github-release.md).
+
+## Resolve the release
+
+- Use the requested branch set; otherwise use the branch set already established in the active task, falling back to the current checked-out Minecraft branch. Never silently add the other branch. `1.20.1` uses Forge / Java 17; `1.21.1` uses NeoForge / Java 21.
+- Use the requested version; otherwise use the version agreed in the task or the selected branch's `mod_version`. Do not invent a new version increment. If it is already released and there are no new production changes, verify it and recover only missing destinations. If new production changes would overwrite an existing version and no new version is specified, ask only for that missing version.
+- For two branches with one requested mod version, set each `mod_version` to its own `<minecraft>-<version>`. If distinct branch versions were explicitly requested, retain them; use the explicit Release tag or the current selected branch's mod-version suffix as the tag. A tag points to one selected branch commit, while attachments can contain both builds.
+- Reuse existing changelog content when correct. Otherwise derive a concise player-facing changelog from actual changes since the preceding release, using `publish/changelog-<version>.md`. Never implement TODO items as part of release preparation. For differing branch versions, combine their labeled sections into a release changelog file and use its exact content as the Release body.
+
+## Build and publish GitHub automatically
+
+1. Inspect local changes and remote heads; preserve unrelated work. Update only release-relevant metadata and documentation. Use existing branch worktrees under `agent/codex` as needed; do not merge game implementations or invent new branches. Commit/push relevant changes before taking each final build SHA.
+2. Reuse a successful, unexpired Build artifact only when its source SHA matches the intended release commit. Otherwise build with the project's Gradle wrapper, or dispatch `build.yml` on each selected branch through GitHub API and wait for success. Verify the returned run's `head_sha` equals the intended commit; a branch race requires re-evaluation, not substitution with any latest successful build. Download the artifact from that exact run. A stopped or failed build is not a release artifact.
+3. Select one production JAR per intended branch. Check the file name, embedded mod ID/version/loader metadata, and record SHA-256. Reuse the repository's release-plan and JAR-validation logic in a staging directory under `agent/codex`; stage only those selected files. Keep a local manifest of branch, commit, build run, file name and hash for the report.
+4. Check the Release/tag before creating anything. A tag must resolve to the intended selected commit; never move an existing release tag or replace published assets automatically. A matching draft can be resumed. An existing published Release goes through the recovery path, not recreation.
+5. Create the GitHub draft through API with an explicit target commit SHA and exact changelog body. Upload all selected JARs. Re-fetch the draft and verify the complete asset set, uploaded state, sizes and hashes (download and hash if GitHub has no digest). Only then set `draft=false` through API. Codex performs this final publish operation itself.
+
+## Follow through to CurseForge and Modrinth
+
+- The `release.published` event starts `publish-platforms.yml`; its workflow and scripts must exist at the tagged commit. Keep release facilities on both existing branches; manual dispatch also requires the workflow on the default branch.
+- Match the publishing run to this release tag and publication time. Wait for each intended branch/platform job, inspect failures and output URLs, and confirm that successful jobs actually produced platform version/file identifiers. A skipped job is not a successful upload.
+- Releases created using a workflow's built-in `GITHUB_TOKEN` do not trigger another release workflow. Prefer the already available user-authorized GitHub API authentication. If the event is suppressed or the workflow is absent from a historical tag, check for an existing run and published platform files, then explicitly dispatch the workflow through API for only the confirmed missing destinations. Do not ask the user to do it.
+- On partial failure, inspect logs and remote platform versions first. Automatically retry a confirmed missing upload for only the failed branch/platform, at most once per invocation after correcting a recoverable cause. If upload acceptance is uncertain after a timeout, stop retrying that destination and report the ambiguity. Never rerun successful destinations or promise automatic deduplication.
+- GitHub Secrets are already configured under `CURSEFORGE_TOKEN` and `MODRINTH_TOKEN`; inspect names only. Their contents cannot be retrieved through GitHub. Use Actions to consume them and do not ask the user to paste them. Project variables are documented in the release guide.
+- Report GitHub and each selected platform's actual outcome with links. Distinguish API acceptance / pending platform review from public availability. If pending review persists, report it explicitly rather than claim the entire release is publicly downloadable.
+- Maintain the task report and project memory with release version, source commits, artifacts, workflow URLs and remaining failures. Commit/push those documentation changes without changing the release tag.
+
+## Maintenance validation
+
+For skill edits, run the skill-creator validator in the project validation environment. For release selection changes, run `node --test .github/scripts/release-plan.test.cjs`; for workflow edits, run actionlint. Use dry runs for configuration checks. Do not create a live test Release merely to validate this skill.
