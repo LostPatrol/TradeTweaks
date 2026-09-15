@@ -68,6 +68,10 @@ Codex 会自动完成版本与更新日志准备、所选分支构建、GitHub D
 
 ## Skill 与维护
 
+发布前，skill 会参考同平台、同 Minecraft 分支已有版本的名称、版本号及更新日志格式。当前显示名称统一为 `Trade Tweaks <Minecraft版本>-<模组版本>`，例如 `Trade Tweaks 1.21.1-2.2.1`，不附加 `(forge)` 或 `(neoforge)`；加载器仍通过兼容性字段标注。历史格式仅作为结构参考，不复制旧版本事实。
+
+已发布版本需要改名时，使用 `update-platform-name.yml`，传入平台、现有文件/版本 ID 和 Minecraft 前缀版本号。它仅修改显示名称，不重新上传附件。Modrinth Token 需具有版本编辑权限；CurseForge 使用官方 update-file API。
+
 项目 skill 位于 `.agents/skills/tradetweaks-release/SKILL.md`，可通过 `$tradetweaks-release` 调用。
 
 测试：`node --test .github/scripts/release-plan.test.cjs`。发布 runner 使用 Node.js 22、PowerShell 和固定提交的 `mc-publish` Action，无需修改 Gradle 构建依赖。

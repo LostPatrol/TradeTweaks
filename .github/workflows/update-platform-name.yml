@@ -1,0 +1,54 @@
+# Change an existing version's display name in place without uploading or replacing files.
+name: Update platform display name
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        type: choice
+        required: true
+        options: [curseforge, modrinth]
+      id:
+        description: Existing platform file or version ID
+        type: string
+        required: true
+      version:
+        description: Minecraft-prefixed version, e.g. 1.21.1-2.2.1
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update only the display name
+        shell: pwsh
+        env:
+          PLATFORM: ${{ inputs.platform }}
+          VERSION_ID: ${{ inputs.id }}
+          MOD_VERSION: ${{ inputs.version }}
+          CF_PROJECT: ${{ vars.CURSEFORGE_PROJECT_ID }}
+          MR_PROJECT: ${{ vars.MODRINTH_PROJECT_ID }}
+          CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          MR_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:MOD_VERSION -notmatch '^(1\.20\.1|1\.21\.1)-\d+\.\d+\.\d+(-[A-Za-z0-9.-]+)?$') { throw 'Invalid version' }
+          $name = "Trade Tweaks $env:MOD_VERSION"
+          if ($env:PLATFORM -eq 'modrinth') {
+            if ($env:VERSION_ID -notmatch '^[A-Za-z0-9]+$') { throw 'Invalid version ID' }
+            $uri = "https://api.modrinth.com/v2/version/$env:VERSION_ID"
+            $headers = @{ Authorization = $env:MR_TOKEN; 'User-Agent' = 'LostPatrol/TradeTweaks release-maintenance' }
+            $before = Invoke-RestMethod $uri -Headers $headers
+            if ($before.project_id -ne $env:MR_PROJECT -or $before.version_number -ne $env:MOD_VERSION) { throw 'Version identity mismatch' }
+            Invoke-RestMethod $uri -Method Patch -Headers $headers -ContentType 'application/json' -Body (@{ name = $name } | ConvertTo-Json) | Out-Null
+            $after = Invoke-RestMethod $uri -Headers $headers
+            if ($after.name -ne $name) { throw 'Name verification failed' }
+            "Verified $($after.id): $($after.name)" >> $env:GITHUB_STEP_SUMMARY
+          } else {
+            if ($env:VERSION_ID -notmatch '^\d+$' -or $env:CF_PROJECT -notmatch '^\d+$') { throw 'Invalid CurseForge ID' }
+            $metadata = @{ fileID = [long]$env:VERSION_ID; displayName = $name } | ConvertTo-Json -Compress
+            $result = Invoke-RestMethod "https://minecraft.curseforge.com/api/projects/$env:CF_PROJECT/update-file" -Method Post -Headers @{ 'X-Api-Token' = $env:CF_TOKEN } -Form @{ metadata = $metadata }
+            if ($result.id -ne [long]$env:VERSION_ID) { throw 'Unexpected updated file ID' }
+            "API accepted display name update for $($result.id): $name" >> $env:GITHUB_STEP_SUMMARY
+          }
