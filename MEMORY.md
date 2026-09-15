@@ -3,7 +3,7 @@
 ## Current baseline
 
 - The `1.20.1` branch targets Forge and Java 17.
-- The current release version is `1.20.1-2.1.3`.
+- The current release version is `1.20.1-2.2.0`.
 - MCA compatibility is isolated in `McaInteractionHandler`: it listens to `EntityInteractSpecific` only when the `mca` mod is loaded and the target entity uses the `mca` registry namespace.
 - Existing generic entity-interaction handlers remain the fallback and the complete no-MCA behavior path.
 - MCA is intentionally not a compile-time or declared runtime dependency.
