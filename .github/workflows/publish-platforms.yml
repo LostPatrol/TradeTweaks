@@ -101,7 +101,7 @@ jobs:
           modrinth-id: ${{ matrix.platform == 'modrinth' && vars.MODRINTH_PROJECT_ID || '' }}
           modrinth-token: ${{ matrix.platform == 'modrinth' && secrets.MODRINTH_TOKEN || '' }}
           files: release-assets/${{ matrix.name }}
-          name: Trade Tweaks ${{ matrix.version }} (${{ matrix.loader }})
+          name: Trade Tweaks ${{ matrix.version }}
           version: ${{ matrix.version }}
           version-type: ${{ matrix.versionType }}
           changelog-file: release-assets/changelog.md
