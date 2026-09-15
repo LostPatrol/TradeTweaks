@@ -13,6 +13,10 @@
 - Compatibility builds must retain byte-identical existing production jar entries outside the intended compatibility class and entrypoint-registration changes.
 - MCA compatibility was accepted after successful in-game testing on 2026-09-15.
 
+## Release history
+
+- The mistakenly published `2.1.3` release and tag were withdrawn on 2026-09-15 and replaced by the intended minor release `2.2.0`.
+
 ## Environment risk
 
 - On 2026-09-15, local Gradle startup was blocked before project configuration by a host Java NIO loopback connection failure. GitHub Actions is the authoritative full Gradle build fallback until the host networking issue is resolved.
