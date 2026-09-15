@@ -106,7 +106,7 @@ public class ItemRenderer {
                 pose.pushPose();
 
                 // The chat pose already contains the HUD transform; applying it again can move the icon out of view.
-                pose.translate(x_shift + x + mc.font.width("  ") / 2.0F, y, 0);
+                pose.translate(x_shift + x + Minecraft.getInstance().font.width("  ") / 2.0F, y, 0);
                 pose.scale(0.5f, 0.5f, 0.5f);
                 guiGraphics.renderItem(stack, 0, 0);
                 pose.popPose();
