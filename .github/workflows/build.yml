@@ -30,7 +30,7 @@ jobs:
       - name: Upload production jar
         uses: actions/upload-artifact@v4
         with:
-          name: tradetweaks-${{ github.ref_name }}
+          name: tradetweaks-${{ github.run_id }}
           path: build/libs/*.jar
           if-no-files-found: error
           retention-days: 7
