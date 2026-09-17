@@ -3,4 +3,4 @@
 
 # FIX
 
-- 改进、修复了与Quark古卷的兼容性
+- Improved compatibility with Quark's Ancient Tomes and fixed related issues.

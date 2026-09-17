@@ -1,5 +1,5 @@
-# Change an existing version's display name in place without uploading or replacing files.
-name: Update platform display name
+# Update existing release metadata without uploading or replacing files.
+name: Update platform release metadata
 on:
   workflow_dispatch:
     inputs:
@@ -15,18 +15,23 @@ on:
         description: Minecraft-prefixed version, e.g. 1.21.1-2.2.1
         type: string
         required: true
+      changelog:
+        description: Optional replacement release notes (omit to preserve existing notes)
+        type: string
+        required: false
 permissions:
   contents: read
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Update only the display name
+      - name: Update existing release metadata
         shell: node {0}
         env:
           PLATFORM: ${{ inputs.platform }}
           VERSION_ID: ${{ inputs.id }}
           MOD_VERSION: ${{ inputs.version }}
+          CHANGELOG: ${{ inputs.changelog }}
           CF_PROJECT: ${{ vars.CURSEFORGE_PROJECT_ID }}
           MR_PROJECT: ${{ vars.MODRINTH_PROJECT_ID }}
           CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -42,31 +47,32 @@ jobs:
           async function main() {
             if (!/^(1\.20\.1|1\.21\.1)-\d+\.\d+\.\d+(-[A-Za-z0-9.-]+)?$/.test(e.MOD_VERSION)) throw new Error('Invalid version');
             const name = `Trade Tweaks ${e.MOD_VERSION}`;
+            const changes = { name, ...(e.CHANGELOG ? { changelog: e.CHANGELOG } : {}) };
             if (e.PLATFORM === 'modrinth') {
               if (!/^[A-Za-z0-9]+$/.test(e.VERSION_ID)) throw new Error('Invalid version ID');
               const url = `https://api.modrinth.com/v2/version/${e.VERSION_ID}`;
               const headers = { Authorization: e.MR_TOKEN, 'User-Agent': 'LostPatrol/TradeTweaks release-maintenance' };
               const before = await request(url, { headers });
               if (before.project_id !== e.MR_PROJECT || before.version_number !== e.MOD_VERSION) throw new Error('Version identity mismatch');
-              if (before.name !== name) await request(url, { method: 'PATCH', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
+              if (before.name !== name || (e.CHANGELOG && before.changelog !== e.CHANGELOG)) await request(url, { method: 'PATCH', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify(changes) });
               // Allow cached reads to catch up after a successful metadata update.
               for (let attempt = 0; attempt < 5; attempt++) {
                 const after = await request(`${url}?verify=${Date.now()}`, { headers });
-                if (after.name === name) {
+                if (after.name === name && (!e.CHANGELOG || after.changelog === e.CHANGELOG)) {
                   fs.appendFileSync(e.GITHUB_STEP_SUMMARY, `Verified ${after.id}: ${after.name}\n`);
                   return;
                 }
                 await new Promise(resolve => setTimeout(resolve, 2000));
               }
-              throw new Error('Name verification failed');
+              throw new Error('Metadata verification failed');
             }
             if (!/^\d+$/.test(e.VERSION_ID) || !/^\d+$/.test(e.CF_PROJECT)) throw new Error('Invalid CurseForge ID');
             const form = new FormData();
-            form.set('metadata', JSON.stringify({ fileID: Number(e.VERSION_ID), displayName: name }));
+            form.set('metadata', JSON.stringify({ fileID: Number(e.VERSION_ID), displayName: name, ...(e.CHANGELOG ? { changelog: e.CHANGELOG, changelogType: 'markdown' } : {}) }));
             const result = await request(`https://minecraft.curseforge.com/api/projects/${e.CF_PROJECT}/update-file`, {
               method: 'POST', headers: { 'X-Api-Token': e.CF_TOKEN }, body: form,
             });
             if (result.id !== Number(e.VERSION_ID)) throw new Error('Unexpected updated file ID');
-            fs.appendFileSync(e.GITHUB_STEP_SUMMARY, `API accepted display name update for ${result.id}: ${name}\n`);
+            fs.appendFileSync(e.GITHUB_STEP_SUMMARY, `API accepted metadata update for ${result.id}: ${name}\n`);
           }
           main().catch(error => { console.error(error.message); process.exitCode = 1; });
