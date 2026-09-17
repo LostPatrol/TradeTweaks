@@ -2,12 +2,12 @@
 
 ## Current baseline
 
-- Current test build is `1.20.1-2.3.0`; local production build and 18 real-Minecraft-class regression assertions passed on 2026-09-18. Both HMCL instances have matching Quark/Zeta installed; gameplay acceptance is pending. No 2.3.0 public release has been published.
+- Current published version is `1.20.1-2.3.0` (2026-09-18). Both local builds and the earlier 18-assertion regressions passed; HMCL test JARs are byte-identical to the published assets. User requested publication; no additional gameplay test result was reported.
 - Quark ancient tome candidates come exclusively from registered ItemListing generators. Only tome exchanges include stack data in deduplication; reflection and synthetic appended offers are removed. Verified Quark versions: Forge 4.0-462 and NeoForge 4.1-485. Enumeration assumes their single bounded random selection and warns above 16384 deterministic probes.
 
 
 - The `1.20.1` branch targets Forge and Java 17.
-- The latest published release version is `1.20.1-2.2.0`.
+- The latest published release version is `1.20.1-2.3.0`.
 - MCA compatibility is isolated in `McaInteractionHandler`: it listens to `EntityInteractSpecific` only when the `mca` mod is loaded and the target entity uses the `mca` registry namespace.
 - Existing generic entity-interaction handlers remain the fallback and the complete no-MCA behavior path.
 - MCA is intentionally not a compile-time or declared runtime dependency.
@@ -18,6 +18,8 @@
 - MCA compatibility was accepted after successful in-game testing on 2026-09-15.
 
 ## Release history
+
+- Release `2.3.0` contains Forge `1.20.1-2.3.0` (source af437a1) and NeoForge `1.21.1-2.3.0` (source/tag target 4d429f0). GitHub assets and Modrinth listed downloads verified; sync run 35258867415 succeeded for all four destinations. Modrinth IDs: vyci7TF8 / LOzZqZoC; CurseForge IDs: 8905730 / 8905729. CurseForge upload accepted, but public pages return 403 and review/public availability remains unverified. Notes use the exact user-requested Quark compatibility sentence.
 
 - The mistakenly published `2.1.3` release and tag were withdrawn on 2026-09-15 and replaced by the intended minor release `2.2.0`.
 
