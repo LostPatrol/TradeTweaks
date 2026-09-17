@@ -1,6 +1,8 @@
+// Enumerates registered trade variants while preserving Quark tome enchantments.
 package net.lostpatrol.tradetweaks.common.tradeselect;
 
 import net.lostpatrol.tradetweaks.TradeTweaks;
+import net.lostpatrol.tradetweaks.integrations.QuarkCompat;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -15,23 +17,30 @@ import java.util.List;
 import java.util.Map;
 
 final class ListingVariantGenerator {
+    // Stop ordinary listings after this many unchanged probes.
     private static final int STABLE_PROBES = 32;
+    // Hard cap on calls made for any registered listing.
     private static final int MAX_PROBES = 16_384;
 
     private ListingVariantGenerator() {
     }
 
+    /** Reuses the listing itself so its configuration and payment rules remain authoritative. */
     static List<MerchantOffer> generate(VillagerTrades.ItemListing listing, Entity trader, int level) {
         Map<OfferItemIdentity, MerchantOffer> variants = new LinkedHashMap<>();
         Exception firstFailure = null;
+        // Tome listings select one enchantment through a single bounded random call.
+        boolean tomeListing = false;
 
         try {
-            addVariant(variants, listing.getOffer(trader, RandomSource.create()));
+            MerchantOffer initial = listing.getOffer(trader, RandomSource.create());
+            tomeListing = QuarkCompat.isAncientTomeOffer(initial);
+            addVariant(variants, initial);
         } catch (Exception e) {
             firstFailure = e;
         }
 
-        int probeLimit = Math.min(
+        int probeLimit = tomeListing ? MAX_PROBES : Math.min(
                 MAX_PROBES,
                 Math.max(1, BuiltInRegistries.ITEM.size())
         );
@@ -42,7 +51,12 @@ final class ListingVariantGenerator {
             EnumeratingRandomSource random = new EnumeratingRandomSource(selector);
             boolean added = false;
             try {
-                added = addVariant(variants, listing.getOffer(trader, random));
+                MerchantOffer offer = listing.getOffer(trader, random);
+                if (QuarkCompat.isAncientTomeOffer(offer)) {
+                    tomeListing = true;
+                    probeLimit = MAX_PROBES;
+                }
+                added = addVariant(variants, offer);
             } catch (Exception e) {
                 if (firstFailure == null) {
                     firstFailure = e;
@@ -58,17 +72,22 @@ final class ListingVariantGenerator {
                     maximumObservedBound
             );
             if (completedProbes >= requiredProbes
-                    && (variants.size() <= 1 || probesWithoutNewVariant >= STABLE_PROBES)) {
+                    && (tomeListing || variants.size() <= 1 || probesWithoutNewVariant >= STABLE_PROBES)) {
                 break;
             }
         }
 
+        if (tomeListing && maximumObservedBound > MAX_PROBES) {
+            TradeTweaks.LOGGER.warn("Quark tome candidates are incomplete: {} variants exceed the {} probe limit",
+                    maximumObservedBound, MAX_PROBES);
+        }
         if (firstFailure != null) {
             TradeTweaks.LOGGER.error("Failed to generate one or more level {} trade variants", level, firstFailure);
         }
         return new ArrayList<>(variants.values());
     }
 
+    /** Adds a distinct candidate while retaining the upstream offer unchanged. */
     private static boolean addVariant(
             Map<OfferItemIdentity, MerchantOffer> variants,
             MerchantOffer offer
@@ -79,12 +98,14 @@ final class ListingVariantGenerator {
         return variants.putIfAbsent(OfferItemIdentity.create(offer), offer) == null;
     }
 
-    private record OfferItemIdentity(Item costA, Item costB, Item result) {
+    private record OfferItemIdentity(Item costA, Item costB, Item result, List<?> tomeData) {
+        /** Only tome exchanges include stack data in their identity. */
         private static OfferItemIdentity create(MerchantOffer offer) {
             return new OfferItemIdentity(
                     offer.getCostA().getItem(),
                     offer.getCostB().getItem(),
-                    offer.getResult().getItem()
+                    offer.getResult().getItem(),
+                    QuarkCompat.variantData(offer)
             );
         }
     }
