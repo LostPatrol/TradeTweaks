@@ -1,4 +1,6 @@
-<!-- Player-facing changes for Trade Tweaks 1.20.1-2.3.0. -->
-# Trade Tweaks 1.20.1-2.3.0
+<!-- Release notes for Trade Tweaks 2.3.0. -->
+# 2.3.0 CHANGELOG
 
-- Fixed Quark Ancient Tome selection to preserve different enchantments and respect Quark's enabled trades and enchantment settings.
+# FIX
+
+- 改进、修复了与Quark古卷的兼容性
