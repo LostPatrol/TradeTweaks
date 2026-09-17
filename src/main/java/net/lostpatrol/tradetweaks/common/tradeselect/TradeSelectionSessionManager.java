@@ -1,3 +1,4 @@
+// Manages selection sessions and candidates from registered villager trades.
 package net.lostpatrol.tradetweaks.common.tradeselect;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -6,7 +7,6 @@ import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
 import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.common.wand.EmeraldWand;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
-import net.lostpatrol.tradetweaks.integrations.QuarkCompat;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
 import net.lostpatrol.tradetweaks.util.VillagerUtil;
 import net.minecraft.core.Holder;
@@ -306,17 +306,6 @@ public final class TradeSelectionSessionManager {
             } catch (Exception e) {
                 TradeTweaks.LOGGER.error("Failed to generate a level {} trade candidate", level, e);
             }
-        }
-
-        try {
-            if (allowEnchantedBooks
-                    && level == 5
-                    && villager.getVillagerData().getProfession() == VillagerProfession.LIBRARIAN
-                    && QuarkCompat.isQuarkLoaded()) {
-                candidates.addAll(QuarkCompat.getAncientTomeOffers(villager.level().registryAccess()));
-            }
-        } catch (Exception e) {
-            TradeTweaks.LOGGER.error("Failed to generate Quark Ancient Tome trade candidates", e);
         }
 
         return candidates;
