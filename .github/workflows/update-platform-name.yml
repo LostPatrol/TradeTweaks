@@ -68,7 +68,7 @@ jobs:
             }
             if (!/^\d+$/.test(e.VERSION_ID) || !/^\d+$/.test(e.CF_PROJECT)) throw new Error('Invalid CurseForge ID');
             const form = new FormData();
-            form.set('metadata', JSON.stringify({ fileID: Number(e.VERSION_ID), displayName: name, ...(e.CHANGELOG ? { changelog: e.CHANGELOG, changelogType: 'markdown' } : {}) }));
+            form.set('metadata', JSON.stringify({ fileID: Number(e.VERSION_ID), displayName: name, ...(e.CHANGELOG ? { changelog: e.CHANGELOG, changelogType: 'text' } : {}) }));
             const result = await request(`https://minecraft.curseforge.com/api/projects/${e.CF_PROJECT}/update-file`, {
               method: 'POST', headers: { 'X-Api-Token': e.CF_TOKEN }, body: form,
             });
