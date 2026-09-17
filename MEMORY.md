@@ -19,7 +19,7 @@
 
 ## Release history
 
-- Release `2.3.0` contains Forge `1.20.1-2.3.0` (source af437a1) and NeoForge `1.21.1-2.3.0` (source/tag target 4d429f0). GitHub assets and Modrinth listed downloads verified; sync run 35258867415 succeeded for all four destinations. Modrinth IDs: vyci7TF8 / LOzZqZoC; CurseForge IDs: 8905730 / 8905729. CurseForge upload accepted, but public pages return 403 and review/public availability remains unverified. Notes use the exact user-requested Quark compatibility sentence.
+- Release `2.3.0` contains Forge `1.20.1-2.3.0` (source af437a1) and NeoForge `1.21.1-2.3.0` (source/tag target 4d429f0). GitHub assets and Modrinth listed downloads verified; sync run 35258867415 succeeded for all four destinations. Modrinth IDs: vyci7TF8 / LOzZqZoC; CurseForge IDs: 8905730 / 8905729. CurseForge upload accepted, but public pages return 403 and review/public availability remains unverified. Notes are English: Improved compatibility with Quark's Ancient Tomes and fixed related issues. GitHub/Modrinth corrections verified; CurseForge update-file returned HTTP 500 for both files and its correction remains unconfirmed.
 
 - The mistakenly published `2.1.3` release and tag were withdrawn on 2026-09-15 and replaced by the intended minor release `2.2.0`.
 
@@ -28,6 +28,8 @@
 - The Java NIO loopback workaround uses JDK_JAVA_OPTIONS with jdk.net.unixdomain.tmpdir=C:\Users\LostPatrol_2\.java-unixdomain. Local 1.20.1-2.3.0 build/reobfuscation succeeds offline; online dependency resolution can stall under the current network setup.
 
 ## Automated distribution
+
+- Treat Chinese release-note descriptions as meaning to rewrite into concise English, unless the user explicitly requests verbatim Chinese. Existing platform metadata can be edited with the optional changelog input on update-platform-name.yml; no re-upload is needed.
 
 - Both Minecraft branches carry `.agents/skills/tradetweaks-release/SKILL.md` and the `publish-platforms.yml` workflow. Published GitHub Releases distribute their attached production JARs independently to CurseForge and Modrinth; absent branches are not built or published.
 - Upload all intended JARs to a draft before publishing. Each JAR carries its own Minecraft/mod version; platform changelogs use the Release body. Manual dispatch supports dry runs and targeted recovery of historical or failed uploads.
