@@ -6,21 +6,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.lostpatrol.tradetweaks.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.ModList;
 
 public class ItemRenderer {
+    /** Current chat-icon opacity read by the loader-specific rendering mixins. */
     public static float alphaValue = 1F;
 
-    @OnlyIn(Dist.CLIENT)
     public static void renderItemForMessage(GuiGraphics guiGraphics, FormattedCharSequence sequence, float x, float y, int color) {
         if (!ClientConfig.tempRenderFlag)
             return;
@@ -43,7 +38,7 @@ public class ItemRenderer {
             if (sofar.endsWith(":  ")) {
                 int s_length = mc.font.width(sofar.substring(0, sofar.length() - 2));
                 // and Chat Heads
-                if (ModList.get().isLoaded("chat_heads")) {
+                if (net.lostpatrol.tradetweaks.platform.Platform.isModLoaded("chat_heads")) {
                     render(guiGraphics, s_length+5*halfSpace, character == ' ' ? 0 : -halfSpace, x, y, style, color);
                 } else {
                     render(guiGraphics, s_length, character == ' ' ? 0 : -halfSpace, x, y, style, color);
@@ -62,19 +57,6 @@ public class ItemRenderer {
         });
     }
 
-    public static MutableComponent createIconComponent(ItemStack stack) {
-        Style style = Style.EMPTY;
-        ItemStack copyStack = stack.copy();
-        if (stack.getCount() > 64) {
-            copyStack.setCount(64);
-        }
-        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackInfo(copyStack)));
-
-        MutableComponent out = Component.literal("   "); // 3 spaces for the icon
-        return out.withStyle(style);
-    }
-
-    @OnlyIn(Dist.CLIENT)
     private static void render(GuiGraphics guiGraphics, float shift, float extraShift, float x, float y, Style style, int color) {
         float a = (color >> 24 & 255) / 255.0F;
 
@@ -93,7 +75,7 @@ public class ItemRenderer {
             float x_shift = shift + extraShift;
 
             //Fix y-shift if overflowingbars is installed
-            if (ModList.get().isLoaded("overflowingbars")) {
+            if (net.lostpatrol.tradetweaks.platform.Platform.isModLoaded("overflowingbars")) {
                 if (Minecraft.getInstance().player != null) {
                     y += Minecraft.getInstance().player.getAbsorptionAmount() > 10.0F ? 10 : 0;
                     y += Minecraft.getInstance().player.getArmorValue() > 0.5F ? 10 : 0;

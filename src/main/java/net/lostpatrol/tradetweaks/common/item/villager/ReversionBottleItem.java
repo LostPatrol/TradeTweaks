@@ -1,3 +1,4 @@
+/** Converts villagers to zombies while preserving their trade and job data. */
 package net.lostpatrol.tradetweaks.common.item.villager;
 
 import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
@@ -21,7 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffers;
-import net.neoforged.neoforge.event.EventHooks;
+import net.lostpatrol.tradetweaks.platform.Platform;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -44,7 +45,7 @@ public class ReversionBottleItem extends Item {
         }
 
         ServerLevel level = (ServerLevel) player.level();
-        if (!EventHooks.canLivingConvert(villager, EntityType.ZOMBIE_VILLAGER, timer -> {})) {
+        if (!Platform.canLivingConvert(villager, EntityType.ZOMBIE_VILLAGER, timer -> {})) {
             return InteractionResult.FAIL;
         }
 
@@ -67,7 +68,7 @@ public class ReversionBottleItem extends Item {
         zombieVillager.setTradeOffers(tradeOffers);
         zombieVillager.setVillagerXp(villagerXp);
         jobSite.ifPresent(tag -> VillagerConversionMemory.storeJobSite(zombieVillager, tag));
-        EventHooks.onLivingConvert(villager, zombieVillager);
+        Platform.onLivingConvert(villager, zombieVillager);
 
         level.levelEvent(null, 1026, zombieVillager.blockPosition(), 0);
         VillagerItemEffects.spawnBloodParticles(level, zombieVillager);

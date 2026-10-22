@@ -1,3 +1,4 @@
+/** Handles sneak scrolling for wands independently of loader input events. */
 package net.lostpatrol.tradetweaks.client.events;
 
 import net.lostpatrol.tradetweaks.common.wand.EmeraldWand;
@@ -5,17 +6,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public class WandScrollHandler {
 
-    @SubscribeEvent
-    public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {
+    /** Handles sneak scrolling and reports whether hotbar scrolling must stop. */
+    public static boolean onMouseScroll(double scroll) {
         Player player = Minecraft.getInstance().player;
-        double scroll = event.getScrollDeltaY();
-        if (player == null || !player.isShiftKeyDown()) return;
-        if (scroll == (double)0.0F) return;
+        if (player == null || !player.isShiftKeyDown()) return false;
+        if (scroll == (double)0.0F) return false;
 
         InteractionHand hand = null;
         ItemStack heldItem = player.getMainHandItem();
@@ -32,8 +30,9 @@ public class WandScrollHandler {
 
         if (hand != null && heldItem.getItem() instanceof EmeraldWand wand) {
             wand.switchMode(heldItem, player, (scroll > (double) 0.0F), hand);
-            event.setCanceled(true);
+            return true;
         }
+        return false;
     }
 }
 

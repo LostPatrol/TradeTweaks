@@ -1,3 +1,4 @@
+/** Displays the server-provided trade candidates and replacement controls. */
 package net.lostpatrol.tradetweaks.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -21,15 +22,12 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
-@OnlyIn(Dist.CLIENT)
 public class TradeSelectionScreen extends Screen {
     private static final ResourceLocation VILLAGER_LOCATION =
             ResourceLocation.withDefaultNamespace("textures/gui/container/villager.png");
@@ -554,7 +552,6 @@ public class TradeSelectionScreen extends Screen {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     private class TradeOfferButton extends Button {
         private final int row;
         private final boolean replacementPanel;

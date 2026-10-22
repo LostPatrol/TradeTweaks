@@ -1,3 +1,4 @@
+/** Tracks and renders workstation outlines from shared highlight payloads. */
 package net.lostpatrol.tradetweaks.network.handler;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -5,10 +6,7 @@ import net.lostpatrol.tradetweaks.network.packet.PacketBlockHighlight;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.lostpatrol.tradetweaks.network.PayloadContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +53,7 @@ public class HandlerBlockHighlight {
 
     private static final Map<BlockPos, HighlightEntry> HIGHLIGHTED_BLOCKS = new HashMap<>();
 
-    public static void handle(PacketBlockHighlight packet, IPayloadContext ctx) {
+    public static void handle(PacketBlockHighlight packet, PayloadContext ctx) {
         ctx.enqueueWork(() -> {
             HIGHLIGHTED_BLOCKS.put(packet.getPos(), new HighlightEntry(
                     packet.getDurationTicks(),
@@ -64,8 +62,8 @@ public class HandlerBlockHighlight {
         });
     }
 
-    @SubscribeEvent
-    public static void onClientTick(ClientTickEvent.Post event) {
+    /** Ages active workstation highlights. */
+    public static void onClientTick() {
         HIGHLIGHTED_BLOCKS.entrySet().removeIf(entry -> {
             HighlightEntry highlight = entry.getValue();
             highlight.decrement();
@@ -73,14 +71,10 @@ public class HandlerBlockHighlight {
         });
     }
 
-    @SubscribeEvent
-    public static void onRenderWorldLast(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
-            return;
-        }
+    /** Draws workstation outlines after world particles. */
+    public static void onRenderWorldLast(PoseStack poseStack) {
 
         Minecraft mc = Minecraft.getInstance();
-        PoseStack poseStack = event.getPoseStack();
         MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
 
         for (Map.Entry<BlockPos, HighlightEntry> entry : HIGHLIGHTED_BLOCKS.entrySet()) {

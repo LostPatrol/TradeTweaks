@@ -1,0 +1,67 @@
+// Fabric build of the shared gameplay sources with loader-specific adapters.
+plugins {
+    id 'fabric-loom' version '1.14.10'
+    id 'maven-publish'
+}
+
+version = rootProject.mod_version
+group = rootProject.mod_group_id
+base.archivesName = rootProject.mod_id
+tasks.named('remapJar') { archiveClassifier = 'fabric' }
+tasks.named('jar') { archiveClassifier = 'fabric-dev' }
+
+repositories {
+    maven {
+        url = 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/'
+        content { includeGroup 'fuzs.forgeconfigapiport' }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
+    include "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+}
+
+// Loader classes have matching public seams; gameplay stays in the root sources.
+def loaderClasses = [
+        'TradeTweaks.java', 'NetworkHandler.java', 'ModItems.java',
+        'ModCreativeModeTab.java', 'ModCriteriaTriggers.java', 'ClientKeyMappings.java',
+        'Platform.java', 'ClientPlatform.java', 'NeoForgeEvents.java', 'NeoForgeClientEvents.java',
+        'ItemRendererMixin.java', 'ChatComponentMixin.java', 'ItemBlockRenderTypesMixin.java',
+        'McaInteractionHandler.java', 'WandInteractionHandler.java',
+        'VillagerToolInteractionHandler.java', 'RaidRewardHandler.java'
+]
+// Capture the directory during configuration so source filtering supports the cache.
+def sharedJavaDirectory = rootProject.file('src/main/java')
+sourceSets.main.java {
+    srcDir sharedJavaDirectory
+    exclude { details ->
+        details.file.toPath().startsWith(sharedJavaDirectory.toPath()) &&
+                loaderClasses.contains(details.file.name)
+    }
+}
+
+loom {
+    accessWidenerPath = file('src/main/resources/tradetweaks.accesswidener')
+    mixin {
+        useLegacyMixinAp = true
+        defaultRefmapName = 'tradetweaks.fabric.refmap.json'
+    }
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+processResources {
+    from(rootProject.file('src/main/resources')) {
+        exclude 'META-INF/**', 'tradetweaks.mixins.json', 'data/tradetweaks/recipe/restoration_bottle.json'
+    }
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') { expand version: project.version }
+}
+
+apply from: rootProject.file('gameplay-tests.gradle')

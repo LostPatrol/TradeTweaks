@@ -1,3 +1,4 @@
+/** Upgrades villager careers and consumes the configured inventory payment. */
 package net.lostpatrol.tradetweaks.common.wand.handler;
 
 import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
@@ -19,8 +20,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.lostpatrol.tradetweaks.platform.Platform;
+import net.lostpatrol.tradetweaks.platform.ItemAccess;
 
 import java.util.List;
 import java.util.Objects;
@@ -79,7 +80,7 @@ public class HandlerUpgradeVillager {
     private static boolean consumeUpgradeCost(Player player) {
         AtomicBoolean success = new AtomicBoolean(false);
 
-        IItemHandler handler = player.getCapability(Capabilities.ItemHandler.ENTITY);
+        ItemAccess handler = Platform.inventory(player);
         if (handler != null) {
             // Try each cost option in order
             for (ItemCost cost : upgradeCosts) {
@@ -95,7 +96,7 @@ public class HandlerUpgradeVillager {
         return success.get();
     }
 
-    private static int findTotal(IItemHandler handler, Item item) {
+    private static int findTotal(ItemAccess handler, Item item) {
         int total = 0;
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack stack = handler.getStackInSlot(i);
@@ -106,7 +107,7 @@ public class HandlerUpgradeVillager {
         return total;
     }
 
-    private static void removeExactly(IItemHandler handler, Item item, int amount) {
+    private static void removeExactly(ItemAccess handler, Item item, int amount) {
         int remaining = amount;
         for (int i = 0; i < handler.getSlots() && remaining > 0; i++) {
             ItemStack stack = handler.getStackInSlot(i);

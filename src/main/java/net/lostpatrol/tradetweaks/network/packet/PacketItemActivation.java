@@ -1,3 +1,4 @@
+/** Encodes hero-totem activation effects and dispatches the client animation. */
 package net.lostpatrol.tradetweaks.network.packet;
 
 import net.lostpatrol.tradetweaks.TradeTweaks;
@@ -6,7 +7,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.lostpatrol.tradetweaks.network.PayloadContext;
 
 /*
 * Animation of Totem of Village Hero
@@ -40,7 +41,7 @@ public class PacketItemActivation implements CustomPacketPayload {
         return TYPE;
     }
 
-    public static void handle(PacketItemActivation packet, IPayloadContext ctx) {
+    public static void handle(PacketItemActivation packet, PayloadContext ctx) {
         ctx.enqueueWork(() -> {
             try {
                 Class<?> clazz = Class.forName("net.lostpatrol.tradetweaks.client.ClientItemActivationHandler");

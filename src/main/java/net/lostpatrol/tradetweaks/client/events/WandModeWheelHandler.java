@@ -1,3 +1,4 @@
+/** Opens the wand mode wheel from shared client tick callbacks. */
 package net.lostpatrol.tradetweaks.client.events;
 
 import net.lostpatrol.tradetweaks.client.gui.WandModeWheelScreen;
@@ -6,15 +7,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 public final class WandModeWheelHandler {
     private WandModeWheelHandler() {
     }
 
-    @SubscribeEvent
-    public static void onClientTick(ClientTickEvent.Post event) {
+    /** Opens the wand wheel when its key is pressed. */
+    public static void onClientTick() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null || mc.screen != null) {
             return;

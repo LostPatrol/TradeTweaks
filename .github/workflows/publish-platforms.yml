@@ -24,6 +24,11 @@ on:
         description: Validate assets without uploading to either platform
         type: boolean
         default: true
+      loader:
+        description: Loader to distribute (select one for a partial retry)
+        type: choice
+        options: [all, forge, neoforge, fabric]
+        default: all
 
 permissions:
   contents: read
@@ -51,6 +56,7 @@ jobs:
           RELEASE_TAG: ${{ inputs.tag }}
           RELEASE_BRANCH: ${{ inputs.branch }}
           RELEASE_PLATFORM: ${{ inputs.platform }}
+          RELEASE_LOADER: ${{ inputs.loader }}
         with:
           script: |
             await require('./.github/scripts/prepare-release.cjs')({ github, context, core });
@@ -72,7 +78,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
-    name: ${{ matrix.minecraft }} / ${{ matrix.platform }}
+    name: ${{ matrix.minecraft }} / ${{ matrix.loader }} / ${{ matrix.platform }}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -101,8 +107,8 @@ jobs:
           modrinth-id: ${{ matrix.platform == 'modrinth' && vars.MODRINTH_PROJECT_ID || '' }}
           modrinth-token: ${{ matrix.platform == 'modrinth' && secrets.MODRINTH_TOKEN || '' }}
           files: release-assets/${{ matrix.name }}
-          name: Trade Tweaks ${{ matrix.version }}
-          version: ${{ matrix.version }}
+          name: ${{ matrix.displayName }}
+          version: ${{ matrix.versionId }}
           version-type: ${{ matrix.versionType }}
           changelog-file: release-assets/changelog.md
           loaders: ${{ matrix.loader }}

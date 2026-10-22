@@ -1,3 +1,4 @@
+/** Registers internal commands used by clickable trade reports. */
 package net.lostpatrol.tradetweaks.command;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -5,16 +6,11 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerLevel;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 public class InternalCommand {
-    public static void register() {
-        NeoForge.EVENT_BUS.addListener(InternalCommand::registerCommands);
-    }
-
-    private static void registerCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(
+    /** Registers the shared command tree. */
+    public static void registerCommands(com.mojang.brigadier.CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(
                 Commands.literal("tradetweaks_internal")
 //                        .requires(source -> source.hasPermission(2))
                         .then(Commands.literal("highlight")

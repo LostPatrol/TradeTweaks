@@ -1,3 +1,4 @@
+/** Registers the native NeoForge payload protocol and send operations. */
 package net.lostpatrol.tradetweaks.network;
 
 import net.lostpatrol.tradetweaks.network.handler.HandlerBlockHighlight;
@@ -20,6 +21,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class NetworkHandler {
+    /** NeoForge payload compatibility version, unchanged by the Fabric adapter. */
     private static final String PROTOCOL_VERSION = "4";
 
     public static void register(IEventBus modEventBus) {
@@ -28,17 +30,22 @@ public class NetworkHandler {
 
     private static void registerPayloads(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
-        registrar.playToServer(PacketWandModeSwitch.TYPE, PacketWandModeSwitch.STREAM_CODEC, HandlerWandModeSwitch::handle);
-        registrar.playToClient(PacketBlockHighlight.TYPE, PacketBlockHighlight.STREAM_CODEC, HandlerBlockHighlight::handle);
-        registrar.playToServer(PacketTradeReplace.TYPE, PacketTradeReplace.STREAM_CODEC, HandlerTradeReplace::handle);
+        registrar.playToServer(PacketWandModeSwitch.TYPE, PacketWandModeSwitch.STREAM_CODEC, (packet, ctx) -> HandlerWandModeSwitch.handle(packet, context(ctx)));
+        registrar.playToClient(PacketBlockHighlight.TYPE, PacketBlockHighlight.STREAM_CODEC, (packet, ctx) -> HandlerBlockHighlight.handle(packet, context(ctx)));
+        registrar.playToServer(PacketTradeReplace.TYPE, PacketTradeReplace.STREAM_CODEC, (packet, ctx) -> HandlerTradeReplace.handle(packet, context(ctx)));
         registrar.playToServer(
                 PacketCloseTradeSelection.TYPE,
                 PacketCloseTradeSelection.STREAM_CODEC,
-                HandlerCloseTradeSelection::handle
+                (packet, ctx) -> HandlerCloseTradeSelection.handle(packet, context(ctx))
         );
-        registrar.playToClient(PacketOpenTradeSelection.TYPE, PacketOpenTradeSelection.STREAM_CODEC, HandlerOpenTradeSelection::handle);
-        registrar.playToClient(PacketItemActivation.TYPE, PacketItemActivation.STREAM_CODEC, PacketItemActivation::handle);
-        registrar.playToServer(PacketWandModeSet.TYPE, PacketWandModeSet.STREAM_CODEC, HandlerWandModeSet::handle);
+        registrar.playToClient(PacketOpenTradeSelection.TYPE, PacketOpenTradeSelection.STREAM_CODEC, (packet, ctx) -> HandlerOpenTradeSelection.handle(packet, context(ctx)));
+        registrar.playToClient(PacketItemActivation.TYPE, PacketItemActivation.STREAM_CODEC, (packet, ctx) -> PacketItemActivation.handle(packet, context(ctx)));
+        registrar.playToServer(PacketWandModeSet.TYPE, PacketWandModeSet.STREAM_CODEC, (packet, ctx) -> HandlerWandModeSet.handle(packet, context(ctx)));
+    }
+
+    /** Adapts NeoForge packet execution to the shared handlers. */
+    private static PayloadContext context(net.neoforged.neoforge.network.handling.IPayloadContext context) {
+        return new PayloadContext(context.player(), work -> context.enqueueWork(work));
     }
 
     public static void sendBlockHighlightToPlayer(ServerPlayer player, PacketBlockHighlight packet) {

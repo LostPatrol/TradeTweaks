@@ -1,3 +1,4 @@
+/** Matches trade offers against text, metadata, tag and color filters. */
 package net.lostpatrol.tradetweaks.client.gui;
 
 import com.mojang.blaze3d.platform.NativeImage;
@@ -15,9 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.ModList;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +30,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@OnlyIn(Dist.CLIENT)
 public final class TradeSearchMatcher {
     private static final Pattern FILTER_SPLIT_PATTERN = Pattern.compile("(-?\".*?(?:\"|$)|\\S+)");
     private static final Pattern QUOTE_PATTERN = Pattern.compile("\"");
@@ -291,7 +288,7 @@ public final class TradeSearchMatcher {
                 Set<String> values = new LinkedHashSet<>();
                 ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(this.stack.getItem());
                 addModNames(values, itemId.getNamespace());
-                String creatorModId = this.stack.getItem().getCreatorModId(this.stack);
+                String creatorModId = net.lostpatrol.tradetweaks.platform.Platform.creatorModId(this.stack);
                 if (creatorModId != null) {
                     addModNames(values, creatorModId);
                 }
@@ -347,8 +344,7 @@ public final class TradeSearchMatcher {
 
     private static void addModNames(Set<String> values, String modId) {
         values.add(normalize(modId));
-        ModList.get().getModContainerById(modId).ifPresent(container -> {
-            String modName = container.getModInfo().getDisplayName();
+        net.lostpatrol.tradetweaks.platform.Platform.modName(modId).ifPresent(modName -> {
             values.add(SPACE_PATTERN.matcher(normalize(modName)).replaceAll(""));
             String[] words = MOD_NAME_SEPARATOR_PATTERN.split(modName);
             if (words.length > 1) {
@@ -373,8 +369,8 @@ public final class TradeSearchMatcher {
             Minecraft minecraft = Minecraft.getInstance();
             BakedModel model = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
             TextureAtlasSprite sprite = model.getParticleIcon();
-            NativeImage image = sprite.contents().getOriginalImage();
-            int tint = minecraft.getItemColors().getColor(stack, 0);
+            NativeImage image = net.lostpatrol.tradetweaks.platform.ClientPlatform.originalImage(sprite.contents());
+            int tint = net.lostpatrol.tradetweaks.platform.ClientPlatform.itemTint(stack);
             addDominantColorNames(names, image, sprite.contents().width(), sprite.contents().height(), tint);
         } catch (RuntimeException | LinkageError ignored) {
         }

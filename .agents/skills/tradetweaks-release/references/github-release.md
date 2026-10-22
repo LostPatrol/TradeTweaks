@@ -17,8 +17,8 @@ Use JSON request bodies serialized by PowerShell `ConvertTo-Json`, `Accept: appl
 
 - `POST /repos/LostPatrol/TradeTweaks/actions/workflows/build.yml/dispatches` with `{ "ref": "1.21.1" }` (or `1.20.1`). The Build workflow supports dispatch without additional inputs.
 - Find the new `workflow_dispatch` run via `/actions/workflows/build.yml/runs`, matching branch, expected `head_sha` and dispatch time. Record its ID; poll `/actions/runs/{run_id}` with bounded waits and continue user-facing progress updates.
-- Require `conclusion=success`, then list `/actions/runs/{run_id}/artifacts` and retrieve the unexpired `tradetweaks-{run_id}` artifact using `/actions/artifacts/{artifact_id}/zip`. Follow the signed download redirect without carrying the API Authorization header.
-- Extract under a unique `agent/codex` staging directory. Match the actual production JAR against that branch's `gradle.properties`; exclude sources/dev/javadoc artifacts.
+- Require `conclusion=success`, then retrieve the relevant `tradetweaks-{run_id}-native` and/or `tradetweaks-{run_id}-fabric` artifacts from `/actions/runs/{run_id}/artifacts` via `/actions/artifacts/{artifact_id}/zip`. Older workflows used `tradetweaks-{run_id}`. Follow the signed download redirect without carrying the API Authorization header.
+- Extract under a unique `agent/codex` staging directory. Match each production JAR against its branch's `gradle.properties` and loader; exclude sources/dev/javadoc artifacts. Keep one JAR per Minecraft/loader pair.
 
 ## Draft, upload, publish
 
@@ -32,6 +32,6 @@ Use JSON request bodies serialized by PowerShell `ConvertTo-Json`, `Accept: appl
 
 Inspect `/actions/workflows/publish-platforms.yml/runs` and `/actions/runs/{run_id}/jobs`; correlate the tag, event, time and expected branch/platform jobs. Inspect logs for returned platform IDs/URLs and failures. Query public platform version/file pages when available to distinguish review from public download.
 
-If explicit recovery is necessary, `POST /actions/workflows/publish-platforms.yml/dispatches` with `ref` set to a branch containing the workflow and inputs such as `{ "tag": "2.2.1", "branch": "1.21.1", "platform": "modrinth", "dry_run": "false" }`. Match the new run before waiting. Never dispatch both platforms again when one has already succeeded. Use `dry_run=true` only when the user's task is validation, not as a substitute for the requested release.
+If explicit recovery is necessary, dispatch `publish-platforms.yml` on a branch containing it with inputs such as `{ "tag": "2.4.0", "branch": "1.21.1", "loader": "fabric", "platform": "modrinth", "dry_run": "false" }`. Match the new run before waiting. Never dispatch successful Minecraft/loader/platform tuples again. Use `dry_run=true` for validation or publication preparation pending approval.
 
 Official references: [Releases](https://docs.github.com/en/rest/releases/releases), [Release assets](https://docs.github.com/en/rest/releases/assets), [Workflow dispatch](https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event), [Artifacts](https://docs.github.com/en/rest/actions/artifacts).

@@ -1,12 +1,13 @@
+/** Routes authenticated trade replacement requests to the session manager. */
 package net.lostpatrol.tradetweaks.network.handler;
 
 import net.lostpatrol.tradetweaks.common.tradeselect.TradeSelectionSessionManager;
 import net.lostpatrol.tradetweaks.network.packet.PacketTradeReplace;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.lostpatrol.tradetweaks.network.PayloadContext;
 
 public class HandlerTradeReplace {
-    public static void handle(PacketTradeReplace packet, IPayloadContext ctx) {
+    public static void handle(PacketTradeReplace packet, PayloadContext ctx) {
         ctx.enqueueWork(() -> {
             if (ctx.player() instanceof ServerPlayer player) {
                 TradeSelectionSessionManager.replaceTrade(

@@ -3,19 +3,19 @@
 
 ## Version ownership
 
-The user decides every version value and when it changes. The release skill executes that decision; it does not recommend, calculate or apply a version increment during an automated release.
+The user owns version selection and publication timing. The skill uses supplied versions or existing metadata; it may choose a version only when the user explicitly delegates that decision. Version delegation does not authorize publication.
 
 - Treat an exact version in the current request or prior active task as authoritative.
-- Otherwise read each selected branch's `mod_version` as an existing user-owned value. Do not modify it automatically.
-- If the request and branch metadata disagree, or a new Release tag cannot be selected without deciding a version, stop before build/publication and ask the user for the exact value.
+- Otherwise read each selected branch's `mod_version`; modify it only when the user explicitly delegates version selection.
+- Resolve conflicting requested and recorded versions before publication. Ask for an exact value only when the user has not delegated version selection and the intended value is unclear.
 - For a multi-branch release, accept equal or different branch versions exactly as supplied. Gaps are valid. Do not backfill a skipped version or independently add one to each branch.
 - Reject reuse of an already published full artifact version for changed bytes. Existing-version requests use the verification/recovery path.
 
-The full artifact version remains `<minecraft>-<mod-version>`, and the display name remains `Trade Tweaks <minecraft>-<mod-version>`.
+The embedded mod version remains `<minecraft>-<mod-version>`. From 2.4.0, artifact filenames and platform IDs append `-<loader>`, and display names append ` (Fabric)`, ` (Forge)` or ` (NeoForge)`. Preserve historical identities for old assets.
 
 ## Determine the audience baseline
 
-For every selected Minecraft branch, inspect the latest actually published version on GitHub Releases, CurseForge and Modrinth. Record the predecessor found for each destination. A repository tag, JAR built on another branch, or publication on another destination does not prove that users on this destination received it.
+For each selected Minecraft/loader pair, inspect the latest actually published version on GitHub Releases, CurseForge and Modrinth. Record each destination's predecessor. A tag, another loader's JAR or another destination's publication does not prove that this audience received it. An initial Fabric release has no Forge/NeoForge predecessor.
 
 Compare the target branch with each destination's predecessor and retain only user-facing changes that are present in that target branch. Do not infer applicability from version numbers alone. In particular:
 

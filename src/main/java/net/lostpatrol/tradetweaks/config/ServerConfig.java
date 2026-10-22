@@ -1,3 +1,4 @@
+/** Defines shared scanning, upgrade-cost and trade-selection settings. */
 package net.lostpatrol.tradetweaks.config;
 
 import net.lostpatrol.tradetweaks.TradeTweaks;
@@ -6,8 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.event.config.ModConfigEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,21 +70,17 @@ public class ServerConfig {
     public static int tempIntervalTicks = 100;
     public static int tempRadiusBlocks = 10;
 
-    @SubscribeEvent
-    public static void onLoad(final ModConfigEvent.Loading event) {
-        if (event.getConfig().getSpec() == SPEC) {
-            tempIntervalTicks = getCheckInterval() * 20;
-            tempRadiusBlocks = getCheckRadius();
-            TradeTweaks.LOGGER.debug("Loaded client config: check interval= {}ticks", tempIntervalTicks);
-            HandlerUpgradeVillager.reloadCosts();
-        }
+    /** Refreshes cached settings when the loader loads the config. */
+    public static void onLoad() {
+        tempIntervalTicks = getCheckInterval() * 20;
+        tempRadiusBlocks = getCheckRadius();
+        TradeTweaks.LOGGER.debug("Loaded server config: check interval= {}ticks", tempIntervalTicks);
+        HandlerUpgradeVillager.reloadCosts();
     }
 
-    @SubscribeEvent
-    public static void onReload(final ModConfigEvent.Reloading event) {
-        if (event.getConfig().getSpec() == SPEC) {
-            HandlerUpgradeVillager.reloadCosts();
-        }
+    /** Refreshes cached settings after config changes. */
+    public static void onReload() {
+        HandlerUpgradeVillager.reloadCosts();
     }
 
     public static void setCheckInterval(int seconds) {

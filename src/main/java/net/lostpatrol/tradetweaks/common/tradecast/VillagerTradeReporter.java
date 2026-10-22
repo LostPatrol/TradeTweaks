@@ -1,3 +1,4 @@
+/** Detects nearby trade changes and creates interactive chat reports. */
 package net.lostpatrol.tradetweaks.common.tradecast;
 
 import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
@@ -28,9 +29,6 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 
 import java.util.*;
 
@@ -48,11 +46,6 @@ public class VillagerTradeReporter {
 
     public static final Map<UUID, PlayerTradeData> playerTradeDataMap = new HashMap<>();
 
-    public static void register() {
-        NeoForge.EVENT_BUS.addListener(VillagerTradeReporter::onPlayerTick);
-        NeoForge.EVENT_BUS.addListener(VillagerTradeReporter::onVillagerDeath);
-    }
-
     // Immediately report when villager profession changes
     // TODO
     // forge/minecraft does not provide VillagerProfessionChangeEvent. this causes problems
@@ -61,12 +54,12 @@ public class VillagerTradeReporter {
     // TODO
     // Is it necessary?
 
-    private static void onPlayerTick(PlayerTickEvent.Post event) {
+    /** Reports changed trades during the server player tick. */
+    public static void onPlayerTick(Player player) {
         if (ClientConfig.tempMode == ClientConfig.ReportMode.OFF) {
             return;
         }
 
-        Player player = event.getEntity();
         if (player.level().isClientSide) {
             return;
         }
@@ -211,7 +204,7 @@ public class VillagerTradeReporter {
 
     // broadcast format and style
     private static Component formatItemStack(ItemStack stack) {
-        MutableComponent icon = net.lostpatrol.tradetweaks.client.render.ItemRenderer.createIconComponent(stack);
+        MutableComponent icon = net.lostpatrol.tradetweaks.common.tradecast.ChatItemIcon.createIconComponent(stack);
 
         if (stack.getItem() == Items.EMERALD) {
             return icon.append(stack.getDisplayName().copy().withStyle(ChatFormatting.GREEN));
@@ -232,8 +225,9 @@ public class VillagerTradeReporter {
         return icon.append(stack.getDisplayName());
     }
 
-    private static void onVillagerDeath(LivingDeathEvent event) {
-        if (!(event.getEntity() instanceof Villager villager)) return;
+    /** Removes cached trades after a villager dies. */
+    public static void onVillagerDeath(net.minecraft.world.entity.LivingEntity entity) {
+        if (!(entity instanceof Villager villager)) return;
 
         UUID villagerId = villager.getUUID();
         for (PlayerTradeData data : playerTradeDataMap.values()) {

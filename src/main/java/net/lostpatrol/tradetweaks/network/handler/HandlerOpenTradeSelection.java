@@ -1,13 +1,14 @@
+/** Opens the client trade screen without linking client classes on servers. */
 package net.lostpatrol.tradetweaks.network.handler;
 
 import net.lostpatrol.tradetweaks.TradeTweaks;
 import net.lostpatrol.tradetweaks.network.packet.PacketOpenTradeSelection;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.lostpatrol.tradetweaks.network.PayloadContext;
 
 import java.lang.reflect.Method;
 
 public class HandlerOpenTradeSelection {
-    public static void handle(PacketOpenTradeSelection packet, IPayloadContext ctx) {
+    public static void handle(PacketOpenTradeSelection packet, PayloadContext ctx) {
         ctx.enqueueWork(() -> {
             try {
                 Class<?> clazz = Class.forName("net.lostpatrol.tradetweaks.client.ClientTradeSelectionOpener");

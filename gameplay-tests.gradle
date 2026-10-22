@@ -1,0 +1,102 @@
+// Adds opt-in GameTest sources without including test code in production artifacts.
+// These are server GameTests, not JUnit tests discovered by the ordinary build.
+sourceSets.test.java.setSrcDirs([])
+sourceSets.test.resources.setSrcDirs([])
+def gameplaySources = sourceSets.create('gameplayTest') {
+    java.srcDir rootProject.file('src/test/java')
+    compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+    runtimeClasspath += output + compileClasspath + sourceSets.main.runtimeClasspath
+}
+def regressionResult = rootProject.file("agent/codex/gameplay-${project == rootProject ? 'neoforge' : 'fabric'}.txt")
+def clientSmokeResult = rootProject.file("agent/codex/client-smoke-${project == rootProject ? 'neoforge' : 'fabric'}.txt")
+
+if (project != rootProject) {
+    gameplaySources.java.exclude '**/regression/neoforge/**'
+    gameplaySources.java.srcDir file('src/testmod/java')
+    gameplaySources.resources.srcDir file('src/testmod/resources')
+    loom {
+        mods {
+            tradetweaks { sourceSet sourceSets.main }
+            tradetweaks_regression { sourceSet gameplaySources }
+        }
+        runs {
+            gameplayTest {
+                server()
+                name = 'Trade Tweaks gameplay regression'
+                source gameplaySources
+                runDir '../agent/codex/gameplay-fabric'
+                vmArg '-Dfabric-api.gametest'
+                vmArg "-Dtradetweaks.regressionResult=${regressionResult.absolutePath}"
+            }
+            clientSmoke {
+                client()
+                name = 'Trade Tweaks client startup smoke'
+                source gameplaySources
+                runDir '../agent/codex/client-smoke-fabric'
+                vmArg '-Dtradetweaks.clientSmoke=true'
+                vmArg "-Dtradetweaks.clientSmokeResult=${clientSmokeResult.absolutePath}"
+            }
+        }
+    }
+} else {
+    // NeoForge uses the same suite and its normal GameTest launcher.
+    runs.gameTestServer {
+        modSource gameplaySources
+        workingDirectory rootProject.file('agent/codex/gameplay-neoforge')
+        systemProperty 'tradetweaks.regressionResult', regressionResult.absolutePath
+    }
+    runs {
+        clientSmoke {
+            runType 'client'
+            modSource gameplaySources
+            workingDirectory rootProject.file('agent/codex/client-smoke-neoforge')
+            systemProperty 'tradetweaks.clientSmoke', 'true'
+            systemProperty 'tradetweaks.clientSmokeResult', clientSmokeResult.absolutePath
+        }
+    }
+    def generatedStructures = layout.buildDirectory.dir('generated/gameplayResources')
+    gameplaySources.resources.srcDir generatedStructures
+    tasks.register('generateGameplayStructure') {
+        outputs.dir generatedStructures
+        doLast {
+            def structure = generatedStructures.get().file('data/tradetweaks/structure/regression_empty.nbt').asFile
+            structure.parentFile.mkdirs()
+            // A minimal air template; generated here to keep binary fixtures out of source.
+            structure.withOutputStream { raw ->
+                def out = new DataOutputStream(new java.util.zip.GZIPOutputStream(raw))
+                out.writeByte(10); out.writeUTF('')
+                out.writeByte(3); out.writeUTF('DataVersion'); out.writeInt(3955)
+                out.writeByte(9); out.writeUTF('size'); out.writeByte(3); out.writeInt(3)
+                [8, 8, 8].each { out.writeInt(it) }
+                out.writeByte(9); out.writeUTF('palette'); out.writeByte(10); out.writeInt(1)
+                out.writeByte(8); out.writeUTF('Name'); out.writeUTF('minecraft:air'); out.writeByte(0)
+                ['blocks', 'entities'].each {
+                    out.writeByte(9); out.writeUTF(it); out.writeByte(10); out.writeInt(0)
+                }
+                out.writeByte(0)
+                out.close()
+            }
+        }
+    }
+    tasks.named('processGameplayTestResources') { dependsOn 'generateGameplayStructure' }
+}
+
+// Remove stale evidence before launch and fail even if a launcher swallows a test failure.
+def gameplayRunName = project == rootProject ? 'runGameTestServer' : 'runGameplayTest'
+tasks.matching { it.name == gameplayRunName }.configureEach {
+    doFirst { regressionResult.delete() }
+    doLast {
+        if (!regressionResult.isFile() || !regressionResult.text.startsWith('PASS assertions=')) {
+            throw new GradleException("Gameplay regression did not pass: ${regressionResult}")
+        }
+    }
+}
+
+tasks.matching { it.name == 'runClientSmoke' }.configureEach {
+    doFirst { clientSmokeResult.delete() }
+    doLast {
+        if (!clientSmokeResult.isFile() || !clientSmokeResult.text.startsWith('PASS titleScreenTicks=')) {
+            throw new GradleException("Client startup smoke did not pass: ${clientSmokeResult}")
+        }
+    }
+}

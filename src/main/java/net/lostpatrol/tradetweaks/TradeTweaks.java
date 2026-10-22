@@ -1,24 +1,17 @@
+/** Initializes native NeoForge registrations and shared gameplay callbacks. */
 package net.lostpatrol.tradetweaks;
 
 import com.mojang.logging.LogUtils;
 import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
-import net.lostpatrol.tradetweaks.command.InternalCommand;
-import net.lostpatrol.tradetweaks.command.TradeBroadcastCommand;
-import net.lostpatrol.tradetweaks.common.tradecast.VillagerTradeReporter;
-import net.lostpatrol.tradetweaks.common.tradeselect.TradeSelectionSessionManager;
 import net.lostpatrol.tradetweaks.config.ClientConfig;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.common.item.ModCreativeModeTab;
 import net.lostpatrol.tradetweaks.common.item.ModItems;
 import net.lostpatrol.tradetweaks.client.events.ClientKeyMappings;
-import net.lostpatrol.tradetweaks.client.events.WandScrollHandler;
-import net.lostpatrol.tradetweaks.client.events.WandModeWheelHandler;
-import net.lostpatrol.tradetweaks.common.item.villager.VillagerConversionMemory;
 import net.lostpatrol.tradetweaks.events.RaidRewardHandler;
 import net.lostpatrol.tradetweaks.events.McaInteractionHandler;
 import net.lostpatrol.tradetweaks.events.VillagerToolInteractionHandler;
 import net.lostpatrol.tradetweaks.events.WandInteractionHandler;
-import net.lostpatrol.tradetweaks.network.handler.HandlerBlockHighlight;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -30,9 +23,12 @@ import org.slf4j.Logger;
 
 @Mod(TradeTweaks.MODID)
 public class TradeTweaks {
+    /** Registry and translation namespace shared by both loaders. */
     public static final String MODID = "tradetweaks";
+    /** Shared diagnostic logger. */
     public static final Logger LOGGER = LogUtils.getLogger();
 
+    /** Registers native services and shared gameplay callbacks. */
     public TradeTweaks(IEventBus modEventBus, ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
         modContainer.registerConfig(ModConfig.Type.COMMON, ClientConfig.SPEC);
@@ -40,26 +36,16 @@ public class TradeTweaks {
         NeoForge.EVENT_BUS.register(WandInteractionHandler.class);
         NeoForge.EVENT_BUS.register(McaInteractionHandler.class);
         NeoForge.EVENT_BUS.register(VillagerToolInteractionHandler.class);
-        NeoForge.EVENT_BUS.register(TradeSelectionSessionManager.class);
-        NeoForge.EVENT_BUS.register(VillagerConversionMemory.class);
         NeoForge.EVENT_BUS.register(RaidRewardHandler.class);
         if (Dist.CLIENT.equals(net.neoforged.fml.loading.FMLEnvironment.dist)) {
-            NeoForge.EVENT_BUS.register(HandlerBlockHighlight.class);
-            NeoForge.EVENT_BUS.register(WandScrollHandler.class);
-            NeoForge.EVENT_BUS.register(WandModeWheelHandler.class);
+            net.lostpatrol.tradetweaks.platform.NeoForgeClientEvents.register(modEventBus);
         }
-
-        VillagerTradeReporter.register();
-        TradeBroadcastCommand.register();
-        InternalCommand.register();
 
         NetworkHandler.register(modEventBus);
 
-        modEventBus.register(ServerConfig.class);
+        net.lostpatrol.tradetweaks.platform.NeoForgeEvents.register(modEventBus);
         if (Dist.CLIENT.equals(net.neoforged.fml.loading.FMLEnvironment.dist)) {
-            modEventBus.register(ClientConfig.class);
             modEventBus.register(ClientKeyMappings.class);
-            modEventBus.register(net.lostpatrol.tradetweaks.client.events.PropertyRegistry.class);
         }
 
         ModItems.register(modEventBus);

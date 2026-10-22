@@ -1,3 +1,4 @@
+// Native NeoForge build; the Fabric subproject consumes the shared gameplay sources.
 plugins {
     id 'java-library'
     id 'maven-publish'
@@ -87,6 +88,7 @@ dependencies {
 }
 
 jar {
+    archiveClassifier = 'neoforge'
     manifest.attributes([
             "MixinConfigs": "${mod_id}.mixins.json"
     ])
@@ -145,3 +147,5 @@ idea {
 tasks.withType(JavaExec).configureEach {
     standardInput = System.in
 }
+
+apply from: rootProject.file('gameplay-tests.gradle')

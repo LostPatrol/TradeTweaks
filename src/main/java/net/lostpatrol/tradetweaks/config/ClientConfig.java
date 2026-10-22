@@ -1,9 +1,8 @@
+/** Defines shared reporting and chat icon settings with loader lifecycle callbacks. */
 package net.lostpatrol.tradetweaks.config;
 
 import net.lostpatrol.tradetweaks.TradeTweaks;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.event.config.ModConfigEvent;
 
 public class ClientConfig {
 
@@ -42,21 +41,17 @@ public class ClientConfig {
     public static ReportMode tempMode = ReportMode.LIBRARIAN_ONLY;
     public static boolean tempRenderFlag = true;
 
-    @SubscribeEvent
-    public static void onLoad(final ModConfigEvent.Loading event) {
-        if (event.getConfig().getSpec() == SPEC) {
-            tempMode = getMode();
-            tempRenderFlag = getRenderMode();
-            TradeTweaks.LOGGER.debug("Loaded client config: mode={}", tempMode);
-        }
+    /** Refreshes cached settings when the loader loads the config. */
+    public static void onLoad() {
+        tempMode = getMode();
+        tempRenderFlag = getRenderMode();
+        TradeTweaks.LOGGER.debug("Loaded client config: mode={}", tempMode);
     }
 
-    @SubscribeEvent
-    public static void onReload(final ModConfigEvent.Reloading event) {
-        if (event.getConfig().getSpec() == SPEC) {
-            tempMode = getMode();
-            tempRenderFlag = getRenderMode();
-        }
+    /** Refreshes cached settings after config changes. */
+    public static void onReload() {
+        tempMode = getMode();
+        tempRenderFlag = getRenderMode();
     }
 
     public static void setMode(ReportMode mode) {
