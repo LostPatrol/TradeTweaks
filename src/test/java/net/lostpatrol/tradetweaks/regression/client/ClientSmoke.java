@@ -7,15 +7,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class ClientSmoke {
-    // Allow normal title-screen rendering for one second before recording startup.
-    private static final int REQUIRED_TITLE_TICKS = 20;
+    // Allow normal title-screen rendering for two seconds after resource loading finishes.
+    private static final int REQUIRED_TITLE_TICKS = 40;
     private static int titleTicks;
     private static boolean finished;
 
     /** Runs only when an explicitly configured test client enables this smoke check. */
     public static void tick(Minecraft client) {
         if (!Boolean.getBoolean("tradetweaks.clientSmoke") || finished) return;
-        titleTicks = client.screen instanceof TitleScreen ? titleTicks + 1 : 0;
+        titleTicks = client.screen instanceof TitleScreen && client.getOverlay() == null ? titleTicks + 1 : 0;
         if (titleTicks < REQUIRED_TITLE_TICKS) return;
         Path result = Path.of(System.getProperty("tradetweaks.clientSmokeResult", "build/client-smoke-result.txt"));
         try {
