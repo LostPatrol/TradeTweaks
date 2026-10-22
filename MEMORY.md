@@ -2,39 +2,36 @@
 
 ## Current baseline
 
-- Current published version is `1.20.1-2.3.0` (2026-09-18). Both local builds and the earlier 18-assertion regressions passed; HMCL test JARs are byte-identical to the published assets. User requested publication; no additional gameplay test result was reported.
-- Quark ancient tome candidates come exclusively from registered ItemListing generators. Only tome exchanges include stack data in deduplication; reflection and synthetic appended offers are removed. Verified Quark versions: Forge 4.0-462 and NeoForge 4.1-485. Enumeration assumes their single bounded random selection and warns above 16384 deterministic probes.
+- Branch `1.20.1`, source `3a233dd`, version `1.20.1-2.4.0`: Forge and Fabric, Java 17. The root 1.21.1 checkout supports NeoForge and Fabric at source `4e77987`.
+- Native dependency remains Forge `47.1.3`; Fabric uses Loader `0.18.4`, Fabric API `0.92.12+1.20.1`, and bundled FCAP `8.0.3`. Gradle remains 8.12.1 with Legacy ModDevGradle 2.0.78 / Loom 1.10.5.
+- Keep this branch's NBT/FriendlyByteBuf APIs, raid-win END-tick polling and search prefix meanings (`#` tooltips, `$` tags). Do not blindly copy 1.21.1 implementations or README text.
+- Native Forge production JAR must include reobfuscation and the nested MixinExtras 0.4.1 dependency. Resource expansion declares version inputs so incremental builds refresh mods.toml.
+- The pre-existing 1.20.1 chat renderer still multiplies the inherited HUD pose; this port preserves that behavior. The 1.21.1 branch has an earlier correction. Visual chat checks remain relevant before release.
 
+## Architecture and maintenance
 
-- The `1.20.1` branch targets Forge and Java 17.
-- The latest published release version is `1.20.1-2.3.0`.
-- MCA compatibility is isolated in `McaInteractionHandler`: it listens to `EntityInteractSpecific` only when the `mca` mod is loaded and the target entity uses the `mca` registry namespace.
-- Existing generic entity-interaction handlers remain the fallback and the complete no-MCA behavior path.
-- MCA is intentionally not a compile-time or declared runtime dependency.
+- Each Minecraft version stays on its existing branch. The root build supplies the native loader; `fabric/` compiles the same gameplay sources with thin loader adapters. Keep rules in shared classes and hooks in `platform/` or Fabric adapters; update Fabric's source exclusion list when adding a replacement class.
+- Fabric requires Fabric API on both client and server; Forge Config API Port is nested in the production JAR. Do not ship the Fabric dev JAR or test source sets.
+- `gameplay-tests.gradle` provides native `:runGameTestServer`, Fabric `:fabric:runGameplayTest`, and `:runClientSmoke` / `:fabric:runClientSmoke`. Development launchers use `--no-configuration-cache`. Client smoke waits for the loading overlay to disappear and 40 stable title-screen ticks.
+- Local production builds, real-server gameplay regressions (46 shared checks per target plus Fabric interaction dispatch), and client startup passed for all four targets. This does not establish visual GUI correctness or third-party modpack compatibility; exact evidence and remaining checks belong in the task report.
+- Native MCA interaction hooks and Quark listing-generation logic remain in place. MCA is not a compile-time/runtime dependency. Previous native MCA testing was accepted on 2026-09-15; Fabric MCA/other integrations still need loader-specific playtesting.
+- Quark Ancient Tome choices come only from registered ItemListing generators. Tome deduplication includes stack data; no synthetic offers/reflection. Previously checked Quark versions: Forge 4.0-462 and NeoForge 4.1-485. Bounded enumeration warns above 16384 deterministic probes.
+- `agent/` is ignored. This branch still tracks `MEMORY.md`; keep it as the current development baseline, without execution logs.
 
-## Verification baseline
+## Release state and workflow
 
-- The earlier MCA compatibility patch was scoped to its compatibility class; the Quark 2.3.0 change is scoped to QuarkCompat and the two trade-selection classes, plus version metadata.
-- MCA compatibility was accepted after successful in-game testing on 2026-09-15.
+- Latest published release remains `2.3.0`. Source version `2.4.0` is prepared but UNRELEASED; the user explicitly requires approval before actual publication.
+- New names: `tradetweaks-<minecraft>-<version>-<loader>.jar`; platform version ID: `<minecraft>-<version>-<loader>`; display name: `Trade Tweaks <minecraft>-<version> (Fabric/Forge/NeoForge)`. Historical unsuffixed assets retain their identities.
+- `build.yml` builds both loaders and runs server GameTests plus release-tool checks. `publish-platforms.yml` distributes exact approved GitHub Release assets to CurseForge/Modrinth; manual runs default to dry-run and support Minecraft/loader/platform filters. Never repeat successful destination tuples without a reason.
+- `tradetweaks-release` governs release execution within the user's current scope. A user may explicitly delegate version selection, as for 2.4.0; this does not override a requirement for publication approval. Editing the skill alone does not authorize publishing.
+- Release notes are concise English unless instructed otherwise. Compare predecessors per Minecraft/loader/destination and include the union of undelivered player-facing changes. Upload all intended JARs to a draft before publishing.
+- Repository variables: CurseForge project `1316814`, Modrinth project `P5pFKnk6`. Existing platform credentials last passed live uploads in September 2026; recheck at publication.
+- Published 2.3.0: Forge source `af437a1`, NeoForge source/tag target `4d429f0`; sync run `35258867415`. Modrinth IDs `vyci7TF8` / `LOzZqZoC`; CurseForge IDs `8905730` / `8905729`. GitHub/Modrinth downloads were verified. CurseForge accepted uploads, but public visibility and its later changelog correction remained unconfirmed.
+- `GITHUB_TOKEN`-created Releases may need an explicit authorized publishing dispatch because event recursion is suppressed. Do not assume an ambiguous request failed or blindly re-upload.
 
-## Release history
+## Local environment
 
-- Release `2.3.0` contains Forge `1.20.1-2.3.0` (source af437a1) and NeoForge `1.21.1-2.3.0` (source/tag target 4d429f0). GitHub assets and Modrinth listed downloads verified; sync run 35258867415 succeeded for all four destinations. Modrinth IDs: vyci7TF8 / LOzZqZoC; CurseForge IDs: 8905730 / 8905729. CurseForge upload accepted, but public pages return 403 and review/public availability remains unverified. Notes are English: Improved compatibility with Quark's Ancient Tomes and fixed related issues. GitHub/Modrinth corrections verified; CurseForge update-file returned HTTP 500 for both files and its correction remains unconfirmed.
-
-- The mistakenly published `2.1.3` release and tag were withdrawn on 2026-09-15 and replaced by the intended minor release `2.2.0`.
-
-## Environment risk
-
-- The Java NIO loopback workaround uses JDK_JAVA_OPTIONS with jdk.net.unixdomain.tmpdir=C:\Users\LostPatrol_2\.java-unixdomain. Local 1.20.1-2.3.0 build/reobfuscation succeeds offline; online dependency resolution can stall under the current network setup.
-
-## Automated distribution
-
-- Treat Chinese release-note descriptions as meaning to rewrite into concise English, unless the user explicitly requests verbatim Chinese. Existing platform metadata can be edited with the optional changelog input on update-platform-name.yml; no re-upload is needed.
-
-- Both Minecraft branches carry `.agents/skills/tradetweaks-release/SKILL.md` and the `publish-platforms.yml` workflow. Published GitHub Releases distribute their attached production JARs independently to CurseForge and Modrinth; absent branches are not built or published.
-- Upload all intended JARs to a draft before publishing. Each JAR carries its own Minecraft/mod version; platform changelogs use the Release body. Manual dispatch supports dry runs and targeted recovery of historical or failed uploads.
-- Repository project variables are configured: CurseForge `1316814`, Modrinth `P5pFKnk6`. Both platform Tokens passed live uploads on 2026-09-15: `1.20.1-2.2.0` (run `34990258384`, CurseForge `8887172`, Modrinth `GTvgLvTw`) and `1.21.1-2.2.1` (run `34990262760`, CurseForge `8887176`, Modrinth `1wk4HggX`). Modrinth versions are listed and downloaded SHA-256 hashes match GitHub assets. CurseForge accepted both uploads; public availability/review status could not be confirmed because file pages were inaccessible. `1.21.1-2.2.0` was explicitly excluded.
-- Workflow-created Releases using the built-in `GITHUB_TOKEN` require an explicit dispatch or different authorized publishing token. Check remote acceptance before retrying an ambiguous upload; automatic deduplication is not guaranteed.
-- Invoking `tradetweaks-release` for a release now authorizes agent-owned build, GitHub draft/asset/publication operations and platform follow-through; the user does not perform routine publishing UI steps. Editing the skill alone does not authorize a release.
-- `build.yml` supports API dispatch for on-demand builds. Release artifacts must match the selected commit SHA. Omitted branch scope defaults to the active task/current Minecraft branch; version numbers are not invented or used to overwrite existing releases.
-- Platform display names use `Trade Tweaks <minecraft>-<mod-version>` without loader parentheses. Before release, compare the same platform/branch historical naming and changelog structure; explicit user formatting wins. Both 2.2.x releases were renamed in place on both platforms; Modrinth readback verified and CurseForge update-file API accepted the changes.
+- Run Gradle with JDK 21; the 1.20.1 game/compiler use JDK 17. Fabric 1.20.1 JavaExec launchers explicitly select 17.
+- Existing Java NIO workaround: `JDK_JAVA_OPTIONS=-Djdk.net.unixdomain.tmpdir=C:\Users\LostPatrol_2\.java-unixdomain`. Do not remove or alter system settings casually.
+- This machine uses the system proxy at `127.0.0.1:10808`; Java dependency downloads may need per-process HTTP/HTTPS proxy properties. No global proxy changes are required.
+- Offline builds can fail when launcher dependencies or NeoGradle asset indexes are absent. Use online resolution for missing files; avoid treating network stalls as source failures.
