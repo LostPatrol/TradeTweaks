@@ -1,3 +1,4 @@
+/** Provides trade-report commands and persisted reporting settings. */
 package net.lostpatrol.tradetweaks.command;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -10,18 +11,13 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegisterCommandsEvent;
 
 
 // modify the config file only after command executed successfully
 public class TradeBroadcastCommand {
-    public static void register() {
-        MinecraftForge.EVENT_BUS.addListener(TradeBroadcastCommand::registerCommands);
-    }
-
-    private static void registerCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(
+    /** Registers the shared command tree. */
+    public static void registerCommands(com.mojang.brigadier.CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(
                 Commands.literal("tradecast")
                         .executes(ctx -> showSettings(ctx.getSource()))
 
@@ -58,7 +54,7 @@ public class TradeBroadcastCommand {
                                         )))))
         );
 
-        event.getDispatcher().register(
+        dispatcher.register(
                 Commands.literal("tradetweaks")
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.literal("enchant_books_select")

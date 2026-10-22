@@ -1,0 +1,61 @@
+// Fabric compiles the existing 1.20.1 gameplay sources with thin loader adapters.
+plugins {
+    id 'fabric-loom' version '1.10.5'
+    id 'maven-publish'
+}
+
+version = rootProject.mod_version
+group = rootProject.mod_group_id
+base.archivesName = rootProject.mod_id
+tasks.named('remapJar') { archiveClassifier = 'fabric' }
+tasks.named('jar') { archiveClassifier = 'fabric-dev' }
+
+repositories {
+    maven {
+        url = 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/'
+        content { includeGroup 'fuzs.forgeconfigapiport' }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
+    include "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+}
+
+// Capture shared source paths while configuring so the exclusion works with configuration cache.
+def sharedJavaDirectory = rootProject.file('src/main/java')
+def loaderClasses = [
+        'TradeTweaks.java', 'NetworkHandler.java', 'ModItems.java', 'ModCreativeModeTab.java',
+        'ClientKeyMappings.java', 'Platform.java', 'ClientPlatform.java', 'ForgeEvents.java',
+        'ForgeClientEvents.java', 'ItemRendererMixin.java', 'McaInteractionHandler.java',
+        'WandInteractionHandler.java', 'VillagerToolInteractionHandler.java'
+]
+sourceSets.main.java {
+    srcDir rootProject.file('src/main/java')
+    exclude { details -> details.file.toPath().startsWith(sharedJavaDirectory.toPath()) && loaderClasses.contains(details.file.name) }
+}
+
+loom {
+    accessWidenerPath = file('src/main/resources/tradetweaks.accesswidener')
+    mixin { defaultRefmapName = 'tradetweaks.fabric.refmap.json' }
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+// Loom otherwise launches with Gradle's JDK; exercise the game's Java 17 baseline.
+def gameLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(17) }
+tasks.withType(JavaExec).configureEach { javaLauncher = gameLauncher }
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+processResources {
+    from(rootProject.file('src/main/resources')) {
+        exclude 'META-INF/**', 'tradetweaks.mixins.json', 'data/tradetweaks/recipes/restoration_bottle.json'
+    }
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') { expand version: project.version }
+}
+
+apply from: rootProject.file('gameplay-tests.gradle')

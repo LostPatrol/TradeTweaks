@@ -26,9 +26,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -181,16 +178,16 @@ public final class TradeSelectionSessionManager {
         return session != null && session.villagerId().equals(villager.getUUID());
     }
 
-    @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && event.getServer().getTickCount() % 20 == 0) {
-            cleanupSessions(event.getServer(), System.currentTimeMillis());
+    /** Expires abandoned selection sessions. */
+    public static void onServerTick(MinecraftServer server) {
+        if (server.getTickCount() % 20 == 0) {
+            cleanupSessions(server, System.currentTimeMillis());
         }
     }
 
-    @SubscribeEvent
-    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
+    /** Releases the departing player's trade lock. */
+    public static void onPlayerLoggedOut(Player departingPlayer) {
+        if (departingPlayer instanceof ServerPlayer player) {
             SelectionSession session = SESSIONS.remove(player.getUUID());
             releaseVillager(player.getServer(), player.getUUID(), session);
         }

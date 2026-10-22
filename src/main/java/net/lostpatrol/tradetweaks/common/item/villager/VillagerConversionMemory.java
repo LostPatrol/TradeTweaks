@@ -1,3 +1,4 @@
+/** Preserves workstation memory across explicit and natural curing. */
 package net.lostpatrol.tradetweaks.common.item.villager;
 
 import com.mojang.serialization.DataResult;
@@ -9,13 +10,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraftforge.event.entity.living.LivingConversionEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.Optional;
 
-@Mod.EventBusSubscriber(modid = TradeTweaks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class VillagerConversionMemory {
     private static final String JOB_SITE_KEY = TradeTweaks.MODID + ":job_site";
 
@@ -29,24 +26,25 @@ public final class VillagerConversionMemory {
                         .resultOrPartial(TradeTweaks.LOGGER::error));
     }
 
+    /** Persists the workstation tag until this zombie villager is cured. */
     public static void storeJobSite(ZombieVillager zombieVillager, Tag jobSite) {
-        zombieVillager.getPersistentData().put(JOB_SITE_KEY, jobSite);
+        net.lostpatrol.tradetweaks.platform.Platform.persistentData(zombieVillager).put(JOB_SITE_KEY, jobSite);
     }
 
-    @SubscribeEvent
-    public static void onLivingConversionPost(LivingConversionEvent.Post event) {
-        if (!(event.getEntity() instanceof ZombieVillager zombieVillager)
-                || !(event.getOutcome() instanceof Villager villager)) {
+    /** Restores workstation memory after instant or natural curing. */
+    public static void onLivingConversionPost(net.minecraft.world.entity.LivingEntity original, net.minecraft.world.entity.LivingEntity outcome) {
+        if (!(original instanceof ZombieVillager zombieVillager)
+                || !(outcome instanceof Villager villager)) {
             return;
         }
 
-        if (!zombieVillager.getPersistentData().contains(JOB_SITE_KEY)) {
+        if (!net.lostpatrol.tradetweaks.platform.Platform.persistentData(zombieVillager).contains(JOB_SITE_KEY)) {
             return;
         }
 
         DataResult<GlobalPos> jobSite = GlobalPos.CODEC.parse(
                 NbtOps.INSTANCE,
-                zombieVillager.getPersistentData().get(JOB_SITE_KEY)
+                net.lostpatrol.tradetweaks.platform.Platform.persistentData(zombieVillager).get(JOB_SITE_KEY)
         );
         jobSite.resultOrPartial(TradeTweaks.LOGGER::error).ifPresent(pos -> {
             villager.getBrain().setMemory(MemoryModuleType.JOB_SITE, pos);

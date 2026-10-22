@@ -1,3 +1,4 @@
+/** Tracks and renders workstation outlines from shared network packets. */
 package net.lostpatrol.tradetweaks.network.handler;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -5,10 +6,7 @@ import net.lostpatrol.tradetweaks.network.packet.PacketBlockHighlight;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.NetworkEvent;
+import net.lostpatrol.tradetweaks.network.PayloadContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,35 +54,29 @@ public class HandlerBlockHighlight {
 
     private static final Map<BlockPos, HighlightEntry> HIGHLIGHTED_BLOCKS = new HashMap<>();
 
-    public static void handle(PacketBlockHighlight packet, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
+    /** Stores the server-provided outline on the client game thread. */
+    public static void handle(PacketBlockHighlight packet, PayloadContext ctx) {
+        ctx.enqueueWork(() -> {
             HIGHLIGHTED_BLOCKS.put(packet.getPos(), new HighlightEntry(
                     packet.getDurationTicks(),
                     new float[]{packet.getRed(), packet.getGreen(), packet.getBlue()}
             ));
         });
-        ctx.get().setPacketHandled(true);
     }
 
-    @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            HIGHLIGHTED_BLOCKS.entrySet().removeIf(entry -> {
-                HighlightEntry highlight = entry.getValue();
-                highlight.decrement();
-                return highlight.shouldRemove();
-            });
-        }
+    /** Ages workstation outlines once per client tick. */
+    public static void onClientTick() {
+        HIGHLIGHTED_BLOCKS.entrySet().removeIf(entry -> {
+            HighlightEntry highlight = entry.getValue();
+            highlight.decrement();
+            return highlight.shouldRemove();
+        });
     }
 
-    @SubscribeEvent
-    public static void onRenderWorldLast(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
-            return;
-        }
+    /** Renders the active workstation outlines after world particles. */
+    public static void onRenderWorldLast(PoseStack poseStack) {
 
         Minecraft mc = Minecraft.getInstance();
-        PoseStack poseStack = event.getPoseStack();
         MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
 
         for (Map.Entry<BlockPos, HighlightEntry> entry : HIGHLIGHTED_BLOCKS.entrySet()) {

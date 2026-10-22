@@ -1,9 +1,12 @@
+/** Upgrades villager careers and consumes configured inventory payments. */
 package net.lostpatrol.tradetweaks.common.wand.handler;
 
 import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
 import net.lostpatrol.tradetweaks.advancement.ModCriteriaTriggers;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.util.VillagerUtil;
+import net.lostpatrol.tradetweaks.platform.ItemAccess;
+import net.lostpatrol.tradetweaks.platform.Platform;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -19,8 +22,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
 
 import java.util.List;
 import java.util.Objects;
@@ -76,26 +77,28 @@ public class HandlerUpgradeVillager {
         return InteractionResult.SUCCESS;
     }
 
+    /** Consumes the first affordable configured payment through the loader inventory. */
     private static boolean consumeUpgradeCost(Player player) {
         AtomicBoolean success = new AtomicBoolean(false);
 
-        player.getCapability(ForgeCapabilities.ITEM_HANDLER)
-                .ifPresent(handler -> {
-                    // Try each cost option in order
-                    for (ItemCost cost : upgradeCosts) {
-                        int total = findTotal(handler, cost.item());
-                        if (total >= cost.amount()) {
-                            removeExactly(handler, cost.item(), cost.amount());
-                            success.set(true);
-                            break;
-                        }
-                    }
-                });
+        ItemAccess handler = Platform.inventory(player);
+        if (handler != null) {
+            // Try each cost option in order.
+            for (ItemCost cost : upgradeCosts) {
+                int total = findTotal(handler, cost.item());
+                if (total >= cost.amount()) {
+                    removeExactly(handler, cost.item(), cost.amount());
+                    success.set(true);
+                    break;
+                }
+            }
+        }
 
         return success.get();
     }
 
-    private static int findTotal(IItemHandler handler, Item item) {
+    /** Counts matching items across the exposed inventory slots. */
+    private static int findTotal(ItemAccess handler, Item item) {
         int total = 0;
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack stack = handler.getStackInSlot(i);
@@ -106,7 +109,8 @@ public class HandlerUpgradeVillager {
         return total;
     }
 
-    private static void removeExactly(IItemHandler handler, Item item, int amount) {
+    /** Removes the already verified payment from matching slots. */
+    private static void removeExactly(ItemAccess handler, Item item, int amount) {
         int remaining = amount;
         for (int i = 0; i < handler.getSlots() && remaining > 0; i++) {
             ItemStack stack = handler.getStackInSlot(i);

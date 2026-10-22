@@ -1,15 +1,4 @@
-buildscript {
-    repositories {
-        maven { url = 'https://repo.spongepowered.org/maven' }
-        maven { url = 'https://maven.parchmentmc.org' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-        classpath group: 'org.parchmentmc.librarian.forgegradle', name: 'org.parchmentmc.librarian.forgegradle.gradle.plugin', version: '1.+'
-    }
-}
-
+// Legacy ModDevGradle supplies native mappings, mixin support and reobfuscation.
 plugins {
     id 'idea'
     id 'eclipse'
@@ -118,6 +107,7 @@ mixin {
 
 
 jar {
+    archiveClassifier = 'forge'
     manifest.attributes([
             "MixinConfigs": "${mod_id}.mixins.json"
     ])
@@ -138,6 +128,8 @@ var replaceProperties = [
 ]
 
 processResources{
+    // Version and metadata changes must invalidate resources even when source files are unchanged.
+    inputs.properties replaceProperties
     filesMatching('**/*.toml') {
         expand replaceProperties
     }
@@ -169,3 +161,5 @@ idea {
         downloadJavadoc = true
     }
 }
+
+apply from: rootProject.file('gameplay-tests.gradle')

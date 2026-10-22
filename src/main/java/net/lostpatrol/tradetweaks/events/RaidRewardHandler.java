@@ -1,3 +1,4 @@
+/** Awards hero totems when the observed raid-win statistic increases. */
 package net.lostpatrol.tradetweaks.events;
 
 import net.lostpatrol.tradetweaks.common.item.ModItems;
@@ -6,24 +7,22 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class RaidRewardHandler {
+    /** Last observed win counter for each connected player. */
     private static final Map<UUID, Integer> LAST_RAID_WINS = new HashMap<>();
 
-    @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || event.player.level().isClientSide()) {
+    /** Grants rewards only when the player's raid-win counter advances. */
+    public static void onPlayerTick(net.minecraft.world.entity.player.Player tickPlayer) {
+        if (tickPlayer.level().isClientSide()) {
             return;
         }
 
-        if (!(event.player instanceof ServerPlayer player)) {
+        if (!(tickPlayer instanceof ServerPlayer player)) {
             return;
         }
 
@@ -38,11 +37,12 @@ public class RaidRewardHandler {
         grantTotems(player);
     }
 
-    @SubscribeEvent
-    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-        LAST_RAID_WINS.remove(event.getEntity().getUUID());
+    /** Discards the cached raid counter on logout. */
+    public static void onPlayerLogout(net.minecraft.world.entity.player.Player player) {
+        LAST_RAID_WINS.remove(player.getUUID());
     }
 
+    /** Grants the existing reward range for the player's current hero effect. */
     private static void grantTotems(ServerPlayer player) {
         MobEffectInstance heroEffect = player.getEffect(MobEffects.HERO_OF_THE_VILLAGE);
         if (heroEffect == null) {

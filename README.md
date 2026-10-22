@@ -1,10 +1,21 @@
 # Trade Tweaks
 
-Minecraft Forge mod
+Minecraft villager trading tools for Forge, NeoForge and Fabric.
 
 Provides versatile utility wands, useful items, and in-game options to improve the player experience when trading with villagers.
 
 > Currently in early preview. Many features are still under development.
+
+## Installation
+
+| Minecraft | Loaders | Java |
+| --- | --- | --- |
+| 1.20.1 | Forge, Fabric | 17 |
+| 1.21.1 | NeoForge, Fabric | 21 |
+
+Install the matching Trade Tweaks JAR on both client and server. Fabric also requires Fabric API; the configuration library is bundled. Choose one loader build per installation, for example `tradetweaks-1.21.1-2.4.0-fabric.jar` or `tradetweaks-1.21.1-2.4.0-neoforge.jar`.
+
+See [development and builds](DEVELOPING.md) and [release notes](CHANGELOG.md). Third-party mod compatibility is specific to the Minecraft version and loader; Forge/NeoForge compatibility results do not automatically apply to Fabric.
 
 ## Main Content
 

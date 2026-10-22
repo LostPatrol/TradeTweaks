@@ -1,10 +1,21 @@
 # Trade Tweaks
 
-Minecraft Forge mod
+适用于 Forge、NeoForge 和 Fabric 的 Minecraft 村民交易工具模组。
 
 提供功能多样实用的工具手杖、功能道具以及游戏内选项，提升玩家与村民交易时的游戏体验
 
 > 目前为早期预览版本，诸多功能有待实现
+
+## 安装
+
+| Minecraft | 加载器 | Java |
+| --- | --- | --- |
+| 1.20.1 | Forge、Fabric | 17 |
+| 1.21.1 | NeoForge、Fabric | 21 |
+
+客户端和服务端都需要安装与 Minecraft 版本及加载器匹配的 Trade Tweaks JAR。Fabric 还需要安装 Fabric API；配置库已内置。同一次安装只选择一种加载器产物，例如 `tradetweaks-1.21.1-2.4.0-fabric.jar` 或 `tradetweaks-1.21.1-2.4.0-neoforge.jar`。
+
+开发和构建方法见 [DEVELOPING.md](DEVELOPING.md)，版本说明见 [CHANGELOG.md](CHANGELOG.md)。第三方模组兼容性取决于 Minecraft 版本和加载器；Forge/NeoForge 上的兼容结果不直接代表 Fabric 上的兼容结果。
 
 ## 主要内容
 

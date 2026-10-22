@@ -1,12 +1,10 @@
+/** Encodes hero-totem effects and dispatches their client animation. */
 package net.lostpatrol.tradetweaks.network.packet;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.lostpatrol.tradetweaks.TradeTweaks;
+import net.lostpatrol.tradetweaks.network.PayloadContext;
 
 import java.util.function.Supplier;
 
@@ -32,18 +30,15 @@ public class PacketItemActivation {
         return stack;
     }
 
-    public static void handle(PacketItemActivation packet, Supplier<NetworkEvent.Context> ctx) {
-        NetworkEvent.Context context = ctx.get();
+    /** Dispatches the animation without linking client classes on servers. */
+    public static void handle(PacketItemActivation packet, PayloadContext context) {
         context.enqueueWork(() -> {
-            if (context.getDirection().getReceptionSide().isClient()) {
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> handleClient(packet));
+            try {
+                Class.forName("net.lostpatrol.tradetweaks.client.ClientItemActivationHandler")
+                        .getDeclaredMethod("display", ItemStack.class).invoke(null, packet.getStack());
+            } catch (ReflectiveOperationException error) {
+                TradeTweaks.LOGGER.error("Failed to display item activation", error);
             }
         });
-        context.setPacketHandled(true);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    private static void handleClient(PacketItemActivation packet) {
-        Minecraft.getInstance().gameRenderer.displayItemActivation(packet.getStack());
     }
 }

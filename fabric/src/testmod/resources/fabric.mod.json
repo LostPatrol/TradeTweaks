@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "tradetweaks_regression",
+  "version": "1.0.0",
+  "name": "Trade Tweaks gameplay regression tests",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": ["net.lostpatrol.tradetweaks.regression.FabricGameplayTests"],
+    "client": ["net.lostpatrol.tradetweaks.regression.FabricClientSmoke"]
+  },
+  "depends": {
+    "tradetweaks": "*",
+    "fabric-gametest-api-v1": "*"
+  }
+}

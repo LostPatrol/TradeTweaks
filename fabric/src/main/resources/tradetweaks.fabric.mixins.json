@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "package": "net.lostpatrol.tradetweaks.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "tradetweaks.fabric.refmap.json",
+  "mixins": [
+    "ItemStackMixin",
+    "fabric.EntityDataMixin",
+    "fabric.ZombieVillagerMixin"
+  ],
+  "client": [
+    "client.ChatComponentMixin",
+    "client.ItemRendererMixin",
+    "client.ItemBlockRenderTypesMixin",
+    "fabric.MouseHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

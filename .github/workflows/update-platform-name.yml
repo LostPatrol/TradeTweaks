@@ -12,7 +12,7 @@ on:
         type: string
         required: true
       version:
-        description: Minecraft-prefixed version, e.g. 1.21.1-2.2.1
+        description: Published version ID, e.g. 1.21.1-2.4.0-fabric (legacy IDs supported)
         type: string
         required: true
       changelog:
@@ -46,7 +46,9 @@ jobs:
           }
           async function main() {
             if (!/^(1\.20\.1|1\.21\.1)-\d+\.\d+\.\d+(-[A-Za-z0-9.-]+)?$/.test(e.MOD_VERSION)) throw new Error('Invalid version');
-            const name = `Trade Tweaks ${e.MOD_VERSION}`;
+            const qualified = /^(.*)-(fabric|forge|neoforge)$/.exec(e.MOD_VERSION);
+            const loaderNames = { fabric: 'Fabric', forge: 'Forge', neoforge: 'NeoForge' };
+            const name = qualified ? `Trade Tweaks ${qualified[1]} (${loaderNames[qualified[2]]})` : `Trade Tweaks ${e.MOD_VERSION}`;
             const changes = { name, ...(e.CHANGELOG ? { changelog: e.CHANGELOG } : {}) };
             if (e.PLATFORM === 'modrinth') {
               if (!/^[A-Za-z0-9]+$/.test(e.VERSION_ID)) throw new Error('Invalid version ID');
@@ -54,6 +56,7 @@ jobs:
               const headers = { Authorization: e.MR_TOKEN, 'User-Agent': 'LostPatrol/TradeTweaks release-maintenance' };
               const before = await request(url, { headers });
               if (before.project_id !== e.MR_PROJECT || before.version_number !== e.MOD_VERSION) throw new Error('Version identity mismatch');
+              if (qualified && !before.loaders.includes(qualified[2])) throw new Error('Loader identity mismatch');
               if (before.name !== name || (e.CHANGELOG && before.changelog !== e.CHANGELOG)) await request(url, { method: 'PATCH', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify(changes) });
               // Allow cached reads to catch up after a successful metadata update.
               for (let attempt = 0; attempt < 5; attempt++) {

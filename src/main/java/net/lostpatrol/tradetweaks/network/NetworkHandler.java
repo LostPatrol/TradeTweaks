@@ -1,3 +1,4 @@
+/** Registers the native Forge packet protocol and send operations. */
 package net.lostpatrol.tradetweaks.network;
 
 import net.lostpatrol.tradetweaks.TradeTweaks;
@@ -32,6 +33,7 @@ public class NetworkHandler {
         return INSTANCE;
     }
 
+    /** Registers the original seven packet IDs in their existing order. */
     public static void register() {
         if (INSTANCE != null) return;
         INSTANCE = NetworkRegistry.newSimpleChannel(
@@ -46,54 +48,66 @@ public class NetworkHandler {
                 PacketWandModeSwitch.class,
                 PacketWandModeSwitch::encode,
                 PacketWandModeSwitch::new,
-                HandlerWandModeSwitch::handle
+                handler(HandlerWandModeSwitch::handle, false)
         );
         INSTANCE.registerMessage(
                 id++,
                 PacketBlockHighlight.class,
                 PacketBlockHighlight::encode,
                 PacketBlockHighlight::new,
-                HandlerBlockHighlight::handle
+                handler(HandlerBlockHighlight::handle, true)
         );
         INSTANCE.registerMessage(
                 id++,
                 PacketTradeReplace.class,
                 PacketTradeReplace::encode,
                 PacketTradeReplace::new,
-                HandlerTradeReplace::handle
+                handler(HandlerTradeReplace::handle, false)
         );
         INSTANCE.registerMessage(
                 id++,
                 PacketCloseTradeSelection.class,
                 PacketCloseTradeSelection::encode,
                 PacketCloseTradeSelection::new,
-                HandlerCloseTradeSelection::handle
+                handler(HandlerCloseTradeSelection::handle, false)
         );
         INSTANCE.registerMessage(
                 id++,
                 PacketOpenTradeSelection.class,
                 PacketOpenTradeSelection::encode,
                 PacketOpenTradeSelection::new,
-                HandlerOpenTradeSelection::handle
+                handler(HandlerOpenTradeSelection::handle, true)
         );
         INSTANCE.registerMessage(
                 id++,
                 PacketItemActivation.class,
                 PacketItemActivation::encode,
                 PacketItemActivation::new,
-                PacketItemActivation::handle
+                handler(PacketItemActivation::handle, true)
         );
         INSTANCE.registerMessage(
                 id++,
                 PacketWandModeSet.class,
                 PacketWandModeSet::encode,
                 PacketWandModeSet::new,
-                HandlerWandModeSet::handle
+                handler(HandlerWandModeSet::handle, false)
         );
     }
 
     public static void sendBlockHighlightToPlayer(ServerPlayer player, PacketBlockHighlight packet) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), packet);
+    }
+
+    /** Adapts Forge packet acknowledgement, direction and execution to shared handlers. */
+    private static <T> java.util.function.BiConsumer<T, java.util.function.Supplier<net.minecraftforge.network.NetworkEvent.Context>> handler(
+            java.util.function.BiConsumer<T, PayloadContext> callback, boolean clientOnly) {
+        return (packet, supplier) -> {
+            var context = supplier.get();
+            if (!clientOnly || context.getDirection().getReceptionSide().isClient()) {
+                callback.accept(packet, new PayloadContext(context.getSender(), work -> context.enqueueWork(work)));
+            }
+            context.setPacketHandled(true);
+        };
     }
 
     public static void sendWandModeSwitchToServer(PacketWandModeSwitch packet){

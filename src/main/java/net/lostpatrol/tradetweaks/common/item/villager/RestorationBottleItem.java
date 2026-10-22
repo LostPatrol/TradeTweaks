@@ -1,3 +1,4 @@
+/** Instantly cures zombie villagers through the loader conversion hooks. */
 package net.lostpatrol.tradetweaks.common.item.villager;
 
 import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
@@ -12,7 +13,7 @@ import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.lostpatrol.tradetweaks.platform.Platform;
 
 import javax.annotation.Nonnull;
 
@@ -21,6 +22,7 @@ public class RestorationBottleItem extends Item {
         super(properties);
     }
 
+    /** Cures eligible zombie villagers through the platform's conversion hooks. */
     @Override
     @Nonnull
     public InteractionResult interactLivingEntity(@Nonnull ItemStack stack, @Nonnull Player player,
@@ -34,7 +36,7 @@ public class RestorationBottleItem extends Item {
         }
 
         ServerLevel level = (ServerLevel) player.level();
-        if (!ForgeEventFactory.canLivingConvert(zombieVillager, EntityType.VILLAGER, timer -> {})) {
+        if (!Platform.canLivingConvert(zombieVillager, EntityType.VILLAGER, timer -> {})) {
             return InteractionResult.FAIL;
         }
 

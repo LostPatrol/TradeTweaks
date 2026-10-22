@@ -1,4 +1,4 @@
-# Build branch artifacts on changes or on demand for the end-to-end release skill.
+# Build both loaders on the current Minecraft branch and validate release tooling.
 name: Build
 
 on:
@@ -6,9 +6,25 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - loader: native
+            task: ':build'
+            gameplay: ':runGameTestServer'
+            artifacts: build/libs/*.jar
+          - loader: fabric
+            task: ':fabric:build'
+            gameplay: ':fabric:runGameplayTest'
+            artifacts: fabric/build/libs/*.jar
+    name: ${{ github.ref_name }} / ${{ matrix.loader }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,10 +32,12 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Setup JDK 21
+      - name: Setup build and game JDKs
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: |
+            17
+            21
           distribution: 'temurin'
 
       - name: Setup Gradle
@@ -28,13 +46,29 @@ jobs:
       - name: Set gradlew executable
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Build and verify gameplay
+        run: ./gradlew ${{ matrix.task }} ${{ matrix.gameplay }} --no-configuration-cache
 
       - name: Upload production jar
         uses: actions/upload-artifact@v4
         with:
-          name: tradetweaks-${{ github.run_id }}
-          path: build/libs/*.jar
+          name: tradetweaks-${{ github.run_id }}-${{ matrix.loader }}
+          path: |
+            ${{ matrix.artifacts }}
+            !**/*-sources.jar
+            !**/*-dev.jar
+            !**/*-javadoc.jar
           if-no-files-found: error
           retention-days: 7
+
+  maintenance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate release selection
+        run: node --test .github/scripts/release-plan.test.cjs
+      - name: Lint workflows
+        uses: docker://rhysd/actionlint:1.7.7

@@ -10,6 +10,52 @@ const release = { tag_name: '2.2.0', body: '- Fixed trading.', draft: false, pre
 const asset = (mc, v = '2.2.0') => ({ id: mc === '1.20.1' ? 1 : 2,
   name: `tradetweaks-${mc}-${v}.jar`, state: 'uploaded', size: 100 });
 
+/** Build the loader-qualified asset shape used from 2.4.0 onward. */
+function loaderAsset(mc, loader, version = '2.4.0') {
+  return { ...asset(mc, version), id: `${mc}-${loader}`, name: `tradetweaks-${mc}-${version}-${loader}.jar` };
+}
+
+test('four builds create eight independently identifiable platform uploads', () => {
+  const files = [loaderAsset('1.20.1', 'forge'), loaderAsset('1.20.1', 'fabric'),
+    loaderAsset('1.21.1', 'neoforge'), loaderAsset('1.21.1', 'fabric')];
+  const rows = planRelease(release, files).include;
+  assert.equal(rows.length, 8);
+  assert.equal(new Set(rows.map(row => row.versionId)).size, 4);
+  assert.equal(rows[6].version, '1.21.1-2.4.0');
+  assert.equal(rows[6].versionId, '1.21.1-2.4.0-fabric');
+  assert.equal(rows[6].displayName, 'Trade Tweaks 1.21.1-2.4.0 (Fabric)');
+});
+
+test('retry selects one loader without reuploading the other loader', () => {
+  const rows = planRelease(release, [loaderAsset('1.21.1', 'neoforge'), loaderAsset('1.21.1', 'fabric')],
+    { branch: '1.21.1', loader: 'fabric', platform: 'modrinth' }).include;
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].loader, 'fabric');
+  assert.equal(rows[0].platform, 'modrinth');
+});
+
+test('legacy assets retain published identities, including prereleases', () => {
+  const row = planRelease(release, [asset('1.21.1', '2.3.0-beta.1')]).include[0];
+  assert.equal(row.versionId, '1.21.1-2.3.0-beta.1');
+  assert.equal(row.displayName, 'Trade Tweaks 1.21.1-2.3.0-beta.1');
+  assert.equal(row.loader, 'neoforge');
+});
+
+test('qualified prereleases separate loader from version', () => {
+  const row = planRelease({ ...release, prerelease: true },
+    [loaderAsset('1.20.1', 'fabric', '2.4.0-beta.1')]).include[0];
+  assert.equal(row.version, '1.20.1-2.4.0-beta.1');
+  assert.equal(row.versionId, '1.20.1-2.4.0-beta.1-fabric');
+  assert.equal(row.versionType, 'beta');
+});
+
+test('duplicate loader identities and unsupported Minecraft-loader pairs fail', () => {
+  assert.throws(() => planRelease(release, [asset('1.21.1'), loaderAsset('1.21.1', 'neoforge')]), /Multiple/);
+  assert.throws(() => planRelease(release, [loaderAsset('1.20.1', 'neoforge')]), /Unsupported loader/);
+  assert.throws(() => planRelease(release, [loaderAsset('1.21.1', 'forge')]), /Unsupported loader/);
+  assert.throws(() => planRelease(release, [], { loader: 'quilt' }), /Unsupported loader/);
+});
+
 test('single NeoForge release only creates NeoForge destinations', () => {
   const rows = planRelease(release, [asset('1.21.1')]).include;
   assert.equal(rows.length, 2);

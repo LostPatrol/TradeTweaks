@@ -1,3 +1,4 @@
+/** Defines shared scanning, upgrade-cost and trade-selection settings. */
 package net.lostpatrol.tradetweaks.config;
 
 import net.lostpatrol.tradetweaks.TradeTweaks;
@@ -5,15 +6,10 @@ import net.lostpatrol.tradetweaks.common.wand.handler.HandlerUpgradeVillager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = TradeTweaks.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ServerConfig {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
@@ -40,7 +36,7 @@ public class ServerConfig {
         String[] parts = entry.split(":");
         if (parts.length < 2 || parts.length > 3) return false;
 
-        if (!ForgeRegistries.ITEMS.containsKey(new ResourceLocation(parts[0], parts[1]))) {
+        if (!net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(new ResourceLocation(parts[0], parts[1]))) {
             return false;
         }
 
@@ -61,7 +57,7 @@ public class ServerConfig {
             String[] parts = entry.split(":");
             ResourceLocation itemId = new ResourceLocation(parts[0], parts[1]);
             int amount = Integer.parseInt(parts[2]);
-            Item item = ForgeRegistries.ITEMS.getValue(itemId);
+            Item item = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(itemId);
             if (item != null) {
                 costs.add(new HandlerUpgradeVillager.ItemCost(item, amount));
             }
@@ -73,21 +69,17 @@ public class ServerConfig {
     public static int tempIntervalTicks = 100;
     public static int tempRadiusBlocks = 10;
 
-    @SubscribeEvent
-    public static void onLoad(final ModConfigEvent event) {
-        if (event.getConfig().getSpec() == SPEC) {
-            tempIntervalTicks = getCheckInterval() * 20;
-            tempRadiusBlocks = getCheckRadius();
-            TradeTweaks.LOGGER.debug("Loaded client config: check interval= {}ticks", tempIntervalTicks);
-            HandlerUpgradeVillager.reloadCosts();
-        }
+    /** Refreshes cached settings after loader config lifecycle events. */
+    public static void onLoad() {
+        tempIntervalTicks = getCheckInterval() * 20;
+        tempRadiusBlocks = getCheckRadius();
+        TradeTweaks.LOGGER.debug("Loaded server config: check interval= {}ticks", tempIntervalTicks);
+        HandlerUpgradeVillager.reloadCosts();
     }
 
-    @SubscribeEvent
-    public static void onReload(final ModConfigEvent.Reloading event) {
-        if (event.getConfig().getSpec() == SPEC) {
-            HandlerUpgradeVillager.reloadCosts();
-        }
+    /** Reloads the upgrade-cost cache after a config edit. */
+    public static void onReload() {
+        HandlerUpgradeVillager.reloadCosts();
     }
 
     public static void setCheckInterval(int seconds) {

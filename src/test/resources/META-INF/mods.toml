@@ -1,0 +1,9 @@
+# Metadata for the development-only gameplay regression mod.
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="tradetweaks_regression"
+version="1.0.0"
+displayName="Trade Tweaks gameplay regression tests"

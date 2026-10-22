@@ -1,13 +1,9 @@
+/** Defines shared reporting and chat-icon settings with loader lifecycle callbacks. */
 package net.lostpatrol.tradetweaks.config;
 
 import net.lostpatrol.tradetweaks.TradeTweaks;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 
-@Mod.EventBusSubscriber(modid = TradeTweaks.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientConfig {
 
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
@@ -45,12 +41,10 @@ public class ClientConfig {
     public static ReportMode tempMode = ReportMode.LIBRARIAN_ONLY;
     public static boolean tempRenderFlag = true;
 
-    @SubscribeEvent
-    public static void onLoad(final ModConfigEvent event) {
-        if (event.getConfig().getSpec() == SPEC) {
-            tempMode = getMode();
-            TradeTweaks.LOGGER.debug("Loaded client config: mode={}", tempMode);
-        }
+    /** Refreshes cached settings after loader config lifecycle events. */
+    public static void onLoad() {
+        tempMode = getMode();
+        TradeTweaks.LOGGER.debug("Loaded client config: mode={}", tempMode);
     }
 
     public static void setMode(ReportMode mode) {

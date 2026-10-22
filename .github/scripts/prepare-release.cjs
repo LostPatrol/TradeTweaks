@@ -11,7 +11,8 @@ module.exports = async ({ github, context, core }) => {
     : (await github.rest.repos.getReleaseByTag({ ...repo, tag: process.env.RELEASE_TAG })).data;
   const assets = await github.paginate(github.rest.repos.listReleaseAssets, { ...repo, release_id: release.id });
   const matrix = planRelease(release, assets, {
-    branch: process.env.RELEASE_BRANCH || 'all', platform: process.env.RELEASE_PLATFORM || 'all',
+    branch: process.env.RELEASE_BRANCH || 'all', loader: process.env.RELEASE_LOADER || 'all',
+    platform: process.env.RELEASE_PLATFORM || 'all',
   });
   fs.mkdirSync('release-assets', { recursive: true });
   for (const entry of new Map(matrix.include.map(entry => [entry.assetId, entry])).values()) {

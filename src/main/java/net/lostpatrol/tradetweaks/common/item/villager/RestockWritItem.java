@@ -1,3 +1,4 @@
+/** Restocks villager trades while persisting the daily item cooldown. */
 package net.lostpatrol.tradetweaks.common.item.villager;
 
 import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
@@ -96,8 +97,9 @@ public class RestockWritItem extends Item {
         return false;
     }
 
+    /** Reads today's usage from the loader-persisted villager tag. */
     private static int getUseCountToday(Villager villager) {
-        CompoundTag data = villager.getPersistentData();
+        CompoundTag data = net.lostpatrol.tradetweaks.platform.Platform.persistentData(villager);
         long currentDay = villager.level().getDayTime() / 24000L;
         if (data.getLong(DAY_TAG) != currentDay) {
             return 0;
@@ -105,8 +107,9 @@ public class RestockWritItem extends Item {
         return data.getInt(COUNT_TAG);
     }
 
+    /** Persists the updated daily restock count with the villager. */
     private static void setUseCountToday(Villager villager, int count) {
-        CompoundTag data = villager.getPersistentData();
+        CompoundTag data = net.lostpatrol.tradetweaks.platform.Platform.persistentData(villager);
         data.putLong(DAY_TAG, villager.level().getDayTime() / 24000L);
         data.putInt(COUNT_TAG, count);
     }

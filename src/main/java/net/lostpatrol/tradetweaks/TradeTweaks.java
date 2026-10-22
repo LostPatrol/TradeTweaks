@@ -1,3 +1,4 @@
+/** Initializes native Forge registrations and shared gameplay callbacks. */
 package net.lostpatrol.tradetweaks;
 
 import com.mojang.logging.LogUtils;
@@ -26,9 +27,12 @@ import org.slf4j.Logger;
 
 @Mod(TradeTweaks.MODID)
 public class TradeTweaks {
+    /** Registry and translation namespace shared by both loaders. */
     public static final String MODID = "tradetweaks";
+    /** Shared diagnostic logger. */
     public static final Logger LOGGER = LogUtils.getLogger();
 
+    /** Registers native services and the original gameplay event phases. */
     public TradeTweaks() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -36,16 +40,10 @@ public class TradeTweaks {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ClientConfig.SPEC);
 
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(RaidRewardHandler.class);
-        MinecraftForge.EVENT_BUS.register(TradeSelectionSessionManager.class);
+        net.lostpatrol.tradetweaks.platform.ForgeEvents.register(modEventBus);
         if (FMLEnvironment.dist == Dist.CLIENT){
-            MinecraftForge.EVENT_BUS.register(HandlerBlockHighlight.class);
-            MinecraftForge.EVENT_BUS.register(HandlerOpenTradeSelection.class);
+            net.lostpatrol.tradetweaks.platform.ForgeClientEvents.register(modEventBus);
         }
-
-        VillagerTradeReporter.register();
-        TradeBroadcastCommand.register();
-        InternalCommand.register();
 
         NetworkHandler.register();
 

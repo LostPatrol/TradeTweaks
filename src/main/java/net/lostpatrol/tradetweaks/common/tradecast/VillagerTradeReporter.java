@@ -1,3 +1,4 @@
+/** Detects nearby trade changes and creates interactive chat reports. */
 package net.lostpatrol.tradetweaks.common.tradecast;
 
 import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
@@ -26,9 +27,6 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 import java.util.*;
 
@@ -46,11 +44,6 @@ public class VillagerTradeReporter {
 
     public static final Map<UUID, PlayerTradeData> playerTradeDataMap = new HashMap<>();
 
-    public static void register() {
-        MinecraftForge.EVENT_BUS.addListener(VillagerTradeReporter::onPlayerTick);
-        MinecraftForge.EVENT_BUS.addListener(VillagerTradeReporter::onVillagerDeath);
-    }
-
     // Immediately report when villager profession changes
     // TODO
     // forge/minecraft does not provide VillagerProfessionChangeEvent. this causes problems
@@ -59,22 +52,23 @@ public class VillagerTradeReporter {
     // TODO
     // Is it necessary?
 
-    private static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+    /** Reports changed trades during a server player tick. */
+    public static void onPlayerTick(Player player) {
         if (ClientConfig.tempMode == ClientConfig.ReportMode.OFF) {
             return;
         }
 
-        if (event.phase != TickEvent.Phase.END || event.player.level().isClientSide) {
+        if (player.level().isClientSide) {
             return;
         }
 
-        if (event.player.level().getGameTime() % ServerConfig.tempIntervalTicks != 0) {
+        if (player.level().getGameTime() % ServerConfig.tempIntervalTicks != 0) {
             return;
         }
 
-        List<AbstractVillager> villagers = event.player.level().getEntitiesOfClass(
+        List<AbstractVillager> villagers = player.level().getEntitiesOfClass(
                 AbstractVillager.class,
-                new AABB(event.player.blockPosition()).inflate(ServerConfig.tempRadiusBlocks),
+                new AABB(player.blockPosition()).inflate(ServerConfig.tempRadiusBlocks),
                 villager -> {
                     if (!(villager instanceof Villager)) {
                         return false;
@@ -89,7 +83,7 @@ public class VillagerTradeReporter {
                 }
         );
 
-        PlayerTradeData playerData = getPlayerData(event.player.getUUID());
+        PlayerTradeData playerData = getPlayerData(player.getUUID());
         for (AbstractVillager villager : villagers) {
             if (villager instanceof Villager v) {
                 MerchantOffers currentOffers = v.getOffers();
@@ -99,7 +93,7 @@ public class VillagerTradeReporter {
                     continue;
                 }
 
-                reportTrades(v, event.player, false);
+                reportTrades(v, player, false);
                 playerData.lastKnownOffers.put(villagerId, deepCopyOffers(currentOffers));
             }
         }
@@ -222,8 +216,9 @@ public class VillagerTradeReporter {
         return stack.getDisplayName();
     }
 
-    private static void onVillagerDeath(LivingDeathEvent event) {
-        if (!(event.getEntity() instanceof Villager villager)) return;
+    /** Removes cached offers after a villager dies. */
+    public static void onVillagerDeath(net.minecraft.world.entity.LivingEntity entity) {
+        if (!(entity instanceof Villager villager)) return;
 
         UUID villagerId = villager.getUUID();
         for (PlayerTradeData data : playerTradeDataMap.values()) {

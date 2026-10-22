@@ -1,3 +1,14 @@
+// Resolves native Forge and Fabric build plugins for the shared 1.20.1 sources.
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = 'https://maven.fabricmc.net/' }
+        maven { url = 'https://maven.neoforged.net/releases' }
+    }
+}
+
 plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.9.0'
 }
+
+include 'fabric'

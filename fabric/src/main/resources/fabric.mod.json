@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "tradetweaks",
+  "version": "${version}",
+  "name": "Trade Tweaks",
+  "description": "Powerful tools and commands for better villager trading experience.",
+  "authors": ["LostPatrol_3"],
+  "icon": "logo.png",
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/trade-tweaks",
+    "sources": "https://github.com/LostPatrol/TradeTweaks",
+    "issues": "https://github.com/LostPatrol/TradeTweaks/issues"
+  },
+  "license": "CC-BY-NC-SA-3.0",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["net.lostpatrol.tradetweaks.TradeTweaks"],
+    "client": ["net.lostpatrol.tradetweaks.fabric.FabricClient"]
+  },
+  "mixins": ["tradetweaks.fabric.mixins.json"],
+  "custom": {
+    "mc-publish": {
+      "dependencies": ["fabric-api(required){modrinth:P7dR8mSH}{curseforge:306612}"]
+    }
+  },
+  "accessWidener": "tradetweaks.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "1.20.1",
+    "java": ">=17",
+    "fabric-api": "*",
+    "forgeconfigapiport": ">=8.0.3"
+  }
+}

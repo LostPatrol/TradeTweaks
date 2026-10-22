@@ -1,3 +1,4 @@
+/** Applies cyclic wand mode changes on the server game thread. */
 package net.lostpatrol.tradetweaks.network.handler;
 
 import net.lostpatrol.tradetweaks.common.wand.EmeraldWand;
@@ -6,16 +7,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
+import net.lostpatrol.tradetweaks.network.PayloadContext;
 
 import java.util.function.Supplier;
 
 import static net.lostpatrol.tradetweaks.common.wand.EmeraldWand.*;
 
 public class HandlerWandModeSwitch {
-    public static void handle(PacketWandModeSwitch packet, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayer player = ctx.get().getSender();
+    /** Cycles the sender's currently held wand on the server game thread. */
+    public static void handle(PacketWandModeSwitch packet, PayloadContext ctx) {
+        ctx.enqueueWork(() -> {
+            ServerPlayer player = ctx.player();
             if (player != null) {
                 ItemStack stack = player.getItemInHand(packet.getHand());
                 if (stack.getItem() instanceof EmeraldWand wand) {
@@ -23,7 +25,6 @@ public class HandlerWandModeSwitch {
                 }
             }
         });
-        ctx.get().setPacketHandled(true);
     }
 
     public static void handleModeSwitchServer(ItemStack stack, Player player, boolean forward, InteractionHand hand) {

@@ -1,0 +1,17 @@
+accessWidener v2 named
+# Matches the native access transformer facilities actually used by shared logic.
+accessible field net/minecraft/world/entity/npc/Villager increaseProfessionLevelOnUpdate Z
+accessible method net/minecraft/world/entity/npc/Villager increaseMerchantCareer ()V
+accessible method net/minecraft/world/entity/npc/Villager updateTrades ()V
+accessible field net/minecraft/world/entity/Entity random Lnet/minecraft/util/RandomSource;
+mutable field net/minecraft/world/entity/Entity random Lnet/minecraft/util/RandomSource;
+accessible class net/minecraft/world/entity/npc/VillagerTrades$EnchantBookForEmeralds
+accessible method net/minecraft/world/entity/monster/ZombieVillager startConverting (Ljava/util/UUID;I)V
+accessible method net/minecraft/world/entity/monster/ZombieVillager finishConversion (Lnet/minecraft/server/level/ServerLevel;)V
+# Client-only fields that NeoForge exposes through its own patches.
+accessible field net/minecraft/client/renderer/texture/SpriteContents originalImage Lcom/mojang/blaze3d/platform/NativeImage;
+accessible field net/minecraft/client/Minecraft itemColors Lnet/minecraft/client/color/item/ItemColors;
+accessible field net/minecraft/client/gui/screens/Screen renderables Ljava/util/List;
+
+# Vanilla keeps criterion registration private; Forge exposes this method.
+accessible method net/minecraft/advancements/CriteriaTriggers register (Lnet/minecraft/advancements/CriterionTrigger;)Lnet/minecraft/advancements/CriterionTrigger;

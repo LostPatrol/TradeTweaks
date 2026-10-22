@@ -1,3 +1,4 @@
+/** Zombifies villagers while preserving their trade and job data. */
 package net.lostpatrol.tradetweaks.common.item.villager;
 
 import net.lostpatrol.tradetweaks.advancement.AdvancementEventTrigger;
@@ -21,7 +22,7 @@ import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.lostpatrol.tradetweaks.platform.Platform;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class ReversionBottleItem extends Item {
         super(properties);
     }
 
+    /** Zombifies the target while retaining its existing trades and workstation. */
     @Override
     @Nonnull
     public InteractionResult interactLivingEntity(@Nonnull ItemStack stack, @Nonnull Player player,
@@ -44,7 +46,7 @@ public class ReversionBottleItem extends Item {
         }
 
         ServerLevel level = (ServerLevel) player.level();
-        if (!ForgeEventFactory.canLivingConvert(villager, EntityType.ZOMBIE_VILLAGER, timer -> {})) {
+        if (!Platform.canLivingConvert(villager, EntityType.ZOMBIE_VILLAGER, timer -> {})) {
             return InteractionResult.FAIL;
         }
 
@@ -67,7 +69,7 @@ public class ReversionBottleItem extends Item {
         zombieVillager.setTradeOffers(tradeOffers);
         zombieVillager.setVillagerXp(villagerXp);
         jobSite.ifPresent(tag -> VillagerConversionMemory.storeJobSite(zombieVillager, tag));
-        ForgeEventFactory.onLivingConvert(villager, zombieVillager);
+        Platform.onLivingConvert(villager, zombieVillager);
 
         level.levelEvent(null, 1026, zombieVillager.blockPosition(), 0);
         VillagerItemEffects.spawnBloodParticles(level, zombieVillager);

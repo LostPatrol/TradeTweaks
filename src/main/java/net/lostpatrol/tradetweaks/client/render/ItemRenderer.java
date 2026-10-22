@@ -1,3 +1,4 @@
+/** Renders item icons embedded in formatted chat messages. */
 package net.lostpatrol.tradetweaks.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -13,16 +14,12 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = TradeTweaks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ItemRenderer {
+    /** Chat opacity consumed by the loader-specific item-rendering mixin. */
     public static float alphaValue = 1F;
 
-    @OnlyIn(Dist.CLIENT)
+    /** Finds encoded item hovers and renders their reserved chat spaces. */
     public static void renderItemForMessage(GuiGraphics guiGraphics, FormattedCharSequence sequence, float x, float y, int color) {
         if (!ClientConfig.tempRenderFlag)
             return;
@@ -45,7 +42,7 @@ public class ItemRenderer {
             if (sofar.endsWith(":  ")) {
                 int s_length = mc.font.width(sofar.substring(0, sofar.length() - 2));
                 // and Chat Heads
-                if (ModList.get().isLoaded("chat_heads")) {
+                if (net.lostpatrol.tradetweaks.platform.Platform.isModLoaded("chat_heads")) {
                     render(guiGraphics, s_length+5*halfSpace, character == ' ' ? 0 : -halfSpace, x, y, style, color);
                 } else {
                     render(guiGraphics, s_length, character == ' ' ? 0 : -halfSpace, x, y, style, color);
@@ -64,25 +61,7 @@ public class ItemRenderer {
         });
     }
 
-    public static MutableComponent createStackComponent(ItemStack stack, MutableComponent component) {
-        if (!ClientConfig.tempRenderFlag)
-            return component;
-
-        Style style = component.getStyle();
-        ItemStack copyStack = stack.copy();
-        if (stack.getCount() > 64) {
-            copyStack.setCount(64);
-        }
-        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackInfo(copyStack)));
-        component.withStyle(style);
-
-
-        MutableComponent out = Component.literal("   ");
-        out.setStyle(style);
-        return out.append(component);
-    }
-
-    @OnlyIn(Dist.CLIENT)
+    /** Draws one fading item icon with the existing HUD compatibility offsets. */
     private static void render(GuiGraphics guiGraphics, float shift, float extraShift, float x, float y, Style style, int color) {
         float a = (color >> 24 & 255) / 255.0F;
 
@@ -101,7 +80,7 @@ public class ItemRenderer {
             float x_shift = shift + extraShift;
 
             //Fix y-shift if overflowingbars is installed
-            if (ModList.get().isLoaded("overflowingbars")) {
+            if (net.lostpatrol.tradetweaks.platform.Platform.isModLoaded("overflowingbars")) {
                 if (Minecraft.getInstance().player != null) {
                     y += Minecraft.getInstance().player.getAbsorptionAmount() > 10.0F ? 10 : 0;
                     y += Minecraft.getInstance().player.getArmorValue() > 0.5F ? 10 : 0;
