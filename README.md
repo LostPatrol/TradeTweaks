@@ -15,7 +15,7 @@ Provides versatile utility wands, useful item, and in-game options to improve th
 
 Install the matching Trade Tweaks JAR on both client and server. Fabric also requires Fabric API; the configuration library is bundled. Choose one loader build per installation, for example `tradetweaks-1.21.1-2.4.0-fabric.jar` or `tradetweaks-1.21.1-2.4.0-neoforge.jar`.
 
-See [development and builds](DEVELOPING.md) and [release notes](CHANGELOG.md). Third-party mod compatibility is specific to the Minecraft version and loader; Forge/NeoForge compatibility results do not automatically apply to Fabric.
+See the [2.4.0 release notes](publish/changelog-2.4.0.md). Third-party mod compatibility is specific to the Minecraft version and loader; Forge/NeoForge compatibility results do not automatically apply to Fabric.
 
 ## Main Content
 
