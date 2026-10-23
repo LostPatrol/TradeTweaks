@@ -59,13 +59,13 @@ loom {
     }
 }
 
-// Unique task names remain visible when IDEA filters tasks shared with the native loader.
-tasks.register('runFabricClient') {
+// Avoid native-loader dynamic run<Name> rules during IDEA task lookup.
+tasks.register('launchFabricClient') {
     group = 'fabric'
     description = 'Starts the Fabric development client.'
     dependsOn tasks.named('runClient')
 }
-tasks.register('runFabricServer') {
+tasks.register('launchFabricServer') {
     group = 'fabric'
     description = 'Starts the Fabric development server.'
     dependsOn tasks.named('runServer')

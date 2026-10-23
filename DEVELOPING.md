@@ -26,7 +26,7 @@ The first command builds Forge/NeoForge into `build/libs`; the second builds Fab
 
 ## Gameplay checks
 
-Reload the Gradle project in IDEA after changing build scripts. Loom generates the `Trade Tweaks Fabric client/server` run/debug configurations during synchronization. The Gradle panel also exposes uniquely named `:fabric:runFabricClient` and `:fabric:runFabricServer` tasks, avoiding hidden tasks with names matching the native loader. From PowerShell, use `.\gradlew.bat :fabric:runFabricClient --no-configuration-cache`. The native client remains `:runClient`.
+Reload the Gradle project in IDEA after changing build scripts. Loom generates the `Trade Tweaks Fabric client/server` run/debug configurations during synchronization. The Gradle panel also exposes `:fabric:launchFabricClient` and `:fabric:launchFabricServer`. These names avoid both native task-name collisions and NeoGradle's dynamic `run<Name>` rule on the 1.21.1 branch. From PowerShell, use `.\gradlew.bat :fabric:launchFabricClient --no-configuration-cache`. The native client remains `:runClient`.
 
 The dedicated GameTest source set in `gameplay-tests.gradle` exercises shared gameplay against real server entities. It is excluded from production JARs and the ordinary JUnit test task. Run `runGameTestServer` for the native loader and `:fabric:runGameplayTest` for Fabric, with `--no-configuration-cache` for the development launcher tasks.
 
