@@ -15,7 +15,7 @@
 
 客户端和服务端都需要安装与 Minecraft 版本及加载器匹配的 Trade Tweaks JAR。Fabric 还需要安装 Fabric API；配置库已内置。同一次安装只选择一种加载器产物，例如 `tradetweaks-1.21.1-2.4.0-fabric.jar` 或 `tradetweaks-1.21.1-2.4.0-neoforge.jar`。
 
-开发和构建方法见 [DEVELOPING.md](DEVELOPING.md)，版本说明见 [CHANGELOG.md](CHANGELOG.md)。第三方模组兼容性取决于 Minecraft 版本和加载器；Forge/NeoForge 上的兼容结果不直接代表 Fabric 上的兼容结果。
+版本说明见 [2.4.0 更新日志](publish/changelog-2.4.0.md)。第三方模组兼容性取决于 Minecraft 版本和加载器；Forge/NeoForge 上的兼容结果不直接代表 Fabric 上的兼容结果。
 
 ## 主要内容
 

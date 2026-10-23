@@ -1,8 +1,12 @@
 # Trade Tweaks
 
-A Minecraft Forge mod that provides versatile utility staffs, useful items, and in-game options to enhance the player experience when trading with villagers.
+A Minecraft mod for Forge, NeoForge, and Fabric that provides versatile utility staffs, useful items, and in-game options to enhance the player experience when trading with villagers.
 
 > Currently in early preview - many features are still under development.
+
+## Installation
+
+Minecraft 1.20.1 supports Forge and Fabric (Java 17); Minecraft 1.21.1 supports NeoForge and Fabric (Java 21). Install the matching Trade Tweaks JAR on both client and server. Fabric also requires Fabric API; the configuration library is bundled. Choose one loader build per installation. Third-party mod compatibility depends on the Minecraft version and loader.
 
 ## Key Features
 
