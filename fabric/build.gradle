@@ -80,7 +80,8 @@ processResources {
     // Capture metadata during configuration; copy actions cannot access Project.
     def resourceVersion = project.version.toString()
     from(rootProject.file('src/main/resources')) {
-        exclude 'META-INF/**', 'tradetweaks.mixins.json', 'data/tradetweaks/recipes/restoration_bottle.json'
+        exclude 'META-INF/**', 'tradetweaks.mixins.json',
+                'data/tradetweaks/recipes/restoration_bottle.json', 'data/tradetweaks/recipes/upgrade.json'
     }
     inputs.property 'version', resourceVersion
     filesMatching('fabric.mod.json') { expand version: resourceVersion }

@@ -22,6 +22,7 @@ import net.lostpatrol.tradetweaks.config.ClientConfig;
 import net.lostpatrol.tradetweaks.config.ServerConfig;
 import net.lostpatrol.tradetweaks.events.RaidRewardHandler;
 import net.lostpatrol.tradetweaks.fabric.FabricInteractions;
+import net.lostpatrol.tradetweaks.fabric.FabricRecipes;
 import net.lostpatrol.tradetweaks.network.NetworkHandler;
 import net.minecraftforge.fml.config.ModConfig;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ public final class TradeTweaks implements ModInitializer {
     /** Installs shared registrations before worlds and datapacks load. */
     @Override public void onInitialize() {
         ModItems.register();
+        FabricRecipes.register();
         ModCreativeModeTab.register();
         ModCriteriaTriggers.register();
         ModConfigEvents.loading(MODID).register(TradeTweaks::onConfigEvent);

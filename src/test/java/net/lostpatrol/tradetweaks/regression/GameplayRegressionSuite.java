@@ -15,6 +15,7 @@ import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundUpdateRecipesPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -32,6 +33,9 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.inventory.TransientCraftingContainer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.trading.MerchantOffers;
@@ -88,6 +92,7 @@ public final class GameplayRegressionSuite {
         other.setPos(villager.getX(), villager.getY(), villager.getZ());
         level.addFreshEntity(villager);
         try {
+            checkWandUpgradeRecipe(server, owner);
             checkRestorationRecipe(server);
             checkSelection(server, owner, other, villager);
             checkUpgrade(owner, villager);
@@ -101,6 +106,27 @@ public final class GameplayRegressionSuite {
             unregisterPlayer(server, owner);
             unregisterPlayer(server, other);
             villager.discard();
+        }
+    }
+
+    /** Crafts through the loaded recipe and checks the functional and visual upgrade flag. */
+    private void checkWandUpgradeRecipe(MinecraftServer server, QuietPlayer player) {
+        var grid = new TransientCraftingContainer(new CraftingMenu(0, player.getInventory()), 2, 2);
+        grid.setItem(0, new ItemStack(ModItems.EMERALD_WAND.get()));
+        grid.setItem(3, new ItemStack(Items.NETHER_STAR));
+        var recipe = server.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, grid, player.level()).orElseThrow();
+        require(recipe.getId().equals(new ResourceLocation("tradetweaks", "upgrade")), "wand and nether star select the upgrade recipe");
+        ItemStack result = recipe.assemble(grid, server.registryAccess());
+        require(result.is(ModItems.EMERALD_WAND.get()) && result.getCount() == 1, "upgrade recipe produces one emerald wand");
+        require(EmeraldWand.isUpgraded(result), "crafted wand has its functional upgrade flag");
+        require(EmeraldWand.isUpgradedTexture(result) == 1F, "crafted wand selects the upgraded model");
+        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
+        try {
+            new ClientboundUpdateRecipesPacket(java.util.List.of(recipe)).write(buffer);
+            var synced = new ClientboundUpdateRecipesPacket(buffer).getRecipes().get(0);
+            require(EmeraldWand.isUpgraded(synced.getResultItem(server.registryAccess())), "recipe synchronization retains the wand upgrade");
+        } finally {
+            buffer.release();
         }
     }
 

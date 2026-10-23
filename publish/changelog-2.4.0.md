@@ -9,3 +9,7 @@
 
 + Downloads now include explicit loader labels. Forge remains supported on Minecraft 1.20.1, and NeoForge remains supported on Minecraft 1.21.1.
 + Third-party mod compatibility depends on the Minecraft version and loader; Forge/NeoForge compatibility does not automatically apply to Fabric.
+
+# FIX
+
++ Fixed crafting an Emerald Wand with a Nether Star failing to produce an upgraded wand on Fabric for Minecraft 1.20.1.
