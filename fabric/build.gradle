@@ -27,22 +27,48 @@ dependencies {
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
-// Capture shared source paths while configuring so the exclusion works with configuration cache.
-def sharedJavaDirectory = rootProject.file('src/main/java')
+// Native implementations are replaced by the Fabric adapters below.
 def loaderClasses = [
         'TradeTweaks.java', 'NetworkHandler.java', 'ModItems.java', 'ModCreativeModeTab.java',
         'ClientKeyMappings.java', 'Platform.java', 'ClientPlatform.java', 'ForgeEvents.java',
         'ForgeClientEvents.java', 'ItemRendererMixin.java', 'McaInteractionHandler.java',
         'WandInteractionHandler.java', 'VillagerToolInteractionHandler.java'
 ]
-sourceSets.main.java {
-    srcDir rootProject.file('src/main/java')
-    exclude { details -> details.file.toPath().startsWith(sharedJavaDirectory.toPath()) && loaderClasses.contains(details.file.name) }
+// Separate source roots keep IDEA from resolving native classes against Fabric dependencies.
+def sharedSources = tasks.register('prepareSharedSources', Sync) {
+    from rootProject.file('src/main/java')
+    into layout.buildDirectory.dir('generated/sources/shared/java/main')
+    exclude { details -> loaderClasses.contains(details.file.name) }
 }
+sourceSets.main.java.srcDir(sharedSources)
+idea.module.generatedSourceDirs.add(layout.buildDirectory.dir('generated/sources/shared/java/main').get().asFile)
+tasks.named('ideaSyncTask').configure { dependsOn sharedSources }
 
 loom {
     accessWidenerPath = file('src/main/resources/tradetweaks.accesswidener')
     mixin { defaultRefmapName = 'tradetweaks.fabric.refmap.json' }
+    runs {
+        client {
+            name = 'Trade Tweaks Fabric client'
+            ideConfigGenerated = true
+        }
+        server {
+            name = 'Trade Tweaks Fabric server'
+            ideConfigGenerated = true
+        }
+    }
+}
+
+// Unique task names remain visible when IDEA filters tasks shared with the native loader.
+tasks.register('runFabricClient') {
+    group = 'fabric'
+    description = 'Starts the Fabric development client.'
+    dependsOn tasks.named('runClient')
+}
+tasks.register('runFabricServer') {
+    group = 'fabric'
+    description = 'Starts the Fabric development server.'
+    dependsOn tasks.named('runServer')
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)

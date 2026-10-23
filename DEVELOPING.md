@@ -6,7 +6,7 @@ Each Minecraft version stays on its existing branch: `1.20.1` targets Forge and 
 ## Source layout
 
 - `src/main/java` contains shared gameplay, GUI and packet data, plus the native loader entrypoints/adapters.
-- `fabric/src/main/java` supplies Fabric entrypoints and adapters. Its build includes the shared sources and excludes the native implementations it replaces.
+- `fabric/src/main/java` supplies Fabric entrypoints and adapters. `prepareSharedSources` copies the shared sources into `fabric/build/generated/sources/shared/java/main`, excluding native implementations. Compilation and IDEA synchronization run this task automatically; edit the originals in `src/main/java`, never generated copies. Separate source roots prevent IDEA from assigning native classes to the Fabric module.
 - The platform seam handles registration, events, configuration, entity data and loader metadata. Keep gameplay rules in shared classes; keep loader-specific hooks in adapters.
 - `src/main/resources` holds shared assets/data. Fabric adds its metadata, access widener, mixins and loader-specific recipe override under `fabric/src/main/resources`.
 
@@ -25,6 +25,8 @@ node --test .github/scripts/release-plan.test.cjs
 The first command builds Forge/NeoForge into `build/libs`; the second builds Fabric into `fabric/build/libs`. Use the remapped production JAR, excluding `sources`, `dev` and `javadoc` artifacts. Filenames include the Minecraft version, mod version and loader, for example `tradetweaks-1.21.1-2.4.0-fabric.jar`. Use separate development game directories for each loader and preserve existing saves.
 
 ## Gameplay checks
+
+Reload the Gradle project in IDEA after changing build scripts. Loom generates the `Trade Tweaks Fabric client/server` run/debug configurations during synchronization. The Gradle panel also exposes uniquely named `:fabric:runFabricClient` and `:fabric:runFabricServer` tasks, avoiding hidden tasks with names matching the native loader. From PowerShell, use `.\gradlew.bat :fabric:runFabricClient --no-configuration-cache`. The native client remains `:runClient`.
 
 The dedicated GameTest source set in `gameplay-tests.gradle` exercises shared gameplay against real server entities. It is excluded from production JARs and the ordinary JUnit test task. Run `runGameTestServer` for the native loader and `:fabric:runGameplayTest` for Fabric, with `--no-configuration-cache` for the development launcher tasks.
 
