@@ -24,7 +24,7 @@ node --test .github/scripts/release-plan.test.cjs
 
 The first command builds Forge/NeoForge into `build/libs`; the second builds Fabric into `fabric/build/libs`. Use the remapped production JAR, excluding `sources`, `dev` and `javadoc` artifacts. Filenames include the Minecraft version, mod version and loader, for example `tradetweaks-1.21.1-2.4.0-fabric.jar`. Use separate development game directories for each loader and preserve existing saves.
 
-Reload the Gradle project in IDEA after changing build scripts. Loom generates the `Trade Tweaks Fabric client/server` run/debug configurations during synchronization. The Gradle panel also exposes uniquely named `:fabric:runFabricClient` and `:fabric:runFabricServer` tasks, avoiding hidden tasks with names matching the native loader. From PowerShell, use `.\gradlew.bat :fabric:runFabricClient --no-configuration-cache`. The native client remains `:runClient`.
+Reload the Gradle project in IDEA after changing build scripts. Loom generates the `Trade Tweaks Fabric client/server` run/debug configurations during synchronization. The Gradle panel also exposes `:fabric:launchFabricClient` and `:fabric:launchFabricServer`. These names avoid both native task-name collisions and NeoGradle's dynamic `run<Name>` rule. From PowerShell, use `.\gradlew.bat :fabric:launchFabricClient --no-configuration-cache`. The native client remains `:runClient`.
 
 ## Gameplay checks
 
