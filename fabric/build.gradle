@@ -77,11 +77,13 @@ def gameLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVe
 tasks.withType(JavaExec).configureEach { javaLauncher = gameLauncher }
 tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
 processResources {
+    // Capture metadata during configuration; copy actions cannot access Project.
+    def resourceVersion = project.version.toString()
     from(rootProject.file('src/main/resources')) {
         exclude 'META-INF/**', 'tradetweaks.mixins.json', 'data/tradetweaks/recipes/restoration_bottle.json'
     }
-    inputs.property 'version', project.version
-    filesMatching('fabric.mod.json') { expand version: project.version }
+    inputs.property 'version', resourceVersion
+    filesMatching('fabric.mod.json') { expand version: resourceVersion }
 }
 
 apply from: rootProject.file('gameplay-tests.gradle')
