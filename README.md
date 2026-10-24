@@ -1,10 +1,11 @@
 # Trade Tweaks
 
+[![CurseForge Downloads](https://img.shields.io/curseforge/dt/1316814?style=plastic&logo=curseforge&label=CurseForge&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/trade-tweaks)
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/P5pFKnk6?style=plastic&logo=modrinth&label=Modrinth&color=00AF5C)](https://modrinth.com/mod/trade-tweaks)
+
 Minecraft villager trading tools for Forge, NeoForge and Fabric.
 
 Provides versatile utility wands, useful items, and in-game options to improve the player experience when trading with villagers.
-
-> Currently in early preview. Many features are still under development.
 
 ## Installation
 
@@ -92,7 +93,7 @@ Method 2:
 + Allows players to manually select any possible trade for a villager as its current trade option
 + Any trade with the same profession requirement and profession level requirement as the current trade option is considered a possible trade
 + Randomized category trades from mods are expanded into distinct item variants, so tag-like choices such as different logs or signs are all shown instead of one random example
-+ The replacement column has a live JEI-style search field. Use `@` for mod names, `#` for tooltips, `$` for tags, `%` for creative tabs, `^` for colors, and `&` for resource IDs. Spaces combine terms, `|` separates alternatives, `-` excludes a term, and quotes preserve phrases. Press `Tab` to focus the field and `Enter` or `Esc` to leave it
++ The replacement column has a live JEI-style search field. Use `@` for mod names, `#` for tags, `$` for tooltips, `%` for creative tabs, `^` for colors, and `&` for resource IDs. Spaces combine terms, `|` separates alternatives, `-` excludes a term, and quotes preserve phrases. Press `Tab` to focus the field and `Enter` or `Esc` to leave it
 + Allows a villager to have multiple duplicate trade options, and supports multiplayer
 + Requires 1 nether star to upgrade the wand before this feature can be used
 + For librarians specifically, players can select enchanted books for the highest level of every enchantment, with a higher chance of lower trade prices. This feature can be disabled in the server config
@@ -185,7 +186,7 @@ Server command. Changes the server update check interval. Requires permission.
 /tradetweaks enchant_books_select [bool]
 ```
 
-Server command. Determines whether the wand's Trade Selection feature can be used to select librarians' enchanted books.
+Server command.
 
 ## Compatibility
 

@@ -1,10 +1,11 @@
 # Trade Tweaks
 
+[![CurseForge Downloads](https://img.shields.io/curseforge/dt/1316814?style=plastic&logo=curseforge&label=CurseForge&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/trade-tweaks)
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/P5pFKnk6?style=plastic&logo=modrinth&label=Modrinth&color=00AF5C)](https://modrinth.com/mod/trade-tweaks)
+
 适用于 Forge、NeoForge 和 Fabric 的 Minecraft 村民交易工具模组。
 
 提供功能多样实用的工具手杖、功能道具以及游戏内选项，提升玩家与村民交易时的游戏体验
-
-> 目前为早期预览版本，诸多功能有待实现
 
 ## 安装
 
@@ -116,7 +117,7 @@
 + 允许玩家手动选择村民的任一可能出现的交易作为当前交易选项
 + 任何与当前交易选项有着相同职业要求和职业等级要求的交易，都将被视为“可能出现的交易”
 + 对于模组中按类别随机生成的交易，会展开其中不同的物品变体；例如各种原木、告示牌等都会显示，而不是只随机显示一种
-+ 右栏顶部提供实时生效的 JEI 风格搜索框。`@` 搜索模组名，`#` 搜索物品提示，`$` 搜索标签，`%` 搜索创造模式物品栏，`^` 搜索颜色，`&` 搜索资源 ID；空格表示同时满足，`|` 表示任选其一，`-` 排除关键词，引号可保留短语。按 `Tab` 聚焦搜索框，按回车或 `Esc` 退出输入
++ 右栏顶部提供实时生效的 JEI 风格搜索框。`@` 搜索模组名，`#` 搜索标签，`$` 搜索物品提示，`%` 搜索创造模式物品栏，`^` 搜索颜色，`&` 搜索资源 ID；空格表示同时满足，`|` 表示任选其一，`-` 排除关键词，引号可保留短语。按 `Tab` 聚焦搜索框，按回车或 `Esc` 退出输入
 + 允许一个村民有多个重复的交易选项，并且兼容多人游戏
 + 需要1个下界之星对手杖进行升级以使用此功能
 + 特别地，对于图书管理员，可以选择所有魔咒的最高等级所对应的附魔书，且有更高几率出现较低的交易价格（此特性可由服务器配置关闭）
@@ -133,7 +134,7 @@
 
 ![alt text](https://github.com/LostPatrol/TradeTweaks/blob/1.20.1/publish/assets/book_of_enlightenment.png?raw=true)
 
-将傻子村民(Nitwit)变为无业村民；
+将傻子村民（Nitwit)变为无业村民；
 
 
 
@@ -239,7 +240,7 @@
 /tradetweaks enchant_books_select [bool]
 ```
 
-服务端命令 决定手杖的自选交易功能是否可以用于选择图书管理员的附魔书。
+服务端命令 
 
 ## 兼容性
 

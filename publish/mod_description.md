@@ -1,8 +1,6 @@
 # Trade Tweaks
 
-A Minecraft mod for Forge, NeoForge, and Fabric that provides versatile utility staffs, useful items, and in-game options to enhance the player experience when trading with villagers.
-
-> Currently in early preview - many features are still under development.
+A Minecraft mod for Forge, NeoForge, and Fabric that provides versatile utility wands, useful items, and in-game options to enhance the player experience when trading with villagers.
 
 ## Installation
 
@@ -96,7 +94,7 @@ Method 2:
 + Allows players to manually select available trades from villager's potential offer pool
 + Any trade with the same profession and profession level required, will be considered as an available trade.
 + Randomized category trades from mods are expanded into distinct item variants, so tag-like choices such as different logs or signs are all shown instead of one random example.
-+ The replacement column has a live JEI-style search field.`@` for mod names, `#` for tooltips, `$` for tags, `%` for creative tabs, `^` for colors, and `&` for resource IDs. Spaces combine terms, `|` separates alternatives, `-` excludes a term, and quotes preserve phrases. Press `Tab` to focus the field and `Enter` or `Esc` to leave it.
++ The replacement column has a live JEI-style search field.`@` for mod names, `#` for tags, `$` for tooltips, `%` for creative tabs, `^` for colors, and `&` for resource IDs. Spaces combine terms, `|` separates alternatives, `-` excludes a term, and quotes preserve phrases. Press `Tab` to focus the field and `Enter` or `Esc` to leave it.
 + Allow duplicated trades
 + Compatible with multiplayers
 + A Nether Star is required to upgrade your wand to use this mode.
@@ -199,8 +197,7 @@ Displays nearby villagers' trade lists (with item icons) in chat, with click-to-
 /tradetweaks enchant_books_select [bool]
 ```
 
-(Server-side) Determines whether the wand's Trade Selection feature can be used to select librarians' enchanted books. Requires permissions.
-
+(Server-side) Toggles enchanted book selection. Requires permissions.
 
 ## Compatibility
 
