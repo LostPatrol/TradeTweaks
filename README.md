@@ -1,5 +1,7 @@
 # Trade Tweaks
 
+[中文说明](README_zh.md)
+
 [![CurseForge Downloads](https://img.shields.io/curseforge/dt/1316814?style=plastic&logo=curseforge&label=CurseForge&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/trade-tweaks)
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/P5pFKnk6?style=plastic&logo=modrinth&label=Modrinth&color=00AF5C)](https://modrinth.com/mod/trade-tweaks)
 
