@@ -1,10 +1,11 @@
 # Trade Tweaks
 
+[![CurseForge Downloads](https://img.shields.io/curseforge/dt/1316814?style=plastic&logo=curseforge&label=CurseForge&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/trade-tweaks)
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/P5pFKnk6?style=plastic&logo=modrinth&label=Modrinth&color=00AF5C)](https://modrinth.com/mod/trade-tweaks)
+
 Minecraft villager trading tools for Forge, NeoForge and Fabric.
 
-Provides versatile utility wands, useful item, and in-game options to improve the player experience when trading with villagers.
-
-> Currently in early preview. Many features are still under development.
+Provides versatile utility wands, useful items, and in-game options to improve the player experience when trading with villagers.
 
 ## Installation
 

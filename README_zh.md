@@ -1,10 +1,11 @@
 # Trade Tweaks
 
+[![CurseForge Downloads](https://img.shields.io/curseforge/dt/1316814?style=plastic&logo=curseforge&label=CurseForge&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/trade-tweaks)
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/P5pFKnk6?style=plastic&logo=modrinth&label=Modrinth&color=00AF5C)](https://modrinth.com/mod/trade-tweaks)
+
 适用于 Forge、NeoForge 和 Fabric 的 Minecraft 村民交易工具模组。
 
 提供功能多样实用的工具手杖、功能道具以及游戏内选项，提升玩家与村民交易时的游戏体验
-
-> 目前为早期预览版本，诸多功能有待实现
 
 ## 安装
 

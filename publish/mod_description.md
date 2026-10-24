@@ -1,8 +1,6 @@
 # Trade Tweaks
 
-A Minecraft mod for Forge, NeoForge, and Fabric that provides versatile utility staffs, useful items, and in-game options to enhance the player experience when trading with villagers.
-
-> Currently in early preview - many features are still under development.
+A Minecraft mod for Forge, NeoForge, and Fabric that provides versatile utility wands, useful items, and in-game options to enhance the player experience when trading with villagers.
 
 ## Installation
 
